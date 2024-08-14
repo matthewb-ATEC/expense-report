@@ -1,11 +1,20 @@
 import React from 'react';
+import Project from './Project';
+import Expense from './Expense';
 
-interface ExpenseFormProps {
+interface HomeProps {
   // Define any props you expect to pass to this component
 }
 
-const ExpenseForm: React.FC<ExpenseFormProps> = (props) => {
+const Home: React.FC<HomeProps> = (props) => {
   // You can define any state or handlers here
+
+  const projects = [
+    {id: 0},
+    {id: 1},
+    {id: 2},
+    {id: 3},
+  ]
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -14,18 +23,19 @@ const ExpenseForm: React.FC<ExpenseFormProps> = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Form fields go here */}
       <div>
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" name="name" />
       </div>
-      <div>
-        <label htmlFor="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" />
-      </div>
-      <button type="submit">Add Expense</button>
+    
+      {projects.map((project) => (
+        <div key={project.id}>
+          <Project />
+        </div>
+      ))}
+
     </form>
   );
 };
 
-export default ExpenseForm;
+export default Home;
