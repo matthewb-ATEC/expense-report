@@ -1,8 +1,10 @@
-import ExpenseForm from './Components/ExpenseForm';
+import Home from './Components/Home';
 
 function App() {
   return (
-    <ExpenseForm/>
+    <>
+    <Home/>
+    </>
   );
 }
 
