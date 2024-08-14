@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Expense {
   // Define any props you expect to pass to this component
