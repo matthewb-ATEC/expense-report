@@ -36,6 +36,13 @@ npm install jspdf
 npm install pdf-lib
 ```
 
+## Install uuid package
+
+```bash
+npm install uuid
+npm install --save-dev @types/uuid
+```
+
 ## View the react app locally
 
 Run the following command to view the react app in your browser at localhost:port
