@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { costCategories } from "../Data/costCategories";
 import ReimbursableGas from "./Expense Components/ReimbursableGas";
 import Description from "./Expense Components/Description";
 import PerDiem from "./Expense Components/PerDiem";
 import Milage from "./Expense Components/Milage";
-import { Expense as ExpenseType } from "../Types";
+import { Attachment as AttachmentType, Expense as ExpenseType } from "../Types";
+import { v4 as uuidv4 } from "uuid";
 
 interface ExpenseProps {
   expense: ExpenseType;
@@ -29,6 +30,9 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   );
   const [costCode, setCostCode] = useState<string>(expense.costCode);
   const [cost, setCost] = useState<string>(expense.cost?.toString() || "0");
+  const [attachments, setAttachments] = useState<AttachmentType[]>(
+    expense.attachments || []
+  );
 
   useEffect(() => {
     updateExpense({
@@ -37,8 +41,9 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       costCategory: selectedCategory,
       costCode,
       cost: parseFloat(cost),
+      attachments,
     });
-  }, [selectedDate, selectedCategory, costCode, cost]);
+  }, [selectedDate, selectedCategory, costCode, cost, attachments]);
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -97,11 +102,21 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
     </div>
   );
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  // Function to handle file upload
+  const handleUploadAttachment = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+
     if (files) {
-      onFileUpload();
+      const newAttachments = Array.from(files).map((file, index) => ({
+        id: uuidv4(), // Use uuid to generate unique ID
+        file,
+      }));
+      setAttachments([...attachments, ...newAttachments]);
     }
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments(attachments.filter((attachment) => attachment.id != id));
   };
 
   const SelectedComponent = CATEGORY_COMPONENT_MAP[selectedCategory] || null;
@@ -150,12 +165,15 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
         selectedCategory !== "Per Diem" &&
         renderCostInput()}
 
-      <input type="file" multiple onChange={handleFileChange} />
+      {/* File Upload */}
+      <input type="file" multiple onChange={handleUploadAttachment} />
+
+      {/* List of Attachments */}
       <ul>
         {attachments.map((attachment) => (
           <li key={attachment.id}>
-            {attachment.file.name}
-            <button onClick={() => onDeleteAttachment(attachment.id)}>
+            {attachment.file?.name}
+            <button onClick={() => handleDeleteAttachment(attachment.id)}>
               Delete
             </button>
           </li>

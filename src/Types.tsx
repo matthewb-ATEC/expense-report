@@ -1,3 +1,12 @@
+import { UUID } from "crypto";
+
+export interface Project {
+  id: number;
+  projectNumber: number;
+  projectName: string;
+  expenses: Expense[];
+}
+
 export interface Expense {
   id: number;
   date: string;
@@ -13,11 +22,10 @@ export interface Expense {
   breakfast?: number;
   lunch?: number;
   dinner?: number;
+  attachments?: Attachment[];
 }
 
-export interface Project {
-  id: number;
-  projectNumber: number;
-  projectName: string;
-  expenses: Expense[];
+export interface Attachment {
+  id: string;
+  file: File | null;
 }
