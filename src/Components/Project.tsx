@@ -59,12 +59,12 @@ const Project: React.FC<ProjectProps> = ({ allProjects }) => {
         </select>
       </div>
 
-      <div>{selectedProjectName}</div>
+      <div>Project Name: {selectedProjectName}</div>
 
       {expenses.map((expense) => (
         <div key={expense.id}>
           <Expense />
-          <div>{expense.id}</div>
+          <div>Expense ID: {expense.id}</div>
           <button type="button" onClick={() => removeExpense(expense.id)}>
             Remove Expense
           </button>
