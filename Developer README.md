@@ -29,18 +29,10 @@ npm --version
 npx --version
 ```
 
-## Install pdf functionality support
+## Install all dependencies
 
 ```bash
-npm install jspdf
-npm install pdf-lib
-```
-
-## Install uuid package
-
-```bash
-npm install uuid
-npm install --save-dev @types/uuid
+npm install
 ```
 
 ## View the react app locally
