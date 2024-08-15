@@ -2,6 +2,15 @@ import Project from "./Project";
 import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
 import { Project as ProjectType } from "../Types";
+import { jsPDF } from "jspdf";
+import { PDFDocument } from "pdf-lib";
+
+interface Attachment {
+  id: string;
+  projectId: number;
+  expenseId: number;
+  file: File;
+}
 
 const Home: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([
@@ -59,6 +68,122 @@ const Home: React.FC = () => {
     // Send the projects data to the backend or handle it as needed
   };
 
+  // Handles file upload
+  const handleFileUpload = (
+    projectId: number,
+    expenseId: number,
+    files: File[]
+  ) => {
+    console.log(
+      `Uploading files for Project ${projectId}, Expense ${expenseId}`
+    );
+    const newAttachments = files.map((file) => ({
+      id: `${projectId}-${expenseId}-${file.name}-${Date.now()}`, // Create a unique ID for each attachment
+      projectId,
+      expenseId,
+      file,
+    }));
+    setAttachments([...attachments, ...newAttachments]);
+  };
+
+  const handleDeleteAttachment = (attachmentId: string) => {
+    setAttachments(
+      attachments.filter((attachment) => attachment.id !== attachmentId)
+    );
+  };
+
+  const handleDownloadPDF = async () => {
+    // Create a new PDF document
+    const doc = new jsPDF();
+    doc.text("Hello World", 10, 10);
+    console.log(attachments);
+    if (attachments.length > 0) {
+      // Load existing attachments into PDF
+      const basePdfBytes = doc.output("arraybuffer");
+      const basePdfDoc = await PDFDocument.load(basePdfBytes);
+
+      for (const attachment of attachments) {
+        const fileBytes = await attachment.file.arrayBuffer();
+        const uploadedPdfDoc = await PDFDocument.load(fileBytes);
+
+        const copiedPages = await basePdfDoc.copyPages(
+          uploadedPdfDoc,
+          uploadedPdfDoc.getPageIndices()
+        );
+        copiedPages.forEach((page) => basePdfDoc.addPage(page));
+      }
+
+      // Save the final merged PDF
+      const mergedPdfBytes = await basePdfDoc.save();
+      const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "merged_report.pdf";
+      link.click();
+    } else {
+      doc.save("report.pdf");
+    }
+  };
+
+  // Handles file upload
+  const handleFileUpload = (
+    projectId: number,
+    expenseId: number,
+    files: File[]
+  ) => {
+    console.log(
+      `Uploading files for Project ${projectId}, Expense ${expenseId}`
+    );
+    const newAttachments = files.map((file) => ({
+      id: `${projectId}-${expenseId}-${file.name}-${Date.now()}`, // Create a unique ID for each attachment
+      projectId,
+      expenseId,
+      file,
+    }));
+    setAttachments([...attachments, ...newAttachments]);
+  };
+
+  const handleDeleteAttachment = (attachmentId: string) => {
+    setAttachments(
+      attachments.filter((attachment) => attachment.id !== attachmentId)
+    );
+  };
+
+  const handleDownloadPDF = async () => {
+    // Create a new PDF document
+    const doc = new jsPDF();
+    doc.text("Hello World", 10, 10);
+    console.log(attachments);
+    if (attachments.length > 0) {
+      // Load existing attachments into PDF
+      const basePdfBytes = doc.output("arraybuffer");
+      const basePdfDoc = await PDFDocument.load(basePdfBytes);
+
+      for (const attachment of attachments) {
+        const fileBytes = await attachment.file.arrayBuffer();
+        const uploadedPdfDoc = await PDFDocument.load(fileBytes);
+
+        const copiedPages = await basePdfDoc.copyPages(
+          uploadedPdfDoc,
+          uploadedPdfDoc.getPageIndices()
+        );
+        copiedPages.forEach((page) => basePdfDoc.addPage(page));
+      }
+
+      // Save the final merged PDF
+      const mergedPdfBytes = await basePdfDoc.save();
+      const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "merged_report.pdf";
+      link.click();
+    } else {
+      doc.save("report.pdf");
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -76,14 +201,22 @@ const Home: React.FC = () => {
           <button type="button" onClick={() => removeProject(project.id)}>
             Remove Project
           </button>
+          <br />
+          <br />
         </div>
       ))}
 
       <button type="button" onClick={addProject}>
         Add Project
       </button>
+      <br />
+      <br />
+      <br />
 
-      <button type="submit">Submit</button>
+      {/* Add the Download PDF button */}
+      <button type="button" onClick={handleDownloadPDF}>
+        PDF
+      </button>
     </form>
   );
 };
