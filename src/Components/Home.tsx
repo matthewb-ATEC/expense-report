@@ -4,12 +4,18 @@ import { allProjects } from "../Data/projects";
 import { jsPDF } from "jspdf";
 import { PDFDocument } from "pdf-lib";
 
+interface Attachment {
+  projectId: number;
+  expenseId: number;
+  file: File;
+}
+
 const Home: React.FC = () => {
   // List of all projecst created by the user to track expenses
   const [projects, setProjects] = useState([{ id: 0 }]);
 
   // State to store the uploaded file (Temporary)
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   // Adds a new default project to the overall list
   const addProject = () => {
@@ -27,25 +33,43 @@ const Home: React.FC = () => {
     // Handle form submission logic
   };
 
+  // Handles file upload
+  const handleFileUpload = (
+    projectId: number,
+    expenseId: number,
+    files: File[]
+  ) => {
+    const newAttachments = files.map((file) => ({
+      projectId,
+      expenseId,
+      file,
+    }));
+    setAttachments([...attachments, ...newAttachments]);
+  };
+
   const handleDownloadPDF = async () => {
-    if (uploadedFile) {
-      // If a file is uploaded, append it to the "Hello World" PDF
-      const uploadedPdfBytes = await uploadedFile.arrayBuffer();
-      const uploadedPdfDoc = await PDFDocument.load(uploadedPdfBytes);
+    // Create a new PDF document
+    const doc = new jsPDF();
+    doc.text("Hello World", 10, 10);
+    console.log(attachments);
+    if (attachments.length > 0) {
+      // Load existing attachments into PDF
+      const basePdfBytes = doc.output("arraybuffer");
+      const basePdfDoc = await PDFDocument.load(basePdfBytes);
 
-      //Data
-      const doc = new jsPDF();
-      doc.text("Report data here", 10, 10);
-      const jsPdfBytes = doc.output("arraybuffer");
-      const jsPdfDoc = await PDFDocument.load(jsPdfBytes);
+      for (const attachment of attachments) {
+        const fileBytes = await attachment.file.arrayBuffer();
+        const uploadedPdfDoc = await PDFDocument.load(fileBytes);
 
-      const copiedPages = await jsPdfDoc.copyPages(
-        uploadedPdfDoc,
-        uploadedPdfDoc.getPageIndices()
-      );
-      copiedPages.forEach((page) => jsPdfDoc.addPage(page));
+        const copiedPages = await basePdfDoc.copyPages(
+          uploadedPdfDoc,
+          uploadedPdfDoc.getPageIndices()
+        );
+        copiedPages.forEach((page) => basePdfDoc.addPage(page));
+      }
 
-      const mergedPdfBytes = await jsPdfDoc.save();
+      // Save the final merged PDF
+      const mergedPdfBytes = await basePdfDoc.save();
       const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -53,17 +77,8 @@ const Home: React.FC = () => {
       link.download = "merged_report.pdf";
       link.click();
     } else {
-      // If no file is uploaded, just download the "Hello World" PDF
-      const doc = new jsPDF();
-      doc.text("Hello World", 10, 10);
       doc.save("report.pdf");
     }
-  };
-
-  // Handles file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setUploadedFile(file);
   };
 
   return (
@@ -76,7 +91,7 @@ const Home: React.FC = () => {
       {projects.map((project) => (
         <div key={project.id}>
           *****Project {project.id}*****
-          <Project allProjects={allProjects} />
+          <Project allProjects={allProjects} onFileUpload={handleFileUpload} />
           <button type="button" onClick={() => removeProject(project.id)}>
             Remove Project
           </button>
@@ -91,12 +106,6 @@ const Home: React.FC = () => {
       <br />
       <br />
       <br />
-
-      {/* File Upload Section */}
-      <div>
-        <input type="file" onChange={handleFileUpload} />
-        {uploadedFile && <p>File Uploaded: {uploadedFile.name}</p>}
-      </div>
 
       {/* Add the Download PDF button */}
       <button type="button" onClick={handleDownloadPDF}>
