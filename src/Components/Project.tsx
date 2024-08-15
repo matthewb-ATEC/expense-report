@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
-import { Expense as ExpenseType } from "../Types";
+import { Expense as ExpenseType } from "../Data/Types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ProjectProps {
@@ -63,10 +63,13 @@ const Project: React.FC<ProjectProps> = ({
   };
 
   return (
-    <>
-      <div>
-        <label htmlFor="projectNumber">Project Number:</label>
+    <div className="flex flex-col space-y-4">
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap" htmlFor="projectNumber">
+          Project Number
+        </label>
         <select
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
           id="projectNumber"
           value={selectedProjectNumber || ""}
           onChange={handleProjectNumberChange}
@@ -80,22 +83,33 @@ const Project: React.FC<ProjectProps> = ({
         </select>
       </div>
 
-      <div>Project Name: {selectedProjectName}</div>
-
+      {selectedProjectName && (
+        <div className="flex justify-between">
+          <div>Project Name </div>
+          <div>{selectedProjectName}</div>
+        </div>
+      )}
       {expenses.map((expense) => (
-        <div key={expense.id}>
+        <div className="flex flex-col space-y-4" key={expense.id}>
           <Expense expense={expense} updateExpense={handleExpenseUpdate} />
-          <div>Expense ID: {expense.id}</div>
-          <button type="button" onClick={() => removeExpense(expense.id)}>
+          <button
+            className="p-2 bg-red-500 text-white font-bold rounded-md"
+            type="button"
+            onClick={() => removeExpense(expense.id)}
+          >
             Remove Expense
           </button>
         </div>
       ))}
 
-      <button type="button" onClick={addExpense}>
+      <button
+        className="p-2 bg-blue-500 text-white font-bold rounded-md"
+        type="button"
+        onClick={addExpense}
+      >
         Add Expense
       </button>
-    </>
+    </div>
   );
 };
 

@@ -36,50 +36,64 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
 
   return (
     <>
-      <label>Purpose:</label>
-      <select
-        id="purpose"
-        value={purpose}
-        onChange={(e) => handleChange("purpose", e.target.value)}
-      >
-        <option value="" disabled>
-          Select a category
-        </option>
-        <option value="Business">Business</option>
-        <option value="Personal">Personal</option>
-      </select>
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap">Purpose</label>
+        <select
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          id="purpose"
+          value={purpose}
+          onChange={(e) => handleChange("purpose", e.target.value)}
+        >
+          <option value="" disabled>
+            Select a category
+          </option>
+          <option value="Business">Business</option>
+          <option value="Personal">Personal</option>
+        </select>
+      </div>
 
-      <label>From:</label>
-      <input
-        type="text"
-        id="from"
-        value={fromLocation}
-        onChange={(e) => handleChange("fromLocation", e.target.value)}
-      />
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap">From</label>
+        <input
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          type="text"
+          id="from"
+          value={fromLocation}
+          onChange={(e) => handleChange("fromLocation", e.target.value)}
+        />
+      </div>
 
-      <label>To:</label>
-      <input
-        type="text"
-        id="to"
-        value={toLocation}
-        onChange={(e) => handleChange("toLocation", e.target.value)}
-      />
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap">To</label>
+        <input
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          type="text"
+          id="to"
+          value={toLocation}
+          onChange={(e) => handleChange("toLocation", e.target.value)}
+        />
+      </div>
 
-      <label>Milage:</label>
-      <input
-        type="number"
-        id="milage"
-        value={milage}
-        onChange={(e) => handleChange("milage", e.target.value)}
-      />
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap">Milage</label>
+        <input
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          type="number"
+          id="milage"
+          value={milage}
+          onChange={(e) => handleChange("milage", e.target.value)}
+        />
+      </div>
 
-      <label>Round Trip</label>
-      <input
-        type="checkbox"
-        id="roundTrip"
-        checked={roundTrip}
-        onChange={(e) => handleChange("roundTrip", e.target.checked)}
-      />
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap">Round Trip</label>
+        <input
+          type="checkbox"
+          id="roundTrip"
+          checked={roundTrip}
+          onChange={(e) => handleChange("roundTrip", e.target.checked)}
+        />
+      </div>
     </>
   );
 };
