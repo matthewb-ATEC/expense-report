@@ -19,7 +19,9 @@ const Project: React.FC<ProjectProps> = ({ allProjects }) => {
 
   // Adds a new default expense to the list of expenses for this project
   const addExpense = () => {
-    const newExpense = { id: expenses[expenses.length - 1].id + 1 }; // Simple ID generation based on length
+    const newExpenseId =
+      expenses.length > 0 ? expenses[expenses.length - 1].id + 1 : 0;
+    const newExpense = { id: newExpenseId };
     setExpenses([...expenses, newExpense]);
   };
 

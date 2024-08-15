@@ -1,5 +1,5 @@
 import Project from "./Project";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
 
 const Home: React.FC = () => {
@@ -8,7 +8,9 @@ const Home: React.FC = () => {
 
   // Adds a new default project to the overall list
   const addProject = () => {
-    const newProject = { id: projects[projects.length - 1].id + 1 }; // Simple ID generation based on length
+    const newProjectId =
+      projects.length > 0 ? projects[projects.length - 1].id + 1 : 0;
+    const newProject = { id: newProjectId };
     setProjects([...projects, newProject]);
   };
 
