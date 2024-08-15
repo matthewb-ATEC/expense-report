@@ -4,9 +4,21 @@ import Expense from "./Expense";
 interface ProjectProps {
   allProjects: { number: number; name: string }[];
   onFileUpload: (projectId: number, expenseId: number, files: File[]) => void;
+  attachments: {
+    id: string;
+    projectId: number;
+    expenseId: number;
+    file: File;
+  }[];
+  onDeleteAttachment: (attachmentId: string) => void;
 }
 
-const Project: React.FC<ProjectProps> = ({ allProjects, onFileUpload }) => {
+const Project: React.FC<ProjectProps> = ({
+  allProjects,
+  onFileUpload,
+  attachments,
+  onDeleteAttachment,
+}) => {
   // State for the selected project number and name
   const [selectedProjectNumber, setSelectedProjectNumber] = useState<
     number | undefined
@@ -67,6 +79,8 @@ const Project: React.FC<ProjectProps> = ({ allProjects, onFileUpload }) => {
             expenseId={expense.id}
             projectId={selectedProjectNumber || 0}
             onFileUpload={onFileUpload}
+            attachments={attachments.filter((a) => a.expenseId === expense.id)}
+            onDeleteAttachment={onDeleteAttachment}
           />
           <button type="button" onClick={() => removeExpense(expense.id)}>
             Remove Expense

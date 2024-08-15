@@ -5,6 +5,7 @@ import { jsPDF } from "jspdf";
 import { PDFDocument } from "pdf-lib";
 
 interface Attachment {
+  id: string;
   projectId: number;
   expenseId: number;
   file: File;
@@ -39,12 +40,22 @@ const Home: React.FC = () => {
     expenseId: number,
     files: File[]
   ) => {
+    console.log(
+      `Uploading files for Project ${projectId}, Expense ${expenseId}`
+    );
     const newAttachments = files.map((file) => ({
+      id: `${projectId}-${expenseId}-${file.name}-${Date.now()}`, // Create a unique ID for each attachment
       projectId,
       expenseId,
       file,
     }));
     setAttachments([...attachments, ...newAttachments]);
+  };
+
+  const handleDeleteAttachment = (attachmentId: string) => {
+    setAttachments(
+      attachments.filter((attachment) => attachment.id !== attachmentId)
+    );
   };
 
   const handleDownloadPDF = async () => {
@@ -91,7 +102,12 @@ const Home: React.FC = () => {
       {projects.map((project) => (
         <div key={project.id}>
           *****Project {project.id}*****
-          <Project allProjects={allProjects} onFileUpload={handleFileUpload} />
+          <Project
+            allProjects={allProjects}
+            onFileUpload={handleFileUpload}
+            attachments={attachments.filter((a) => a.projectId === project.id)}
+            onDeleteAttachment={handleDeleteAttachment}
+          />
           <button type="button" onClick={() => removeProject(project.id)}>
             Remove Project
           </button>
