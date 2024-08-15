@@ -61,11 +61,13 @@ const Project: React.FC<ProjectProps> = ({ allProjects }) => {
 
       {expenses.map((expense) => (
         <div key={expense.id}>
+          --Expense {expense.id}--
           <Expense />
-          <div>{expense.id}</div>
           <button type="button" onClick={() => removeExpense(expense.id)}>
             Remove Expense
           </button>
+          <br />
+          <br />
         </div>
       ))}
 
