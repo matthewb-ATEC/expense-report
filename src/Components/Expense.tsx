@@ -166,7 +166,12 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
         renderCostInput()}
 
       {/* File Upload */}
-      <input type="file" multiple onChange={handleUploadAttachment} />
+      <input
+        type="file"
+        multiple
+        accept=".pdf, .png, .jpg, .jpeg"
+        onChange={handleUploadAttachment}
+      />
 
       {/* List of Attachments */}
       <ul>
