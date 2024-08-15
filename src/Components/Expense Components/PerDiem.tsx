@@ -1,9 +1,28 @@
 import React, { useState } from "react";
 
-const PerDiem: React.FC = () => {
+interface PerDiemProps {
+  onUpdate: (updatedData: {
+    breakfast: string;
+    lunch: string;
+    dinner: string;
+  }) => void;
+}
+
+const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
   const [breakfast, setBreakfast] = useState<string>("0");
   const [lunch, setLunch] = useState<string>("0");
   const [dinner, setDinner] = useState<string>("0");
+
+  const handleChange = (
+    field: "breakfast" | "lunch" | "dinner",
+    value: string
+  ) => {
+    const updatedData = { breakfast, lunch, dinner, [field]: value };
+    if (field === "breakfast") setBreakfast(value);
+    if (field === "lunch") setLunch(value);
+    if (field === "dinner") setDinner(value);
+    onUpdate(updatedData);
+  };
 
   return (
     <>
@@ -12,12 +31,7 @@ const PerDiem: React.FC = () => {
         type="number"
         id="breakfast"
         value={breakfast}
-        onChange={(e) => {
-          const value = parseFloat(e.target.value);
-          if (value >= 0) {
-            setBreakfast(value.toFixed(2)); // Format to two decimal places
-          }
-        }}
+        onChange={(e) => handleChange("breakfast", e.target.value)}
       />
 
       <label>Lunch:</label>
@@ -25,12 +39,7 @@ const PerDiem: React.FC = () => {
         type="number"
         id="lunch"
         value={lunch}
-        onChange={(e) => {
-          const value = parseFloat(e.target.value);
-          if (value >= 0) {
-            setLunch(value.toFixed(2)); // Format to two decimal places
-          }
-        }}
+        onChange={(e) => handleChange("lunch", e.target.value)}
       />
 
       <label>Dinner:</label>
@@ -38,12 +47,7 @@ const PerDiem: React.FC = () => {
         type="number"
         id="dinner"
         value={dinner}
-        onChange={(e) => {
-          const value = parseFloat(e.target.value);
-          if (value >= 0) {
-            setDinner(value.toFixed(2)); // Format to two decimal places
-          }
-        }}
+        onChange={(e) => handleChange("dinner", e.target.value)}
       />
     </>
   );

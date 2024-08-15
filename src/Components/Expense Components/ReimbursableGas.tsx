@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 
-const ReimbursableGas: React.FC = () => {
-  // Reimbursable Gas specific fields
+interface ReimbursableGasProps {
+  onUpdate: (updatedData: { taxable: boolean }) => void;
+}
+
+const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ onUpdate }) => {
   const [taxable, setTaxable] = useState<boolean>(false);
+
+  const handleTaxableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedTaxable = e.target.checked;
+    setTaxable(updatedTaxable);
+    onUpdate({ taxable: updatedTaxable });
+  };
 
   return (
     <>
@@ -11,7 +20,7 @@ const ReimbursableGas: React.FC = () => {
         type="checkbox"
         id="taxable"
         checked={taxable}
-        onChange={(e) => setTaxable(e.target.checked)}
+        onChange={handleTaxableChange}
       />
     </>
   );

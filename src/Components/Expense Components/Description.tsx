@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 
-const Description: React.FC = () => {
+interface DescriptionProps {
+  onUpdate: (updatedData: { description: string }) => void;
+}
+
+const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
   const [description, setDescription] = useState<string>("");
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedDescription = e.target.value;
+    setDescription(updatedDescription);
+    onUpdate({ description: updatedDescription });
+  };
 
   return (
     <>
@@ -10,7 +20,7 @@ const Description: React.FC = () => {
         type="text"
         id="description"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={handleDescriptionChange}
       />
     </>
   );
