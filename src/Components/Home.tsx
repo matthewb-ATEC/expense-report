@@ -31,11 +31,13 @@ const Home: React.FC = () => {
 
       {projects.map((project) => (
         <div key={project.id}>
+          *****Project {project.id}*****
           <Project allProjects={allProjects} />
-
           <button type="button" onClick={() => removeProject(project.id)}>
             Remove Project
           </button>
+          <br />
+          <br />
         </div>
       ))}
 
