@@ -97,6 +97,13 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
     </div>
   );
 
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      onFileUpload();
+    }
+  };
+
   const SelectedComponent = CATEGORY_COMPONENT_MAP[selectedCategory] || null;
 
   return (
@@ -142,6 +149,18 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
         selectedCategory !== "Milage" &&
         selectedCategory !== "Per Diem" &&
         renderCostInput()}
+
+      <input type="file" multiple onChange={handleFileChange} />
+      <ul>
+        {attachments.map((attachment) => (
+          <li key={attachment.id}>
+            {attachment.file.name}
+            <button onClick={() => onDeleteAttachment(attachment.id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </>
   );
 };

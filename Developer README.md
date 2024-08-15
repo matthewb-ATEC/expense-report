@@ -29,6 +29,13 @@ npm --version
 npx --version
 ```
 
+## Install pdf functionality support
+
+```bash
+npm install jspdf
+npm install pdf-lib
+```
+
 ## View the react app locally
 
 Run the following command to view the react app in your browser at localhost:port
