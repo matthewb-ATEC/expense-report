@@ -4,16 +4,17 @@ import { allProjects } from "../Data/projects";
 import { Project as ProjectType } from "../Types";
 import { jsPDF } from "jspdf";
 import { PDFDocument } from "pdf-lib";
+import { v4 as uuidv4 } from "uuid";
 
 const Home: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([
     {
-      id: 0,
+      id: uuidv4(),
       projectNumber: 0,
       projectName: "",
       expenses: [
         {
-          id: 0,
+          id: uuidv4(),
           date: "",
           costCategory: "",
           costCode: "",
@@ -24,16 +25,13 @@ const Home: React.FC = () => {
   ]);
 
   const addProject = () => {
-    const newProjectId =
-      projects.length > 0 ? projects[projects.length - 1].id + 1 : 0;
-
     const newProject: ProjectType = {
-      id: newProjectId,
+      id: uuidv4(),
       projectNumber: 0,
       projectName: "",
       expenses: [
         {
-          id: 0,
+          id: uuidv4(),
           date: "",
           costCategory: "",
           costCode: "",
@@ -45,7 +43,7 @@ const Home: React.FC = () => {
     setProjects([...projects, newProject]);
   };
 
-  const removeProject = (id: number) => {
+  const removeProject = (id: string) => {
     setProjects(projects.filter((project) => project.id !== id));
   };
 
