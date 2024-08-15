@@ -6,7 +6,7 @@ export const costCategories = [
   { category: "Tolls/Parking", costCode: "62-1009-TRV" },
   { category: "Client Entertainment", costCode: "62-1006-MLJ" },
   { category: "Per Diem", costCode: "62-1005-MLJ" },
-  { category: "Job Site Material", costCode: "" },
-  { category: "Milage", costCode: "" },
-  { category: "Other", costCode: "" },
+  { category: "Job Site Material" },
+  { category: "Milage" },
+  { category: "Other" },
 ];
