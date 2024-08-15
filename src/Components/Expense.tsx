@@ -4,7 +4,10 @@ import ReimbursableGas from "./Expense Components/ReimbursableGas";
 import Description from "./Expense Components/Description";
 import PerDiem from "./Expense Components/PerDiem";
 import Milage from "./Expense Components/Milage";
-import { Attachment as AttachmentType, Expense as ExpenseType } from "../Types";
+import {
+  Attachment as AttachmentType,
+  Expense as ExpenseType,
+} from "../Data/Types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ExpenseProps {
@@ -69,12 +72,15 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   };
 
   const renderCostCodeInput = () => (
-    <div>
-      <label htmlFor="costCode">Cost Code:</label>
+    <div className="flex justify-between items-center">
+      <label className="mr-4 text-nowrap" htmlFor="costCode">
+        Cost Code
+      </label>
       {hasDefaultCostCode() ? (
         <div id="costCode">{costCode}</div>
       ) : (
         <input
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
           type="text"
           id="costCode"
           value={costCode}
@@ -87,8 +93,9 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
 
   const renderCostInput = () => (
     <div>
-      <label>Cost:</label>
+      <label className="mr-4">Cost</label>
       <input
+        className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
         type="number"
         id="cost"
         value={cost}
@@ -122,11 +129,14 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const SelectedComponent = CATEGORY_COMPONENT_MAP[selectedCategory] || null;
 
   return (
-    <>
+    <div className="flex flex-col space-y-2">
       {/* Date Picker */}
-      <div>
-        <label htmlFor="date">Date:</label>
+      <div className="flex justify-between items-center">
+        <label className="mr-4" htmlFor="date">
+          Date
+        </label>
         <input
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
           type="date"
           id="date"
           value={selectedDate}
@@ -135,9 +145,12 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       </div>
 
       {/* Cost Category Dropdown */}
-      <div>
-        <label htmlFor="costCategory">Cost Category:</label>
+      <div className="flex justify-between items-center">
+        <label className="mr-4 text-nowrap" htmlFor="costCategory">
+          Cost Category
+        </label>
         <select
+          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
           id="costCategory"
           value={selectedCategory}
           onChange={handleCategoryChange}
@@ -174,17 +187,20 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       />
 
       {/* List of Attachments */}
-      <ul>
+      <div>
         {attachments.map((attachment) => (
-          <li key={attachment.id}>
-            {attachment.file?.name}
-            <button onClick={() => handleDeleteAttachment(attachment.id)}>
+          <div className="flex flex-col justify-between" key={attachment.id}>
+            <div>{attachment.file?.name}</div>
+            <button
+              className="p-2 bg-red-500 text-white font-bold rounded-md"
+              onClick={() => handleDeleteAttachment(attachment.id)}
+            >
               Delete
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
-    </>
+      </div>
+    </div>
   );
 };
 
