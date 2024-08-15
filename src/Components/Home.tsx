@@ -1,27 +1,62 @@
 import Project from "./Project";
 import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
+import { Project as ProjectType } from "../Types";
 
 const Home: React.FC = () => {
-  // List of all projecst created by the user to track expenses
-  const [projects, setProjects] = useState([{ id: 0 }]);
+  const [projects, setProjects] = useState<ProjectType[]>([
+    {
+      id: 0,
+      projectNumber: 0,
+      projectName: "",
+      expenses: [
+        {
+          id: 0,
+          date: "",
+          costCategory: "",
+          costCode: "",
+        },
+      ],
+    },
+  ]);
 
-  // Adds a new default project to the overall list
   const addProject = () => {
     const newProjectId =
       projects.length > 0 ? projects[projects.length - 1].id + 1 : 0;
-    const newProject = { id: newProjectId };
+
+    const newProject: ProjectType = {
+      id: newProjectId,
+      projectNumber: 0,
+      projectName: "",
+      expenses: [
+        {
+          id: 0,
+          date: "",
+          costCategory: "",
+          costCode: "",
+        },
+      ],
+    };
+
     setProjects([...projects, newProject]);
   };
 
-  // Removes the selected project from the overall list
   const removeProject = (id: number) => {
     setProjects(projects.filter((project) => project.id !== id));
   };
 
+  const handleProjectUpdate = (updatedProject: any) => {
+    setProjects(
+      projects.map((project) =>
+        project.id === updatedProject.id ? updatedProject : project
+      )
+    );
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission logic
+    console.log(JSON.stringify(projects));
+    // Send the projects data to the backend or handle it as needed
   };
 
   return (
@@ -33,8 +68,11 @@ const Home: React.FC = () => {
 
       {projects.map((project) => (
         <div key={project.id}>
-          <Project allProjects={allProjects} />
-
+          <Project
+            project={project}
+            allProjects={allProjects}
+            updateProject={handleProjectUpdate}
+          />
           <button type="button" onClick={() => removeProject(project.id)}>
             Remove Project
           </button>
@@ -44,6 +82,8 @@ const Home: React.FC = () => {
       <button type="button" onClick={addProject}>
         Add Project
       </button>
+
+      <button type="submit">Submit</button>
     </form>
   );
 };

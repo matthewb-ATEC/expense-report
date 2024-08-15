@@ -1,11 +1,38 @@
 import React, { useState } from "react";
 
-const Milage: React.FC = () => {
+interface MilageProps {
+  onUpdate: (updatedData: {
+    purpose: string;
+    fromLocation: string;
+    toLocation: string;
+    milage: string;
+    roundTrip: boolean;
+  }) => void;
+}
+
+const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
   const [purpose, setPurpose] = useState<string>("");
   const [fromLocation, setFromLocation] = useState<string>("");
   const [toLocation, setToLocation] = useState<string>("");
   const [milage, setMilage] = useState<string>("0");
   const [roundTrip, setRoundTrip] = useState<boolean>(false);
+
+  const handleChange = (field: string, value: any) => {
+    const updatedData = {
+      purpose,
+      fromLocation,
+      toLocation,
+      milage,
+      roundTrip,
+      [field]: value,
+    };
+    if (field === "purpose") setPurpose(value);
+    if (field === "fromLocation") setFromLocation(value);
+    if (field === "toLocation") setToLocation(value);
+    if (field === "milage") setMilage(value);
+    if (field === "roundTrip") setRoundTrip(value);
+    onUpdate(updatedData);
+  };
 
   return (
     <>
@@ -13,7 +40,7 @@ const Milage: React.FC = () => {
       <select
         id="purpose"
         value={purpose}
-        onChange={(e) => setPurpose(e.target.value)}
+        onChange={(e) => handleChange("purpose", e.target.value)}
       >
         <option value="" disabled>
           Select a category
@@ -27,7 +54,7 @@ const Milage: React.FC = () => {
         type="text"
         id="from"
         value={fromLocation}
-        onChange={(e) => setFromLocation(e.target.value)}
+        onChange={(e) => handleChange("fromLocation", e.target.value)}
       />
 
       <label>To:</label>
@@ -35,7 +62,7 @@ const Milage: React.FC = () => {
         type="text"
         id="to"
         value={toLocation}
-        onChange={(e) => setToLocation(e.target.value)}
+        onChange={(e) => handleChange("toLocation", e.target.value)}
       />
 
       <label>Milage:</label>
@@ -43,12 +70,7 @@ const Milage: React.FC = () => {
         type="number"
         id="milage"
         value={milage}
-        onChange={(e) => {
-          const value = Number(e.target.value);
-          if (value >= 0) {
-            setMilage(value.toString());
-          }
-        }}
+        onChange={(e) => handleChange("milage", e.target.value)}
       />
 
       <label>Round Trip</label>
@@ -56,7 +78,7 @@ const Milage: React.FC = () => {
         type="checkbox"
         id="roundTrip"
         checked={roundTrip}
-        onChange={(e) => setRoundTrip(e.target.checked)}
+        onChange={(e) => handleChange("roundTrip", e.target.checked)}
       />
     </>
   );

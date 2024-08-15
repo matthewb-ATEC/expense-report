@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { costCategories } from "../Data/costCategories";
 import ReimbursableGas from "./Expense Components/ReimbursableGas";
 import Description from "./Expense Components/Description";
 import PerDiem from "./Expense Components/PerDiem";
 import Milage from "./Expense Components/Milage";
+import { Expense as ExpenseType } from "../Types";
 
-interface Expense {
-  // Define any props you expect to pass to this component
+interface ExpenseProps {
+  expense: ExpenseType;
+  updateExpense: (updatedExpense: ExpenseType) => void;
 }
 
-const CATEGORY_COMPONENT_MAP: { [key: string]: React.FC } = {
+const CATEGORY_COMPONENT_MAP: {
+  [key: string]: React.FC<{ onUpdate: (updatedData: any) => void }>;
+} = {
   "Reimbursable Gas": ReimbursableGas,
   "Client Entertainment": Description,
   "Per Diem": PerDiem,
@@ -18,21 +22,39 @@ const CATEGORY_COMPONENT_MAP: { [key: string]: React.FC } = {
   "Job Site Material": Description,
 };
 
-const Expense: React.FC<Expense> = (props) => {
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [costCode, setCostCode] = useState<string>("");
-  const [cost, setCost] = useState<string>("0");
+const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
+  const [selectedDate, setSelectedDate] = useState<string>(expense.date);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    expense.costCategory
+  );
+  const [costCode, setCostCode] = useState<string>(expense.costCode);
+  const [cost, setCost] = useState<string>(expense.cost?.toString() || "0");
+
+  useEffect(() => {
+    updateExpense({
+      ...expense,
+      date: selectedDate,
+      costCategory: selectedCategory,
+      costCode,
+      cost: parseFloat(cost),
+    });
+  }, [selectedDate, selectedCategory, costCode, cost]);
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const category = event.target.value;
     setSelectedCategory(category);
-
     const selectedCostCode =
       costCategories.find((item) => item.category === category)?.costCode || "";
     setCostCode(selectedCostCode);
+  };
+
+  const handleChildUpdate = (updatedData: any) => {
+    updateExpense({
+      ...expense,
+      ...updatedData,
+    });
   };
 
   const hasDefaultCostCode = () => {
@@ -113,7 +135,7 @@ const Expense: React.FC<Expense> = (props) => {
       {selectedCategory && renderCostCodeInput()}
 
       {/* Conditional Rendering for Expense Type */}
-      {SelectedComponent && <SelectedComponent />}
+      {SelectedComponent && <SelectedComponent onUpdate={handleChildUpdate} />}
 
       {/* Conditional Rendering for Cost Input */}
       {selectedCategory &&

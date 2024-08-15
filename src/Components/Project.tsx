@@ -1,44 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
+import { Expense as ExpenseType } from "../Types";
 
 interface ProjectProps {
+  project: any;
   allProjects: { number: number; name: string }[];
+  updateProject: (updatedProject: any) => void;
 }
 
-const Project: React.FC<ProjectProps> = ({ allProjects }) => {
-  // State for the selected project number and name
+const Project: React.FC<ProjectProps> = ({
+  project,
+  allProjects,
+  updateProject,
+}) => {
   const [selectedProjectNumber, setSelectedProjectNumber] = useState<
     number | undefined
-  >();
+  >(project.projectNumber);
   const [selectedProjectName, setSelectedProjectName] = useState<
     string | undefined
-  >();
+  >(project.projectName);
+  const [expenses, setExpenses] = useState<ExpenseType[]>(project.expenses);
 
-  // The list of all expenses created by the user for this project
-  const [expenses, setExpenses] = useState([{ id: 0 }]);
+  useEffect(() => {
+    updateProject({
+      ...project,
+      projectNumber: selectedProjectNumber,
+      projectName: selectedProjectName,
+      expenses,
+    });
+  }, [selectedProjectNumber, selectedProjectName, expenses]);
 
-  // Adds a new default expense to the list of expenses for this project
   const addExpense = () => {
     const newExpenseId =
       expenses.length > 0 ? expenses[expenses.length - 1].id + 1 : 0;
-    const newExpense = { id: newExpenseId };
+    const newExpense: ExpenseType = {
+      id: newExpenseId,
+      date: "",
+      costCategory: "",
+      costCode: "",
+    };
     setExpenses([...expenses, newExpense]);
   };
 
-  // Removes the selected expense from this project
   const removeExpense = (id: number) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
   };
 
-  // Update the project name and notify Home component based on selected project number
   const handleProjectNumberChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const number = Number(event.target.value);
     setSelectedProjectNumber(number);
-
     const project = allProjects.find((project) => project.number === number);
     setSelectedProjectName(project ? project.name : "");
+  };
+
+  const handleExpenseUpdate = (updatedExpense: any) => {
+    setExpenses(
+      expenses.map((expense) =>
+        expense.id === updatedExpense.id ? updatedExpense : expense
+      )
+    );
   };
 
   return (
@@ -63,7 +85,7 @@ const Project: React.FC<ProjectProps> = ({ allProjects }) => {
 
       {expenses.map((expense) => (
         <div key={expense.id}>
-          <Expense />
+          <Expense expense={expense} updateExpense={handleExpenseUpdate} />
           <div>Expense ID: {expense.id}</div>
           <button type="button" onClick={() => removeExpense(expense.id)}>
             Remove Expense
