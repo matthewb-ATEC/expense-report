@@ -1,7 +1,7 @@
 import Project from "./Project";
 import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
-import { Project as ProjectType } from "../Types";
+import { Project as ProjectType } from "../Data/Types";
 import { jsPDF } from "jspdf";
 import { PDFDocument } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
@@ -105,39 +105,71 @@ const Home: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" />
-      </div>
+    <div className="flex h-full justify-center">
+      <div className="flex-col self-center">
+        <form
+          onSubmit={handleSubmit}
+          className="my-24 flex-col bg-white self-center space-y-8 p-8 shadow-md rounded-md"
+        >
+          <div className="flex justify-between items-center">
+            <label className="mr-4" htmlFor="name">
+              Name
+            </label>
+            <input
+              className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+              type="text"
+              id="name"
+              name="name"
+            />
+          </div>
 
-      {projects.map((project) => (
-        <div key={project.id}>
-          <Project
-            project={project}
-            allProjects={allProjects}
-            updateProject={handleProjectUpdate}
-          />
-          <button type="button" onClick={() => removeProject(project.id)}>
-            Remove Project
+          {projects.map((project) => (
+            <div className="flex flex-col space-y-8" key={project.id}>
+              <Project
+                project={project}
+                allProjects={allProjects}
+                updateProject={handleProjectUpdate}
+              />
+              <button
+                className="p-2 bg-red-500 text-white font-bold rounded-md"
+                type="button"
+                onClick={() => removeProject(project.id)}
+              >
+                Remove Project
+              </button>
+            </div>
+          ))}
+
+          <button
+            className="p-2 bg-blue-500 text-white font-bold rounded-md"
+            type="button"
+            onClick={addProject}
+          >
+            Add Project
           </button>
-        </div>
-      ))}
 
-      <button type="button" onClick={addProject}>
-        Add Project
-      </button>
+          <div className="flex space-x-8 justify-center">
+            {/* Download PDF button */}
+            <button
+              className="p-4 bg-blue-500 text-white font-bold rounded-md"
+              type="button"
+              onClick={handleDownloadPDF}
+            >
+              PDF
+            </button>
 
-      {/* Download PDF button */}
-      <button type="button" onClick={handleDownloadPDF}>
-        PDF
-      </button>
-
-      {/* Submit Form */}
-      <button type="button" onClick={handleSubmit}>
-        Submit
-      </button>
-    </form>
+            {/* Submit Form */}
+            <button
+              className="p-4 bg-blue-500 text-white font-bold rounded-md"
+              type="button"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -17,6 +17,7 @@ const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
     <>
       <label>Description:</label>
       <input
+        className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
         type="text"
         id="description"
         value={description}

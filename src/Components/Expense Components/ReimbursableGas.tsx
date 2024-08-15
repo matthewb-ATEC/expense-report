@@ -15,7 +15,7 @@ const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ onUpdate }) => {
 
   return (
     <>
-      <label>Taxable:</label>
+      <label className="mr-4 text-nowrap">Taxable</label>
       <input
         type="checkbox"
         id="taxable"
