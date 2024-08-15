@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
 import { Expense as ExpenseType } from "../Types";
+import { v4 as uuidv4 } from "uuid";
 
 interface ProjectProps {
   project: any;
@@ -31,10 +32,8 @@ const Project: React.FC<ProjectProps> = ({
   }, [selectedProjectNumber, selectedProjectName, expenses]);
 
   const addExpense = () => {
-    const newExpenseId =
-      expenses.length > 0 ? expenses[expenses.length - 1].id + 1 : 0;
     const newExpense: ExpenseType = {
-      id: newExpenseId,
+      id: uuidv4(),
       date: "",
       costCategory: "",
       costCode: "",
@@ -42,7 +41,7 @@ const Project: React.FC<ProjectProps> = ({
     setExpenses([...expenses, newExpense]);
   };
 
-  const removeExpense = (id: number) => {
+  const removeExpense = (id: string) => {
     setExpenses(expenses.filter((expense) => expense.id !== id));
   };
 

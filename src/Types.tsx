@@ -1,14 +1,12 @@
-import { UUID } from "crypto";
-
 export interface Project {
-  id: number;
+  id: string;
   projectNumber: number;
   projectName: string;
   expenses: Expense[];
 }
 
 export interface Expense {
-  id: number;
+  id: string;
   date: string;
   costCategory: string;
   costCode: string;
