@@ -3,9 +3,10 @@ import Expense from "./Expense";
 
 interface ProjectProps {
   allProjects: { number: number; name: string }[];
+  onFileUpload: (projectId: number, expenseId: number, files: File[]) => void;
 }
 
-const Project: React.FC<ProjectProps> = ({ allProjects }) => {
+const Project: React.FC<ProjectProps> = ({ allProjects, onFileUpload }) => {
   // State for the selected project number and name
   const [selectedProjectNumber, setSelectedProjectNumber] = useState<
     number | undefined
@@ -62,7 +63,11 @@ const Project: React.FC<ProjectProps> = ({ allProjects }) => {
       {expenses.map((expense) => (
         <div key={expense.id}>
           --Expense {expense.id}--
-          <Expense />
+          <Expense
+            expenseId={expense.id}
+            projectId={selectedProjectNumber || 0}
+            onFileUpload={onFileUpload}
+          />
           <button type="button" onClick={() => removeExpense(expense.id)}>
             Remove Expense
           </button>
