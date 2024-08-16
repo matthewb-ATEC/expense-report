@@ -1,3 +1,7 @@
+// Administration Parameters
+export const mileageRate = 0.66;
+// TODO: per diem caps
+
 export const total = { value: 0 };
 export const totalTaxed = { value: 0 };
 export const totalUntaxed = { value: 0 };
