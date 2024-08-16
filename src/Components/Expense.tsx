@@ -74,19 +74,19 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const renderCostCodeInput = () => (
     <>
       {hasDefaultCostCode() ? (
-        <div className="flex justify-between items-center">
+        <div className="bg-red-500 flex justify-between items-center">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
             Cost Code
           </label>
           <div id="costCode">{costCode}</div>
         </div>
       ) : (
-        <div className="flex-col space-y-2 items-start w-full">
+        <div className="flex flex-col space-y-2 items-start">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
             Cost Code
           </label>
           <input
-            className="p-2 w-full border-grey-300 border-b-2"
+            className="p-2 border-grey-300 border-b-2"
             type="text"
             id="costCode"
             value={costCode}
@@ -99,10 +99,10 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   );
 
   const renderCostInput = () => (
-    <div className="flex-col w-full items-start space-y-2">
+    <div className="flex flex-col items-start space-y-2">
       <label className="text-gray-600">Cost</label>
       <input
-        className="p-2 w-full border-grey-300 border-b-2"
+        className="p-2 border-grey-300 border-b-2"
         type="number"
         id="cost"
         value={cost}
@@ -136,55 +136,58 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const SelectedComponent = CATEGORY_COMPONENT_MAP[selectedCategory] || null;
 
   return (
-    <div className="w-full flex flex-col space-y-4">
-      {/* Date Picker */}
-      <div className="flex-col w-full items-start space-y-2">
-        <label className="text-gray-600" htmlFor="date">
-          Date
-        </label>
-        <input
-          className="p-2 w-full border-grey-300 border-b-2"
-          type="date"
-          id="date"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
-      </div>
+    <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4">
+        {/* Date Picker */}
+        <div className="flex flex-col items-start space-y-2">
+          <label className="text-gray-600" htmlFor="date">
+            Date
+          </label>
+          <input
+            className="p-2 w-full border-grey-300 border-b-2"
+            type="date"
+            id="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
 
-      {/* Cost Category Dropdown */}
-      <div className="flex-col w-full items-start space-y-2">
-        <label className="text-gray-600 text-nowrap" htmlFor="costCategory">
-          Cost Category
-        </label>
-        <select
-          className="p-2 w-full border-grey-300 border-b-2"
-          id="costCategory"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-        >
-          <option value="" disabled>
-            Select a category
-          </option>
-          {costCategories.map((costCategory, index) => (
-            <option key={index} value={costCategory.category}>
-              {costCategory.category}
+        {/* Cost Category Dropdown */}
+        <div className="flex flex-col items-start space-y-2">
+          <label className="text-gray-600 text-nowrap" htmlFor="costCategory">
+            Cost Category
+          </label>
+          <select
+            className="p-2 w-full border-grey-300 border-b-2"
+            id="costCategory"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="" disabled>
+              Select a category
             </option>
-          ))}
-        </select>
+            {costCategories.map((costCategory, index) => (
+              <option key={index} value={costCategory.category}>
+                {costCategory.category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Conditional Rendering for Cost Code */}
+        {selectedCategory && renderCostCodeInput()}
+
+        {/* Conditional Rendering for Expense Type */}
+        {SelectedComponent && (
+          <SelectedComponent onUpdate={handleChildUpdate} />
+        )}
+
+        {/* Conditional Rendering for Cost Input */}
+        {selectedCategory &&
+          selectedCategory !== "Milage" &&
+          selectedCategory !== "Per Diem" &&
+          renderCostInput()}
       </div>
-
-      {/* Conditional Rendering for Cost Code */}
-      {selectedCategory && renderCostCodeInput()}
-
-      {/* Conditional Rendering for Expense Type */}
-      {SelectedComponent && <SelectedComponent onUpdate={handleChildUpdate} />}
-
-      {/* Conditional Rendering for Cost Input */}
-      {selectedCategory &&
-        selectedCategory !== "Milage" &&
-        selectedCategory !== "Per Diem" &&
-        renderCostInput()}
-
       {/* File Upload */}
       <input
         type="file"

@@ -14,7 +14,7 @@ const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
   };
 
   return (
-    <div className="flex-col w-full items-start space-y-2">
+    <div className="flex flex-col w-full items-start space-y-2">
       <label className="text-gray-600">Description</label>
       <input
         className="p-2 w-full border-grey-300 border-b-2"
