@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
 import { Project as ProjectType } from "../Data/Types";
 import { jsPDF } from "jspdf";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
+import { total, totalTaxed, totalUntaxed, breakdown } from "../Data/results";
 
 const Home: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([
@@ -57,8 +58,32 @@ const Home: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    // calculate(projects); // for the refactor into Calculations.tsx
     console.log(JSON.stringify(projects));
-    // Send the projects data to the backend or handle it as needed
+    console.log(projects);
+    total.value = 0;
+    totalTaxed.value = 0;
+    totalUntaxed.value = 0;
+    breakdown.forEach((item) => {
+      item.sum = 0;
+    });
+
+    for (let p = 0; p < projects.length; p++) {
+      for (let e = 0; e < projects[p].expenses.length; e++) {
+        // cost calculations
+        let cost = projects[p].expenses[e].cost;
+        if (cost !== null && typeof cost === "number" && cost >= 0) {
+          total.value += cost;
+        } else {
+          console.log("invalid cost returned");
+        }
+      }
+    }
+
+    console.log("total: ", total.value);
+    console.log("total taxed: ", totalTaxed.value);
+    console.log("total untaxed: ", totalUntaxed.value);
+    console.log(breakdown);
   };
 
   // Utility function to create a PDF from an image file
@@ -138,26 +163,59 @@ const Home: React.FC = () => {
           const fileBytes = await attachment.file.arrayBuffer();
           const fileType = attachment.file.type;
 
-          let pdfBytes: Uint8Array;
+          let uploadedPdfDoc;
 
           if (fileType === "application/pdf") {
-            // If the file is a PDF, merge it into the main document
-            const uploadedPdfDoc = await PDFDocument.load(fileBytes);
-            const copiedPages = await pdfDoc.copyPages(
-              uploadedPdfDoc,
-              uploadedPdfDoc.getPageIndices()
-            );
-            copiedPages.forEach((page) => pdfDoc.addPage(page));
+            // If the file is a PDF, load it directly
+            uploadedPdfDoc = await PDFDocument.load(fileBytes);
           } else {
-            // Convert the file to PDF format
-            pdfBytes = await convertFileToPdf(attachment.file);
-            const convertedPdfDoc = await PDFDocument.load(pdfBytes);
-            const copiedPages = await pdfDoc.copyPages(
-              convertedPdfDoc,
-              convertedPdfDoc.getPageIndices()
-            );
-            copiedPages.forEach((page) => pdfDoc.addPage(page));
+            // Convert non-PDF files to PDF format
+            const pdfBytes = await convertFileToPdf(attachment.file);
+            uploadedPdfDoc = await PDFDocument.load(pdfBytes);
           }
+
+          // Copy pages from the attachment PDF to the main PDF document
+          const copiedPages = await pdfDoc.copyPages(
+            uploadedPdfDoc,
+            uploadedPdfDoc.getPageIndices()
+          );
+
+          const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+          copiedPages.forEach((page, pageIndex) => {
+            pdfDoc.addPage(page);
+
+            // Add a "post-it note" annotation to the page
+            const noteText = `Note`;
+            const { width, height } = page.getSize();
+            const textSize = 12;
+            const padding = 5;
+
+            // Measure the width of the text
+            const textWidth = font.widthOfTextAtSize(noteText, textSize);
+            const textHeight = textSize;
+
+            const boxX = 25;
+            const boxY = height - 25;
+
+            // Draw semi-transparent background rectangle
+            page.drawRectangle({
+              x: boxX - padding,
+              y: boxY - padding,
+              width: textWidth + padding * 2,
+              height: textHeight + padding * 2,
+              color: rgb(0, 0, 0),
+              opacity: 0.5, // 50% opacity for the background
+            });
+
+            page.drawText(noteText, {
+              x: 25,
+              y: height - 25,
+              size: textSize,
+              color: rgb(1, 1, 1), // White color for visibility
+              rotate: degrees(0), // Rotation
+            });
+          });
         } catch (error) {
           console.error("Error processing attachment:", error);
         }
@@ -172,7 +230,7 @@ const Home: React.FC = () => {
     // Create a link element and trigger a download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "combined_attachments.pdf";
+    link.download = "combined_attachments_with_notes.pdf";
     link.click();
   };
 
