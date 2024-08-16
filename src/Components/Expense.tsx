@@ -72,30 +72,37 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   };
 
   const renderCostCodeInput = () => (
-    <div className="flex justify-between items-center">
-      <label className="mr-4 text-nowrap" htmlFor="costCode">
-        Cost Code
-      </label>
+    <>
       {hasDefaultCostCode() ? (
-        <div id="costCode">{costCode}</div>
+        <div className="flex justify-between items-center">
+          <label className="text-gray-600 text-nowrap" htmlFor="costCode">
+            Cost Code
+          </label>
+          <div id="costCode">{costCode}</div>
+        </div>
       ) : (
-        <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
-          type="text"
-          id="costCode"
-          value={costCode}
-          onChange={(e) => setCostCode(e.target.value)}
-          placeholder="Enter cost code"
-        />
+        <div className="flex-col space-y-2 items-start w-full">
+          <label className="text-gray-600 text-nowrap" htmlFor="costCode">
+            Cost Code
+          </label>
+          <input
+            className="p-2 w-full border-grey-300 border-b-2"
+            type="text"
+            id="costCode"
+            value={costCode}
+            onChange={(e) => setCostCode(e.target.value)}
+            placeholder="Enter cost code"
+          />
+        </div>
       )}
-    </div>
+    </>
   );
 
   const renderCostInput = () => (
-    <div>
-      <label className="mr-4">Cost</label>
+    <div className="flex-col w-full items-start space-y-2">
+      <label className="text-gray-600">Cost</label>
       <input
-        className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+        className="p-2 w-full border-grey-300 border-b-2"
         type="number"
         id="cost"
         value={cost}
@@ -129,14 +136,14 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const SelectedComponent = CATEGORY_COMPONENT_MAP[selectedCategory] || null;
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="w-full flex flex-col space-y-4">
       {/* Date Picker */}
-      <div className="flex justify-between items-center">
-        <label className="mr-4" htmlFor="date">
+      <div className="flex-col w-full items-start space-y-2">
+        <label className="text-gray-600" htmlFor="date">
           Date
         </label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="date"
           id="date"
           value={selectedDate}
@@ -145,12 +152,12 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       </div>
 
       {/* Cost Category Dropdown */}
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap" htmlFor="costCategory">
+      <div className="flex-col w-full items-start space-y-2">
+        <label className="text-gray-600 text-nowrap" htmlFor="costCategory">
           Cost Category
         </label>
         <select
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           id="costCategory"
           value={selectedCategory}
           onChange={handleCategoryChange}
@@ -189,10 +196,13 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       {/* List of Attachments */}
       <div>
         {attachments.map((attachment) => (
-          <div className="flex flex-col justify-between" key={attachment.id}>
+          <div
+            className="flex justify-between items-center"
+            key={attachment.id}
+          >
             <div>{attachment.file?.name}</div>
             <button
-              className="p-2 bg-red-500 text-white font-bold rounded-md"
+              className="p-2 text-red-500 font-bold"
               onClick={() => handleDeleteAttachment(attachment.id)}
             >
               Delete
