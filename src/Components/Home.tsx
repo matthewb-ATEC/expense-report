@@ -5,7 +5,14 @@ import { Project as ProjectType } from "../Data/Types";
 import { jsPDF } from "jspdf";
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
-import { total, totalTaxed, totalUntaxed, breakdown } from "../Data/results";
+import {
+  total,
+  totalTaxed,
+  totalUntaxed,
+  breakdown,
+  summaries,
+  mileageRate,
+} from "../Data/results";
 
 const Home: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([
@@ -70,13 +77,76 @@ const Home: React.FC = () => {
 
     for (let p = 0; p < projects.length; p++) {
       for (let e = 0; e < projects[p].expenses.length; e++) {
-        // cost calculations
-        let cost = projects[p].expenses[e].cost;
-        if (cost !== null && typeof cost === "number" && cost >= 0) {
-          total.value += cost;
+        let expense = projects[p].expenses[e];
+        if (expense.costCategory === "Milage") {
+          console.log(expense.mileage, typeof expense.mileage);
+          if (
+            expense.mileage !== null &&
+            typeof expense.mileage === "number" &&
+            expense.mileage >= 0
+          ) {
+            total.value += Number(expense.mileage) * mileageRate;
+            totalTaxed.value += Number(expense.mileage) * mileageRate;
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.mileage) * mileageRate;
+            }
+          }
+        } else if (expense.costCategory === "Per Diem") {
+          if (expense.breakfast !== null) {
+            total.value += Number(expense.breakfast);
+            totalTaxed.value += Number(expense.breakfast);
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.breakfast);
+            }
+          }
+          if (expense.lunch !== null) {
+            total.value += Number(expense.lunch);
+            totalTaxed.value += Number(expense.lunch);
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.lunch);
+            }
+          }
+          if (expense.dinner !== null) {
+            total.value += Number(expense.dinner);
+            totalTaxed.value += Number(expense.dinner);
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.dinner);
+            }
+          }
         } else {
-          console.log("invalid cost returned");
+          if (
+            expense.cost !== null &&
+            typeof expense.cost === "number" &&
+            expense.cost >= 0
+          ) {
+            total.value += expense.cost;
+            if (expense.costCategory === "Reimbursable Gas") {
+              totalUntaxed.value += expense.cost;
+            } else {
+              totalTaxed.value += expense.cost;
+            }
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.cost);
+            }
+          }
         }
+
+        // update breakdown
       }
     }
 

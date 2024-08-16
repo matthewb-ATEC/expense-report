@@ -5,7 +5,14 @@ import { Project as ProjectType } from "../Data/Types";
 import { jsPDF } from "jspdf";
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
-import { total, totalTaxed, totalUntaxed, breakdown } from "../Data/results";
+import {
+  total,
+  totalTaxed,
+  totalUntaxed,
+  breakdown,
+  summaries,
+  mileageRate,
+} from "../Data/results";
 
 /*
 export const calculate = (projects: Container) => {
