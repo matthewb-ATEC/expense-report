@@ -36,7 +36,7 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
 
   return (
     <>
-      <div className="flex-col w-full items-start space-y-2">
+      <div className="flex flex-col w-full items-start space-y-2">
         <label>Purpose</label>
         <select
           className="p-2 w-full border-grey-300 border-b-2"
@@ -52,7 +52,7 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
         </select>
       </div>
 
-      <div className="flex-col w-full items-start space-y-2">
+      <div className="flex flex-col w-full items-start space-y-2">
         <label>From</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
@@ -63,7 +63,7 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex-col w-full items-start space-y-2">
+      <div className="flex flex-col w-full items-start space-y-2">
         <label>To</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
@@ -74,7 +74,7 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex-col w-full items-start space-y-2">
+      <div className="flex flex-col w-full items-start space-y-2">
         <label>Milage</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"

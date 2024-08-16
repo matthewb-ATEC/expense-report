@@ -63,9 +63,9 @@ const Project: React.FC<ProjectProps> = ({
   };
 
   return (
-    <div className="w-full flex-col">
-      <div className="flex-col space-y-4">
-        <div className="flex-col w-full items-start space-y-2">
+    <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-4">
+        <div className="flex flex-col items-start space-y-2">
           <label className="text-gray-600 text-nowrap" htmlFor="projectNumber">
             Project Number
           </label>
