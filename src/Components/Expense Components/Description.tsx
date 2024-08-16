@@ -14,16 +14,16 @@ const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
   };
 
   return (
-    <>
-      <label>Description:</label>
+    <div className="flex-col w-full items-start space-y-2">
+      <label className="text-gray-600">Description</label>
       <input
-        className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+        className="p-2 w-full border-grey-300 border-b-2"
         type="text"
         id="description"
         value={description}
         onChange={handleDescriptionChange}
       />
-    </>
+    </div>
   );
 };
 
