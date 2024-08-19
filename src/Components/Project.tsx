@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 interface ProjectProps {
   project: any;
-  allProjects: { number: number; name: string }[];
+  allProjects: { number: string }[];
   updateProject: (updatedProject: any) => void;
 }
 
@@ -15,21 +15,17 @@ const Project: React.FC<ProjectProps> = ({
   updateProject,
 }) => {
   const [selectedProjectNumber, setSelectedProjectNumber] = useState<
-    number | undefined
-  >(project.projectNumber);
-  const [selectedProjectName, setSelectedProjectName] = useState<
     string | undefined
-  >(project.projectName);
+  >(project.projectNumber);
   const [expenses, setExpenses] = useState<ExpenseType[]>(project.expenses);
 
   useEffect(() => {
     updateProject({
       ...project,
       projectNumber: selectedProjectNumber,
-      projectName: selectedProjectName,
       expenses,
     });
-  }, [selectedProjectNumber, selectedProjectName, expenses]);
+  }, [selectedProjectNumber, expenses]);
 
   const addExpense = () => {
     const newExpense: ExpenseType = {
@@ -48,10 +44,8 @@ const Project: React.FC<ProjectProps> = ({
   const handleProjectNumberChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const number = Number(event.target.value);
+    const number = event.target.value;
     setSelectedProjectNumber(number);
-    const project = allProjects.find((project) => project.number === number);
-    setSelectedProjectName(project ? project.name : "");
   };
 
   const handleExpenseUpdate = (updatedExpense: any) => {
@@ -67,7 +61,7 @@ const Project: React.FC<ProjectProps> = ({
       <div className="flex flex-col space-y-4">
         <div className="flex flex-col items-start space-y-2">
           <label className="text-gray-600 text-nowrap" htmlFor="projectNumber">
-            Project Number
+            Project
           </label>
           <select
             className="p-2 w-full border-grey-300 border-b-2"
@@ -83,13 +77,6 @@ const Project: React.FC<ProjectProps> = ({
             ))}
           </select>
         </div>
-
-        {selectedProjectName && (
-          <div className="flex justify-between">
-            <label className="text-gray-600 text-nowrap">Project Name </label>
-            <div>{selectedProjectName}</div>
-          </div>
-        )}
 
         {expenses.map((expense) => (
           <div className="flex space-x-4 items-start" key={expense.id}>

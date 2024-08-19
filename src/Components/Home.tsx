@@ -15,28 +15,12 @@ import {
 } from "../Data/results";
 
 const Home: React.FC = () => {
-  const [projects, setProjects] = useState<ProjectType[]>([
-    {
-      id: uuidv4(),
-      projectNumber: 0,
-      projectName: "",
-      expenses: [
-        {
-          id: uuidv4(),
-          date: "",
-          costCategory: "",
-          costCode: "",
-          attachments: [],
-        },
-      ],
-    },
-  ]);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
 
   const addProject = () => {
     const newProject: ProjectType = {
       id: uuidv4(),
-      projectNumber: 0,
-      projectName: "",
+      projectNumber: "",
       expenses: [
         {
           id: uuidv4(),
