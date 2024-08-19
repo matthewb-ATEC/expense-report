@@ -1,7 +1,6 @@
 export interface Project {
   id: string;
-  projectNumber: number;
-  projectName: string;
+  projectNumber: string;
   expenses: Expense[];
 }
 
