@@ -301,70 +301,64 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full justify-center">
-      <div className="flex-col self-center">
-        <form
-          onSubmit={handleSubmit}
-          className="my-24 flex-col bg-white self-center space-y-8 p-8 shadow-md rounded-md"
-        >
-          <div className="flex justify-between items-center">
-            <label className="mr-4" htmlFor="name">
-              Name
+    <div className="flex p-8 bg-gray-100 justify-center items-center">
+      <form className="flex flex-col self-center space-y-8">
+        <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-sm">
+          <div className="flex flex-col w-full items-start space-y-2">
+            <label className="text-gray-600" htmlFor="name">
+              Full Name
             </label>
             <input
-              className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+              className="p-2 w-full border-grey-300 border-b-2"
               type="text"
               id="name"
               name="name"
             />
           </div>
+        </div>
 
-          {projects.map((project) => (
-            <div className="flex flex-col space-y-8" key={project.id}>
-              <Project
-                project={project}
-                allProjects={allProjects}
-                updateProject={handleProjectUpdate}
-              />
-              <button
-                className="p-2 bg-red-500 text-white font-bold rounded-md"
-                type="button"
-                onClick={() => removeProject(project.id)}
-              >
-                Remove Project
-              </button>
-            </div>
-          ))}
-
-          <button
-            className="p-2 bg-blue-500 text-white font-bold rounded-md"
-            type="button"
-            onClick={addProject}
+        {projects.map((project) => (
+          <div
+            className="flex space-x-8 items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md"
+            key={project.id}
           >
-            Add Project
-          </button>
-
-          <div className="flex space-x-8 justify-center">
-            {/* Download PDF button */}
+            <Project
+              project={project}
+              allProjects={allProjects}
+              updateProject={handleProjectUpdate}
+            />
             <button
-              className="p-4 bg-blue-500 text-white font-bold rounded-md"
+              className="text-red-500 font-bold text-nowrap"
               type="button"
-              onClick={handleDownloadPDF}
+              onClick={() => removeProject(project.id)}
             >
-              PDF
-            </button>
-
-            {/* Submit Form */}
-            <button
-              className="p-4 bg-blue-500 text-white font-bold rounded-md"
-              type="button"
-              onClick={handleSubmit}
-            >
-              Submit
+              Remove Project
             </button>
           </div>
-        </form>
-      </div>
+        ))}
+
+        <button
+          className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
+          type="button"
+          onClick={addProject}
+        >
+          Add Project
+        </button>
+
+        <div className="flex space-x-8 justify-center">
+          {/* Download PDF button */}
+          <button
+            className="p-4 bg-ATECblue shadow-md text-white font-bold rounded-md"
+            type="button"
+            onClick={(event) => {
+              handleSubmit(event); // Call handleSubmit to handle form submission
+              handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
+            }}
+          >
+            Generate Report
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

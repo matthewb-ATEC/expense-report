@@ -36,10 +36,10 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Purpose</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label>Purpose</label>
         <select
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           id="purpose"
           value={purpose}
           onChange={(e) => handleChange("purpose", e.target.value)}
@@ -52,10 +52,10 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         </select>
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">From</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label>From</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="from"
           value={fromLocation}
@@ -63,10 +63,10 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">To</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label>To</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="to"
           value={toLocation}
@@ -74,10 +74,10 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Mileage</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label>Mileage</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="mileage"
           value={mileage}
@@ -85,8 +85,8 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Round Trip</label>
+      <div className="flex w-full items-center justify-between">
+        <label className="text-gray-600 text-nowrap">Round Trip</label>
         <input
           type="checkbox"
           id="roundTrip"
