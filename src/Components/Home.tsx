@@ -78,13 +78,9 @@ const Home: React.FC = () => {
     for (let p = 0; p < projects.length; p++) {
       for (let e = 0; e < projects[p].expenses.length; e++) {
         let expense = projects[p].expenses[e];
-        if (expense.costCategory === "Milage") {
-          console.log(expense.mileage, typeof expense.mileage);
-          if (
-            expense.mileage !== null &&
-            typeof expense.mileage === "number" &&
-            expense.mileage >= 0
-          ) {
+        if (expense.costCategory === "Mileage") {
+          console.log("mileage", expense.mileage, typeof expense.mileage);
+          if (expense.mileage !== null) {
             total.value += Number(expense.mileage) * mileageRate;
             totalTaxed.value += Number(expense.mileage) * mileageRate;
             const exp = breakdown.find(

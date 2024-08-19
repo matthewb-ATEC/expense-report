@@ -3,7 +3,7 @@ import { costCategories } from "../Data/costCategories";
 import ReimbursableGas from "./Expense Components/ReimbursableGas";
 import Description from "./Expense Components/Description";
 import PerDiem from "./Expense Components/PerDiem";
-import Milage from "./Expense Components/Milage";
+import Mileage from "./Expense Components/Mileage";
 import {
   Attachment as AttachmentType,
   Expense as ExpenseType,
@@ -21,7 +21,7 @@ const CATEGORY_COMPONENT_MAP: {
   "Reimbursable Gas": ReimbursableGas,
   "Client Entertainment": Description,
   "Per Diem": PerDiem,
-  Milage: Milage,
+  Mileage: Mileage,
   Other: Description,
   "Job Site Material": Description,
 };
@@ -174,7 +174,7 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
 
       {/* Conditional Rendering for Cost Input */}
       {selectedCategory &&
-        selectedCategory !== "Milage" &&
+        selectedCategory !== "Mileage" &&
         selectedCategory !== "Per Diem" &&
         renderCostInput()}
 

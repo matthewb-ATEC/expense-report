@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 
-interface MilageProps {
+interface MileageProps {
   onUpdate: (updatedData: {
     purpose: string;
     fromLocation: string;
     toLocation: string;
-    milage: string;
+    mileage: number;
     roundTrip: boolean;
   }) => void;
 }
 
-const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
+const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
   const [purpose, setPurpose] = useState<string>("");
   const [fromLocation, setFromLocation] = useState<string>("");
   const [toLocation, setToLocation] = useState<string>("");
-  const [milage, setMilage] = useState<string>("0");
+  const [mileage, setMileage] = useState<number>(0);
   const [roundTrip, setRoundTrip] = useState<boolean>(false);
 
   const handleChange = (field: string, value: any) => {
@@ -22,14 +22,14 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
       purpose,
       fromLocation,
       toLocation,
-      milage,
+      mileage,
       roundTrip,
       [field]: value,
     };
     if (field === "purpose") setPurpose(value);
     if (field === "fromLocation") setFromLocation(value);
     if (field === "toLocation") setToLocation(value);
-    if (field === "milage") setMilage(value);
+    if (field === "mileage") setMileage(value);
     if (field === "roundTrip") setRoundTrip(value);
     onUpdate(updatedData);
   };
@@ -75,13 +75,13 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Milage</label>
+        <label className="mr-4 text-nowrap">Mileage</label>
         <input
           className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
           type="number"
-          id="milage"
-          value={milage}
-          onChange={(e) => handleChange("milage", e.target.value)}
+          id="mileage"
+          value={mileage}
+          onChange={(e) => handleChange("mileage", e.target.value)}
         />
       </div>
 
@@ -98,4 +98,4 @@ const Milage: React.FC<MilageProps> = ({ onUpdate }) => {
   );
 };
 
-export default Milage;
+export default Mileage;

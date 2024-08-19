@@ -7,6 +7,6 @@ export const costCategories = [
   { category: "Client Entertainment", costCode: "62-1006-MLJ" },
   { category: "Per Diem", costCode: "62-1005-MLJ" },
   { category: "Job Site Material" },
-  { category: "Milage" },
+  { category: "Mileage" },
   { category: "Other" },
 ];
