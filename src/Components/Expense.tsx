@@ -74,7 +74,7 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const renderCostCodeInput = () => (
     <>
       {hasDefaultCostCode() ? (
-        <div className="bg-red-500 flex justify-between items-center">
+        <div className=" flex justify-between items-center">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
             Cost Code
           </label>
