@@ -17,15 +17,19 @@ const Project: React.FC<ProjectProps> = ({
   const [selectedProjectNumber, setSelectedProjectNumber] = useState<
     string | undefined
   >(project.projectNumber);
+  const [projectDescription, setProjectDescription] = useState<
+    string | undefined
+  >(project.projectDescription);
   const [expenses, setExpenses] = useState<ExpenseType[]>(project.expenses);
 
   useEffect(() => {
     updateProject({
       ...project,
       projectNumber: selectedProjectNumber,
+      projectDescription: projectDescription,
       expenses,
     });
-  }, [selectedProjectNumber, expenses]);
+  }, [selectedProjectNumber, projectDescription, expenses]);
 
   const addExpense = () => {
     const newExpense: ExpenseType = {
@@ -46,6 +50,14 @@ const Project: React.FC<ProjectProps> = ({
   ) => {
     const number = event.target.value;
     setSelectedProjectNumber(number);
+  };
+
+  const handleProjectDescriptionChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedProjectDescription = e.target.value;
+    setProjectDescription(updatedProjectDescription);
+    updateProject(updatedProjectDescription);
   };
 
   const handleExpenseUpdate = (updatedExpense: any) => {
@@ -75,7 +87,25 @@ const Project: React.FC<ProjectProps> = ({
                 {project.number}
               </option>
             ))}
+            <option value="Other">Other</option>
           </select>
+
+          {selectedProjectNumber == "Other" && (
+            <>
+              <label
+                className="text-gray-600 text-nowrap"
+                htmlFor="projectDescription"
+              >
+                Project Description
+              </label>
+              <input
+                className="p-2 w-full border-grey-300 border-b-2"
+                id="projectDescription"
+                value={projectDescription || ""}
+                onChange={handleProjectDescriptionChange}
+              />
+            </>
+          )}
         </div>
 
         {expenses.map((expense) => (

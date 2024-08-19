@@ -21,6 +21,7 @@ const Home: React.FC = () => {
     const newProject: ProjectType = {
       id: uuidv4(),
       projectNumber: "",
+      projectDescription: "",
       expenses: [
         {
           id: uuidv4(),
