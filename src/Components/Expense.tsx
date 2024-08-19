@@ -15,12 +15,13 @@ interface ExpenseProps {
   updateExpense: (updatedExpense: ExpenseType) => void;
 }
 
+// The following dictionary connect the string parameter to its corresponding component, based on the selectedCategory. The keys are strings, and the strings with spaces require double quotes
 const CATEGORY_COMPONENT_MAP: {
   [key: string]: React.FC<{ onUpdate: (updatedData: any) => void }>;
 } = {
-  "Reimbursable Gas": ReimbursableGas,
-  "Client Entertainment": Description,
-  "Per Diem": PerDiem,
+  "62-1011-TRV - Reimbursable Gas": ReimbursableGas,
+  "62-1006-MLJ - Client Entertainment": Description,
+  "62-1005-MLJ - Per Diem": PerDiem,
   Mileage: Mileage,
   Other: Description,
   "Job Site Material": Description,
