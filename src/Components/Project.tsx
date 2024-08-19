@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
-import { Expense as ExpenseType } from "../Data/Types";
+import { Expense as ExpenseType } from "../Data/types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ProjectProps {

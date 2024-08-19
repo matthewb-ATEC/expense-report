@@ -7,7 +7,7 @@ import Mileage from "./Expense Components/Mileage";
 import {
   Attachment as AttachmentType,
   Expense as ExpenseType,
-} from "../Data/Types";
+} from "../Data/types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ExpenseProps {
