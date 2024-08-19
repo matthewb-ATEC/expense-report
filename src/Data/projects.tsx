@@ -1,6 +1,6 @@
 export const allProjects = [
-  { number: 1, name: "Project A" },
-  { number: 2, name: "Project B" },
-  { number: 3, name: "Project C" },
-  { number: 4, name: "Project D" },
+  { number: 23016, name: "Jacobs FDBU DSM-1 Construction" },
+  { number: 25010, name: "CRB AstraZeneca 9950 MCD" },
+  { number: 25014, name: "CRB-BioBloom Design" },
+  { number: 25015, name: "Messer Lilly LP2" },
 ];

@@ -25,11 +25,11 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Breakfast</label>
+    <div className="flex flex-col space-y-4">
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label className="text-gray-600">Breakfast</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="breakfast"
           value={breakfast}
@@ -37,10 +37,10 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap">Lunch</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label className="text-gray-600">Lunch</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="lunch"
           value={lunch}
@@ -48,10 +48,10 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
         />
       </div>
 
-      <div className="flex justify-between items-center">
-        <label className="mr-4 text-nowrap"> Dinner</label>
+      <div className="flex flex-col w-full items-start space-y-2">
+        <label className="text-gray-600"> Dinner</label>
         <input
-          className="p-2 w-full bg-gray-50 border-grey-300 border-b-2"
+          className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="dinner"
           value={dinner}
