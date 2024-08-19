@@ -14,7 +14,7 @@ export const breakdown = [
   { category: "Client Entertainment", sum: 0 },
   { category: "Per Diem", sum: 0 },
   { category: "Job Site Material", sum: 0 },
-  { category: "Milage", sum: 0 },
+  { category: "Mileage", sum: 0 },
   { category: "Other", sum: 0 },
 ];
 export const summaries = [];
