@@ -1,7 +1,7 @@
 import Project from "./Project";
 import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
-import { Project as ProjectType } from "../Data/Types";
+import { Project as ProjectType } from "../Data/types";
 import { jsPDF } from "jspdf";
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
