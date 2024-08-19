@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
 import { Expense as ExpenseType } from "../Data/types";
 import { v4 as uuidv4 } from "uuid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
 
 interface ProjectProps {
   project: any;
@@ -116,7 +118,7 @@ const Project: React.FC<ProjectProps> = ({
               type="button"
               onClick={() => removeExpense(expense.id)}
             >
-              Remove Expense
+              <FontAwesomeIcon icon={faMinus} />
             </button>
           </div>
         ))}

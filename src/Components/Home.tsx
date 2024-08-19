@@ -13,6 +13,8 @@ import {
   summaries,
   mileageRate,
 } from "../Data/results";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const Home: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
@@ -317,7 +319,7 @@ const Home: React.FC = () => {
               type="button"
               onClick={() => removeProject(project.id)}
             >
-              Remove Project
+              <FontAwesomeIcon icon={faX} />
             </button>
           </div>
         ))}
