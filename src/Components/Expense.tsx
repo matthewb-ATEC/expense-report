@@ -65,22 +65,15 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
     });
   };
 
-  const hasDefaultCostCode = () => {
+  const requiresCostCode = () => {
     return costCategories.some(
-      (item) => item.category === selectedCategory && item.costCode
+      (item) => item.category === selectedCategory && item.costCode == ""
     );
   };
 
   const renderCostCodeInput = () => (
     <>
-      {hasDefaultCostCode() ? (
-        <div className=" flex justify-between items-center">
-          <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-            Cost Code
-          </label>
-          <div id="costCode">{costCode}</div>
-        </div>
-      ) : (
+      {requiresCostCode() && (
         <div className="flex flex-col space-y-2 items-start">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
             Cost Code
