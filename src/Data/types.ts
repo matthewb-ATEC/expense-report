@@ -20,6 +20,7 @@ export interface Expense {
   breakfast?: number;
   lunch?: number;
   dinner?: number;
+  taxable?: boolean;
   attachments?: Attachment[];
 }
 
