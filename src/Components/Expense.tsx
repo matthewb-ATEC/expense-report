@@ -182,36 +182,37 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
           <SelectedComponent onUpdate={handleChildUpdate} />
         )}
 
-      {/* Conditional Rendering for Cost Input */}
-      {selectedCategory &&
-        selectedCategory !== "Mileage" &&
-        selectedCategory !== "Per Diem" &&
-        renderCostInput()}
+        {/* Conditional Rendering for Cost Input */}
+        {selectedCategory &&
+          selectedCategory !== "Mileage" &&
+          selectedCategory !== "Per Diem" &&
+          renderCostInput()}
 
-      {/* File Upload */}
-      <input
-        type="file"
-        multiple
-        accept=".pdf, .png, .jpg, .jpeg"
-        onChange={handleUploadAttachment}
-      />
+        {/* File Upload */}
+        <input
+          type="file"
+          multiple
+          accept=".pdf, .png, .jpg, .jpeg"
+          onChange={handleUploadAttachment}
+        />
 
-      {/* List of Attachments */}
-      <div>
-        {attachments.map((attachment) => (
-          <div
-            className="flex justify-between items-center"
-            key={attachment.id}
-          >
-            <div>{attachment.file?.name}</div>
-            <button
-              className="p-2 text-red-500 font-bold"
-              onClick={() => handleDeleteAttachment(attachment.id)}
+        {/* List of Attachments */}
+        <div>
+          {attachments.map((attachment) => (
+            <div
+              className="flex justify-between items-center"
+              key={attachment.id}
             >
-              Delete
-            </button>
-          </div>
-        ))}
+              <div>{attachment.file?.name}</div>
+              <button
+                className="p-2 text-red-500 font-bold"
+                onClick={() => handleDeleteAttachment(attachment.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
