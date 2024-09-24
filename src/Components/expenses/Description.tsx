@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import { ChangeEvent, FC } from "react";
+import { ExpenseType } from "../../data/types";
 
 interface DescriptionProps {
-  onUpdate: (updatedData: { description: string }) => void;
+  expense: ExpenseType,
+  handleExpenseChange: Function
 }
 
-const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
-  const [description, setDescription] = useState<string>("");
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedDescription = e.target.value;
-    setDescription(updatedDescription);
-    onUpdate({ description: updatedDescription });
+const Description: FC<DescriptionProps> = ({expense, handleExpenseChange }) => {
+  const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      description: event.target.value
+    }
+    handleExpenseChange(updatedExpense);
   };
 
   return (
@@ -20,7 +22,6 @@ const Description: React.FC<DescriptionProps> = ({ onUpdate }) => {
         className="p-2 w-full border-grey-300 border-b-2"
         type="text"
         id="description"
-        value={description}
         onChange={handleDescriptionChange}
       />
     </div>

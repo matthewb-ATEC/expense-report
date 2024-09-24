@@ -1,9 +1,6 @@
-import Project from "./Project";
-import React, { useState } from "react";
-import { allProjects } from "../data/projects";
-import { Project as ProjectType } from "../data/types";
+import React, { useEffect, useState } from "react";
+import { ProjectType } from "../data/types";
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
-import { v4 as uuidv4 } from "uuid";
 import {
   total,
   totalTaxed,
@@ -11,48 +8,27 @@ import {
   breakdown,
   mileageRate,
 } from "../data/results";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import projectsService from "../services/projectsService";
+import Name from "./Name";
+import Projects from "./Projects";
 
-const Home: React.FC = () => {
+const ExpenseReport: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
 
-  const addProject = () => {
-    const newProject: ProjectType = {
-      id: uuidv4(),
-      projectNumber: "",
-      projectDescription: "",
-      expenses: [
-        {
-          id: uuidv4(),
-          date: "",
-          costCategory: "",
-          costCode: "",
-          attachments: [],
-        },
-      ],
-    };
-
-    setProjects([...projects, newProject]);
-  };
-
-  const removeProject = (id: string) => {
-    setProjects(projects.filter((project) => project.id !== id));
-  };
-
-  const handleProjectUpdate = (updatedProject: any) => {
-    setProjects(
-      projects.map((project) =>
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
-  };
+  // Fetch the projects data using the service when the DOM loads
+  useEffect(() => {
+    console.log("Initial useEffect");
+    projectsService.get().then((initialProjects: ProjectType[]) => {
+      console.log("Promise fulfilled");
+      setProjects(initialProjects);
+    }).catch(error => console.log(error));
+  }, []);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // calculate(projects); // for the refactor into Calculations.tsx
-    console.log(JSON.stringify(projects));
     console.log(projects);
+    
     total.value = 0;
     totalTaxed.value = 0;
     totalUntaxed.value = 0;
@@ -288,48 +264,9 @@ const Home: React.FC = () => {
   return (
     <div className="flex p-8 bg-gray-100 justify-center items-center">
       <form className="flex flex-col self-center space-y-8">
-        <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-sm">
-          <div className="flex flex-col w-full items-start space-y-2">
-            <label className="text-gray-600" htmlFor="name">
-              Full Name
-            </label>
-            <input
-              className="p-2 w-full border-grey-300 border-b-2"
-              type="text"
-              id="name"
-              name="name"
-            />
-          </div>
-        </div>
-
-        {projects.map((project) => (
-          <div
-            className="flex space-x-8 items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md"
-            key={project.id}
-          >
-            <Project
-              project={project}
-              allProjects={allProjects}
-              updateProject={handleProjectUpdate}
-            />
-            <button
-              className="text-red-500 font-bold text-nowrap"
-              type="button"
-              onClick={() => removeProject(project.id)}
-            >
-              <FontAwesomeIcon icon={faX} />
-            </button>
-          </div>
-        ))}
-
-        <button
-          className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
-          type="button"
-          onClick={addProject}
-        >
-          Add Project
-        </button>
-
+        <Name/>
+        <Projects projects={projects} handleProjectsChange={setProjects}/>
+        
         <div className="flex space-x-8 justify-center">
           {/* Download PDF button */}
           <button
@@ -348,4 +285,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default ExpenseReport;

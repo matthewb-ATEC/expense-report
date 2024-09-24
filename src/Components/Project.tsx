@@ -1,133 +1,127 @@
-import React, { useEffect, useState } from "react";
-import Expense from "./Expense";
-import { Expense as ExpenseType } from "../data/types";
+import React from "react";
+import { ExpenseType } from "../data/types";
 import { v4 as uuidv4 } from "uuid";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { ProjectType} from "../data/types";
+import { allProjects } from "../data/projects";
+import projectsService from "../services/projectsService";
+import Expenses from "./Expenses";
 
 interface ProjectProps {
-  project: any;
-  allProjects: { number: string }[];
-  updateProject: (updatedProject: any) => void;
+  project: ProjectType;
+  handleProjectChange: Function;
+  handleDeleteProject: Function;
 }
 
 const Project: React.FC<ProjectProps> = ({
   project,
-  allProjects,
-  updateProject,
+  handleProjectChange,
+  handleDeleteProject
 }) => {
-  const [selectedProjectNumber, setSelectedProjectNumber] = useState<
-    string | undefined
-  >(project.projectNumber);
-  const [projectDescription, setProjectDescription] = useState<
-    string | undefined
-  >(project.projectDescription);
-  const [expenses, setExpenses] = useState<ExpenseType[]>(project.expenses);
-
-  useEffect(() => {
-    updateProject({
-      ...project,
-      projectNumber: selectedProjectNumber,
-      projectDescription: projectDescription,
-      expenses,
-    });
-  }, [selectedProjectNumber, projectDescription, expenses]);
-
-  const addExpense = () => {
+  const handleAddExpense = () => {
     const newExpense: ExpenseType = {
       id: uuidv4(),
       date: "",
       costCategory: "",
       costCode: "",
     };
-    setExpenses([...expenses, newExpense]);
+
+    const updatedProject = {
+      ...project,
+      expenses: project.expenses.concat(newExpense)
+    }
+    
+    handleProjectChange(updatedProject);
   };
 
-  const removeExpense = (id: string) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  };
-
-  const handleProjectNumberChange = (
+  const handleSelectedProjectChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const number = event.target.value;
-    setSelectedProjectNumber(number);
-  };
+    const newName: string = event.target.value;
+    const newNumber: number | undefined = allProjects.find((project) => 
+      project.name === newName)?.number
 
-  const handleProjectDescriptionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    const updatedProject: ProjectType = {
+      ...project,
+      number: newNumber,
+      name: newName
+    }
+
+    handleProjectChange(updatedProject)
+  }
+
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedProjectDescription = e.target.value;
-    setProjectDescription(updatedProjectDescription);
-    updateProject(updatedProjectDescription);
+    const updatedProject: ProjectType = {
+      ...project,
+      description: event.target.value
+    }
+    
+    handleProjectChange(updatedProject)
   };
 
-  const handleExpenseUpdate = (updatedExpense: any) => {
-    setExpenses(
-      expenses.map((expense) =>
-        expense.id === updatedExpense.id ? updatedExpense : expense
-      )
-    );
+  const handleExpensesChange = (updatedExpenses: ExpenseType[]) => {
+    const updatedProject: ProjectType = {
+      ...project,
+      expenses: updatedExpenses
+    };
+    handleProjectChange(updatedProject);
   };
 
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex flex-col space-y-4">
         <div className="flex flex-col items-start space-y-2">
-          <label className="text-gray-600 text-nowrap" htmlFor="projectNumber">
+          <label className="text-gray-600 text-nowrap" htmlFor="projectName">
             Project
           </label>
           <select
             className="p-2 w-full border-grey-300 border-b-2"
-            id="projectNumber"
-            value={selectedProjectNumber || ""}
-            onChange={handleProjectNumberChange}
+            id="projectName"
+            onChange={handleSelectedProjectChange}
           >
-            <option value="">Select a number</option>
+            <option value="">Select a project</option>
             {allProjects.map((project) => (
-              <option key={project.number} value={project.number}>
-                {project.number}
+              <option key={project.name} value={project.name}>
+                {project.name}
               </option>
             ))}
             <option value="Other">Other</option>
           </select>
 
-          {selectedProjectNumber == "Other" && (
+          {project.name === "Other" && (
             <>
               <label
                 className="text-gray-600 text-nowrap"
-                htmlFor="projectDescription"
+                htmlFor="description"
               >
-                Project Description
+                Description
               </label>
               <input
                 className="p-2 w-full border-grey-300 border-b-2"
-                id="projectDescription"
-                value={projectDescription || ""}
-                onChange={handleProjectDescriptionChange}
+                id="description"
+                onChange={handleDescriptionChange}
               />
             </>
           )}
         </div>
 
-        {expenses.map((expense) => (
-          <div className="flex space-x-4 items-start" key={expense.id}>
-            <Expense expense={expense} updateExpense={handleExpenseUpdate} />
-            <button
-              className="text-red-500 text-nowrap font-bold"
-              type="button"
-              onClick={() => removeExpense(expense.id)}
-            >
-              <FontAwesomeIcon icon={faMinus} />
-            </button>
-          </div>
-        ))}
+        <Expenses expenses={project.expenses} handleExpensesChange={handleExpensesChange}/>
       </div>
+
+
+          <button
+            className="text-red-500 font-bold text-nowrap"
+            type="button"
+            onClick={() => handleDeleteProject(project.id)}
+          >
+            Delete Project
+          </button>
 
       <button
         className="text-ATECblue font-bold"
         type="button"
-        onClick={addExpense}
+        onClick={handleAddExpense}
       >
         Add Expense
       </button>

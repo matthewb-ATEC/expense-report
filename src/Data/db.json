@@ -1,0 +1,33 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "name": "Other",
+      "description": "tests",
+      "expenses": [
+        {
+          "id": "1",
+          "date": "2024-09-19",
+          "costCategory": "Other",
+          "costCode": "",
+          "attachments": [],
+          "cost": 0,
+          "breakfast": true,
+          "lunch": false,
+          "dinner": false,
+          "taxable": true,
+          "description": "description"
+        },
+        {
+          "id": "7e3c9e08-5aee-4892-a234-9bc5212ff216",
+          "date": "",
+          "costCategory": "Air Fare",
+          "costCode": "62-1001-TRV",
+          "breakfast": false,
+          "lunch": false,
+          "dinner": false
+        }
+      ]
+    }
+  ]
+}
