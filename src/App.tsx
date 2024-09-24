@@ -1,11 +1,13 @@
-import Header from "./Components/Header";
-import Home from "./Components/Home";
-import Footer from "./Components/Footer";
+import Header from "./components/Header";
+import Nav from "./components/Nav";
+import Home from "./components/Home";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <div className="flex flex-col">
       <Header />
+      <Nav/>
       <Home />
       <Footer />
     </div>

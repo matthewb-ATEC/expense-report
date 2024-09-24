@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Expense from "./Expense";
-import { Expense as ExpenseType } from "../Data/types";
+import { Expense as ExpenseType } from "../data/types";
 import { v4 as uuidv4 } from "uuid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";

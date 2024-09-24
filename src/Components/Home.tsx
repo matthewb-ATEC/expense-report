@@ -1,8 +1,7 @@
 import Project from "./Project";
 import React, { useState } from "react";
-import { allProjects } from "../Data/projects";
-import { Project as ProjectType } from "../Data/types";
-import { jsPDF } from "jspdf";
+import { allProjects } from "../data/projects";
+import { Project as ProjectType } from "../data/types";
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -10,9 +9,8 @@ import {
   totalTaxed,
   totalUntaxed,
   breakdown,
-  summaries,
   mileageRate,
-} from "../Data/results";
+} from "../data/results";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 
