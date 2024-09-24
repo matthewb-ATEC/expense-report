@@ -1,27 +1,41 @@
-import React, { useState } from "react";
+import React, { ChangeEvent } from "react";
+import { ExpenseType } from "../../data/types";
 
 interface PerDiemProps {
-  onUpdate: (updatedData: {
-    breakfast: string;
-    lunch: string;
-    dinner: string;
-  }) => void;
+  expense: ExpenseType,
+  handleExpenseChange: Function
 }
 
-const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
-  const [breakfast, setBreakfast] = useState<string>("0");
-  const [lunch, setLunch] = useState<string>("0");
-  const [dinner, setDinner] = useState<string>("0");
-
-  const handleChange = (
-    field: "breakfast" | "lunch" | "dinner",
-    value: string
+const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
+  
+  const handleBreakfastChange = (
+   event: ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedData = { breakfast, lunch, dinner, [field]: value };
-    if (field === "breakfast") setBreakfast(value);
-    if (field === "lunch") setLunch(value);
-    if (field === "dinner") setDinner(value);
-    onUpdate(updatedData);
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      breakfast: event.target.checked
+    }
+    handleExpenseChange(updatedExpense);
+  };
+
+  const handleLunchChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      lunch: event.target.checked
+    }
+    handleExpenseChange(updatedExpense);
+  };
+
+  const handleDinnerChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      dinner: event.target.checked
+    }
+    handleExpenseChange(updatedExpense);
   };
 
   return (
@@ -30,10 +44,9 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
         <label className="text-gray-600">Breakfast</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
-          type="number"
+          type="checkbox"
           id="breakfast"
-          value={breakfast}
-          onChange={(e) => handleChange("breakfast", e.target.value)}
+          onChange={handleBreakfastChange}
         />
       </div>
 
@@ -41,10 +54,9 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
         <label className="text-gray-600">Lunch</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
-          type="number"
+          type="checkbox"
           id="lunch"
-          value={lunch}
-          onChange={(e) => handleChange("lunch", e.target.value)}
+          onChange={handleLunchChange}
         />
       </div>
 
@@ -52,10 +64,9 @@ const PerDiem: React.FC<PerDiemProps> = ({ onUpdate }) => {
         <label className="text-gray-600"> Dinner</label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
-          type="number"
+          type="checkbox"
           id="dinner"
-          value={dinner}
-          onChange={(e) => handleChange("dinner", e.target.value)}
+          onChange={handleDinnerChange}
         />
       </div>
     </div>

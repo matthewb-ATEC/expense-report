@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import { ExpenseType } from "../../data/types";
 
 interface ReimbursableGasProps {
-  onUpdate: (updatedData: { taxable: boolean }) => void;
+  expense: ExpenseType,
+  handleExpenseChange: Function
 }
 
-const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ onUpdate }) => {
-  const [taxable, setTaxable] = useState<boolean>(false);
-
+const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ expense, handleExpenseChange }) => {
   const handleTaxableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedTaxable = e.target.checked;
-    setTaxable(updatedTaxable);
-    onUpdate({ taxable: updatedTaxable });
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      taxable: e.target.checked
+    }
+    handleExpenseChange(updatedExpense)
   };
 
   return (
@@ -19,7 +21,6 @@ const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ onUpdate }) => {
       <input
         type="checkbox"
         id="taxable"
-        checked={taxable}
         onChange={handleTaxableChange}
       />
     </div>

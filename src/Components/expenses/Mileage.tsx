@@ -1,37 +1,60 @@
-import React, { useState } from "react";
+import React, { ChangeEvent } from "react";
+import { ExpenseType } from "../../data/types";
 
 interface MileageProps {
-  onUpdate: (updatedData: {
-    purpose: string;
-    fromLocation: string;
-    toLocation: string;
-    mileage: number;
-    roundTrip: boolean;
-  }) => void;
+  expense: ExpenseType,
+  handleExpenseChange: Function
 }
 
-const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
-  const [purpose, setPurpose] = useState<string>("");
-  const [fromLocation, setFromLocation] = useState<string>("");
-  const [toLocation, setToLocation] = useState<string>("");
-  const [mileage, setMileage] = useState<number>(0);
-  const [roundTrip, setRoundTrip] = useState<boolean>(false);
+const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
+  const handlePurposeChange = (
+   event: ChangeEvent<HTMLSelectElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      purpose: event.target.value
+    }
+    handleExpenseChange(updatedExpense);
+  };
 
-  const handleChange = (field: string, value: any) => {
-    const updatedData = {
-      purpose,
-      fromLocation,
-      toLocation,
-      mileage,
-      roundTrip,
-      [field]: value,
-    };
-    if (field === "purpose") setPurpose(value);
-    if (field === "fromLocation") setFromLocation(value);
-    if (field === "toLocation") setToLocation(value);
-    if (field === "mileage") setMileage(value);
-    if (field === "roundTrip") setRoundTrip(value);
-    onUpdate(updatedData);
+  const handleFromChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      fromLocation: event.target.value
+    }
+    handleExpenseChange(updatedExpense);
+  };
+
+  const handleToChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      toLocation: event.target.value
+    }
+    handleExpenseChange(updatedExpense);
+  };
+
+  const handleMileageChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      mileage: Number(event.target.value)
+    }
+    handleExpenseChange(updatedExpense);
+  };
+
+  const handleRoundTripChange = (
+   event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      roundTrip: event.target.checked
+    }
+    handleExpenseChange(updatedExpense);
   };
 
   return (
@@ -41,8 +64,7 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         <select
           className="p-2 w-full border-grey-300 border-b-2"
           id="purpose"
-          value={purpose}
-          onChange={(e) => handleChange("purpose", e.target.value)}
+          onChange={handlePurposeChange}
         >
           <option value="" disabled>
             Select a category
@@ -58,8 +80,7 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="from"
-          value={fromLocation}
-          onChange={(e) => handleChange("fromLocation", e.target.value)}
+          onChange={handleFromChange}
         />
       </div>
 
@@ -69,8 +90,7 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="to"
-          value={toLocation}
-          onChange={(e) => handleChange("toLocation", e.target.value)}
+          onChange={handleToChange}
         />
       </div>
 
@@ -80,8 +100,7 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="mileage"
-          value={mileage}
-          onChange={(e) => handleChange("mileage", e.target.value)}
+          onChange={handleMileageChange}
         />
       </div>
 
@@ -90,8 +109,7 @@ const Mileage: React.FC<MileageProps> = ({ onUpdate }) => {
         <input
           type="checkbox"
           id="roundTrip"
-          checked={roundTrip}
-          onChange={(e) => handleChange("roundTrip", e.target.checked)}
+          onChange={handleRoundTripChange}
         />
       </div>
     </>
