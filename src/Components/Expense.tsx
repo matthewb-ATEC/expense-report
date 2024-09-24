@@ -1,13 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { costCategories } from "../Data/costCategories";
-import ReimbursableGas from "./Expense Components/ReimbursableGas";
-import Description from "./Expense Components/Description";
-import PerDiem from "./Expense Components/PerDiem";
-import Mileage from "./Expense Components/Mileage";
+import { costCategories } from "../data/costCategories";
+import ReimbursableGas from "./expenses/ReimbursableGas";
+import Description from "./expenses/Description";
+import PerDiem from "./expenses/PerDiem";
+import Mileage from "./expenses/Mileage";
 import {
   Attachment as AttachmentType,
   Expense as ExpenseType,
-} from "../Data/types";
+} from "../data/types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ExpenseProps {
