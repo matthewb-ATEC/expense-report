@@ -1,17 +1,3 @@
 {
-  "projects": [
-    {
-      "id": "cdee9bb7-2169-4578-a34c-ad319ac5a453",
-      "name": "CRB AstraZeneca 9950 MCD",
-      "expenses": [
-        {
-          "id": "bded4789-a4f9-4128-8dd0-f9e3acd8732b",
-          "date": "",
-          "costCategory": "",
-          "costCode": ""
-        }
-      ],
-      "number": 25010
-    }
-  ]
+  "projects": []
 }
