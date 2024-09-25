@@ -2,58 +2,48 @@ import React, { ChangeEvent } from "react";
 import { ExpenseType } from "../../data/types";
 
 interface MileageProps {
-  expense: ExpenseType,
-  handleExpenseChange: Function
+  expense: ExpenseType;
+  handleExpenseChange: Function;
 }
 
 const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
-  const handlePurposeChange = (
-   event: ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handlePurposeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      purpose: event.target.value
-    }
+      purpose: event.target.value,
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleFromChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFromChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      fromLocation: event.target.value
-    }
+      fromLocation: event.target.value,
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleToChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleToChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      toLocation: event.target.value
-    }
+      toLocation: event.target.value,
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleMileageChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleMileageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      mileage: Number(event.target.value)
-    }
+      mileage: Number(event.target.value),
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleRoundTripChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleRoundTripChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      roundTrip: event.target.checked
-    }
+      roundTrip: event.target.checked,
+    };
     handleExpenseChange(updatedExpense);
   };
 
@@ -64,6 +54,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <select
           className="p-2 w-full border-grey-300 border-b-2"
           id="purpose"
+          value={expense.purpose}
           onChange={handlePurposeChange}
         >
           <option value="" disabled>
@@ -80,6 +71,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="from"
+          value={expense.fromLocation}
           onChange={handleFromChange}
         />
       </div>
@@ -90,6 +82,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="text"
           id="to"
+          value={expense.toLocation}
           onChange={handleToChange}
         />
       </div>
@@ -100,6 +93,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="number"
           id="mileage"
+          value={expense.mileage}
           onChange={handleMileageChange}
         />
       </div>
@@ -109,6 +103,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <input
           type="checkbox"
           id="roundTrip"
+          checked={expense.roundTrip}
           onChange={handleRoundTripChange}
         />
       </div>

@@ -9,11 +9,11 @@ const get = async () => {
 };
 
 const getID = async (id) => {
-    console.log(`Getting project ID: ${id}`);
+  console.log(`Getting project ID: ${id}`);
   const request = axios.get(`${baseURL}/${id}`);
   const response = await request;
   return response.data;
-}
+};
 
 const create = async (newProject) => {
   console.log(`Creating project ${newProject}`);

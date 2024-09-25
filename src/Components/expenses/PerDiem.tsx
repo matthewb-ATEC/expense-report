@@ -2,39 +2,32 @@ import React, { ChangeEvent } from "react";
 import { ExpenseType } from "../../data/types";
 
 interface PerDiemProps {
-  expense: ExpenseType,
-  handleExpenseChange: Function
+  expense: ExpenseType;
+  handleExpenseChange: Function;
 }
 
 const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
-  
-  const handleBreakfastChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleBreakfastChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      breakfast: event.target.checked
-    }
+      breakfast: event.target.checked,
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleLunchChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleLunchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      lunch: event.target.checked
-    }
+      lunch: event.target.checked,
+    };
     handleExpenseChange(updatedExpense);
   };
 
-  const handleDinnerChange = (
-   event: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleDinnerChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      dinner: event.target.checked
-    }
+      dinner: event.target.checked,
+    };
     handleExpenseChange(updatedExpense);
   };
 
@@ -46,6 +39,7 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="checkbox"
           id="breakfast"
+          checked={expense.breakfast}
           onChange={handleBreakfastChange}
         />
       </div>
@@ -56,6 +50,7 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="checkbox"
           id="lunch"
+          checked={expense.lunch}
           onChange={handleLunchChange}
         />
       </div>
@@ -66,6 +61,7 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
           className="p-2 w-full border-grey-300 border-b-2"
           type="checkbox"
           id="dinner"
+          checked={expense.dinner}
           onChange={handleDinnerChange}
         />
       </div>

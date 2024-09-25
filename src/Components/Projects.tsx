@@ -1,4 +1,4 @@
-import {ProjectType} from "../data/types";
+import { ProjectType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
 import { v4 as uuidv4 } from "uuid";
@@ -6,21 +6,27 @@ import { v4 as uuidv4 } from "uuid";
 interface ProjectsProps {
   projects: ProjectType[];
   handleProjectsChange: Function;
+  handleSelectedProjectChange: Function;
 }
 
-const Projects: React.FC<ProjectsProps> = ({projects, handleProjectsChange}) => {
+const Projects: React.FC<ProjectsProps> = ({
+  projects,
+  handleProjectsChange,
+  handleSelectedProjectChange,
+}) => {
   const handleProjectChange = (updatedProject: ProjectType) => {
     projectsService
       .updateID(updatedProject.id, updatedProject)
       .then(() => {
-        console.log(`Project changed to`, updatedProject)
+        console.log(`Project changed to`, updatedProject);
 
-        const updatedProjects = projects.map((project) => 
-          project.id === updatedProject.id ? updatedProject : project)
-        
+        const updatedProjects = projects.map((project) =>
+          project.id === updatedProject.id ? updatedProject : project
+        );
+
         handleProjectsChange(updatedProjects);
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error));
   };
 
   const handleAddProject = () => {
@@ -29,14 +35,12 @@ const Projects: React.FC<ProjectsProps> = ({projects, handleProjectsChange}) => 
       id: uuidv4(),
       number: undefined,
       name: "",
-      description: "",
       expenses: [
         {
           id: uuidv4(),
           date: "",
           costCategory: "",
           costCode: "",
-          attachments: [],
         },
       ],
     };
@@ -46,11 +50,12 @@ const Projects: React.FC<ProjectsProps> = ({projects, handleProjectsChange}) => 
       .create(newProject)
       .then((createdProject) => {
         console.log(`Successfully created project ${createdProject}`);
-        
-        const updatedProjects = projects.concat(createdProject)
+
+        const updatedProjects = projects.concat(createdProject);
         handleProjectsChange(updatedProjects);
+        handleSelectedProjectChange(createdProject);
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error));
   };
 
   const handleDeleteProject = (id: string) => {
@@ -59,36 +64,35 @@ const Projects: React.FC<ProjectsProps> = ({projects, handleProjectsChange}) => 
     projectsService
       .deleteID(id)
       .then(() => {
-        const updatedProjects = projects.filter((project) => project.id !== id)
+        const updatedProjects = projects.filter((project) => project.id !== id);
         handleProjectsChange(updatedProjects);
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   };
 
   return (
-    <>
+    <div className="flex flex-col space-y-4">
       {projects.map((project) => (
-        <div
-          className="flex space-x-8 items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md"
+        <Project
           key={project.id}
-        >
-          
-          <Project
-            project={project}
-            handleProjectChange={handleProjectChange}
-            handleDeleteProject={handleDeleteProject}
-          />
-        </div>
+          project={project}
+          handleProjectChange={handleProjectChange}
+          handleDeleteProject={handleDeleteProject}
+          handleSelectedProjectChange={handleSelectedProjectChange}
+        />
       ))}
       <button
-          className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
-          type="button"
-          onClick={handleAddProject}
-        >
+        className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
+        type="button"
+        onClick={() => {
+          handleAddProject();
+          handleSelectedProjectChange(projects[projects.length - 1]);
+        }}
+      >
         Add Project
       </button>
-    </>
-  )
-}
+    </div>
+  );
+};
 
 export default Projects;
