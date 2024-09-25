@@ -33,6 +33,7 @@ const ExpenseReport: React.FC = () => {
         );
 
         setProjects(updatedProjects);
+        setSelectedProject(updatedProject);
       })
       .catch((error) => console.log(error));
   };
@@ -67,6 +68,7 @@ const ExpenseReport: React.FC = () => {
           <Projects
             projects={projects}
             handleProjectsChange={setProjects}
+            handleProjectChange={handleProjectChange}
             handleSelectedProjectChange={handleSelectedProjectChange}
           />
           {projects.length > 0 && (

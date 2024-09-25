@@ -79,18 +79,9 @@ const Expense: FC<ExpenseProps> = ({
         <div className="flex flex-col space-y-4">
           {/* Date Picker */}
           <div className="flex flex-col items-start space-y-2">
-            <div className="flex w-full justify-between">
-              <label className="text-gray-600" htmlFor="date">
-                Date
-              </label>
-              <button
-                className="text-red-500 text-nowrap"
-                type="button"
-                onClick={() => handleDeleteExpense(expense.id)}
-              >
-                Delete
-              </button>
-            </div>
+            <label className="text-gray-600" htmlFor="date">
+              Date
+            </label>
             <input
               className="p-2 w-full border-grey-300 border-b-2"
               type="date"
@@ -195,6 +186,15 @@ const Expense: FC<ExpenseProps> = ({
             expense={expense}
             handleExpenseChange={handleExpenseChange}
           />
+          <div className="flex w-full justify-start">
+            <button
+              className="text-red-500 text-nowrap"
+              type="button"
+              onClick={() => handleDeleteExpense(expense.id)}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -6,29 +6,16 @@ import { v4 as uuidv4 } from "uuid";
 interface ProjectsProps {
   projects: ProjectType[];
   handleProjectsChange: Function;
+  handleProjectChange: Function;
   handleSelectedProjectChange: Function;
 }
 
 const Projects: React.FC<ProjectsProps> = ({
   projects,
   handleProjectsChange,
+  handleProjectChange,
   handleSelectedProjectChange,
 }) => {
-  const handleProjectChange = (updatedProject: ProjectType) => {
-    projectsService
-      .updateID(updatedProject.id, updatedProject)
-      .then(() => {
-        console.log(`Project changed to`, updatedProject);
-
-        const updatedProjects = projects.map((project) =>
-          project.id === updatedProject.id ? updatedProject : project
-        );
-
-        handleProjectsChange(updatedProjects);
-      })
-      .catch((error) => console.log(error));
-  };
-
   const handleAddProject = () => {
     // Create the new default project
     const newProject: ProjectType = {
