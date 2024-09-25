@@ -1,14 +1,16 @@
 import React from "react";
 import Expense from "./Expense";
-import { ExpenseType } from "../data/types";
+import { ExpenseType, ProjectType } from "../data/types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ExpensesProps {
+  project: ProjectType | undefined;
   expenses: ExpenseType[] | undefined;
   handleExpensesChange: Function;
 }
 
 const Expenses: React.FC<ExpensesProps> = ({
+  project,
   expenses,
   handleExpensesChange,
 }) => {
@@ -40,6 +42,7 @@ const Expenses: React.FC<ExpensesProps> = ({
 
   return (
     <div className="flex flex-col space-y-4">
+      <div className="text-xl font-bold">{project?.name} Expenses</div>
       {expenses?.map((expense) => (
         <Expense
           key={expense.id}

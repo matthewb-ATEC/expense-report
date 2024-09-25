@@ -18,7 +18,6 @@ const ExpenseReport: React.FC = () => {
       .then((initialProjects) => {
         console.log("Promise fulfilled");
         setProjects(initialProjects);
-        setSelectedProject(initialProjects[0]);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -72,6 +71,7 @@ const ExpenseReport: React.FC = () => {
           />
           {projects.length > 0 && (
             <Expenses
+              project={selectedProject || undefined}
               expenses={selectedProject?.expenses}
               handleExpensesChange={handleExpensesChange}
             />
