@@ -46,21 +46,9 @@ const Project: React.FC<ProjectProps> = ({
       <div className="flex flex-col space-y-2">
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col items-start space-y-2">
-            <div className="w-full flex justify-between">
-              <label
-                className="text-gray-600 text-nowrap"
-                htmlFor="projectName"
-              >
-                Project
-              </label>
-              <button
-                className="text-red-500 text-nowrap"
-                type="button"
-                onClick={() => handleDeleteProject(project.id)}
-              >
-                Delete
-              </button>
-            </div>
+            <label className="text-gray-600 text-nowrap" htmlFor="projectName">
+              Project
+            </label>
             <select
               className="p-2 w-full border-grey-300 border-b-2"
               id="projectName"
@@ -92,9 +80,18 @@ const Project: React.FC<ProjectProps> = ({
                 />
               </>
             )}
-            <button onClick={() => handleSelectedProjectChange(project)}>
-              Edit
-            </button>
+            <div className="w-full flex justify-between">
+              <button
+                className="text-red-500 text-nowrap"
+                type="button"
+                onClick={() => handleDeleteProject(project.id)}
+              >
+                Delete
+              </button>
+              <button onClick={() => handleSelectedProjectChange(project)}>
+                Edit
+              </button>
+            </div>
           </div>
         </div>
       </div>
