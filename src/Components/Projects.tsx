@@ -49,7 +49,7 @@ const Projects: React.FC<ProjectsProps> = ({
     projectsService
       .create(newProject)
       .then((createdProject) => {
-        console.log(`Successfully created project ${createdProject}`);
+        console.log("Successfully created project", createdProject);
 
         const updatedProjects = projects.concat(createdProject);
         handleProjectsChange(updatedProjects);
@@ -72,6 +72,7 @@ const Projects: React.FC<ProjectsProps> = ({
 
   return (
     <div className="w-full flex flex-col space-y-4">
+      {projects.length > 0 && <div className="text-xl font-bold">Projects</div>}
       {projects.map((project) => (
         <Project
           key={project.id}
@@ -86,7 +87,7 @@ const Projects: React.FC<ProjectsProps> = ({
         type="button"
         onClick={() => {
           handleAddProject();
-          handleSelectedProjectChange(projects[projects.length - 1]);
+          handleSelectedProjectChange(projects[projects.length]);
         }}
       >
         Add Project
