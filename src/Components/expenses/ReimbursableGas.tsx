@@ -2,17 +2,20 @@ import React from "react";
 import { ExpenseType } from "../../data/types";
 
 interface ReimbursableGasProps {
-  expense: ExpenseType,
-  handleExpenseChange: Function
+  expense: ExpenseType;
+  handleExpenseChange: Function;
 }
 
-const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ expense, handleExpenseChange }) => {
+const ReimbursableGas: React.FC<ReimbursableGasProps> = ({
+  expense,
+  handleExpenseChange,
+}) => {
   const handleTaxableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      taxable: e.target.checked
-    }
-    handleExpenseChange(updatedExpense)
+      taxable: e.target.checked,
+    };
+    handleExpenseChange(updatedExpense);
   };
 
   return (
@@ -21,6 +24,7 @@ const ReimbursableGas: React.FC<ReimbursableGasProps> = ({ expense, handleExpens
       <input
         type="checkbox"
         id="taxable"
+        checked={expense.taxable}
         onChange={handleTaxableChange}
       />
     </div>

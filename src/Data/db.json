@@ -1,33 +1,17 @@
 {
   "projects": [
     {
-      "id": "1",
-      "name": "Other",
-      "description": "tests",
+      "id": "cdee9bb7-2169-4578-a34c-ad319ac5a453",
+      "name": "CRB AstraZeneca 9950 MCD",
       "expenses": [
         {
-          "id": "1",
-          "date": "2024-09-19",
-          "costCategory": "Other",
-          "costCode": "",
-          "attachments": [],
-          "cost": 0,
-          "breakfast": true,
-          "lunch": false,
-          "dinner": false,
-          "taxable": true,
-          "description": "description"
-        },
-        {
-          "id": "7e3c9e08-5aee-4892-a234-9bc5212ff216",
+          "id": "bded4789-a4f9-4128-8dd0-f9e3acd8732b",
           "date": "",
-          "costCategory": "Air Fare",
-          "costCode": "62-1001-TRV",
-          "breakfast": false,
-          "lunch": false,
-          "dinner": false
+          "costCategory": "",
+          "costCode": ""
         }
-      ]
+      ],
+      "number": 25010
     }
   ]
 }
