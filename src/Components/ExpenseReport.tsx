@@ -70,10 +70,12 @@ const ExpenseReport: React.FC = () => {
             handleProjectsChange={setProjects}
             handleSelectedProjectChange={handleSelectedProjectChange}
           />
-          <Expenses
-            expenses={selectedProject?.expenses}
-            handleExpensesChange={handleExpensesChange}
-          />
+          {projects.length > 0 && (
+            <Expenses
+              expenses={selectedProject?.expenses}
+              handleExpensesChange={handleExpensesChange}
+            />
+          )}
         </div>
       </div>
     </div>

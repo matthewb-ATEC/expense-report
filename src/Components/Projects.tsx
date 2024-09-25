@@ -71,7 +71,7 @@ const Projects: React.FC<ProjectsProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="w-full flex flex-col space-y-4">
       {projects.map((project) => (
         <Project
           key={project.id}
