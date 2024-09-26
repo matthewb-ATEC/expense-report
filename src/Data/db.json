@@ -1,3 +1,16 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "id": "93c13c8a-7346-4f5d-bb1d-14c7f709c01f",
+      "name": "",
+      "expenses": [
+        {
+          "id": "31c98bd0-c27d-4bfe-9ddb-4496a4986690",
+          "date": "",
+          "costCategory": "",
+          "costCode": ""
+        }
+      ]
+    }
+  ]
 }

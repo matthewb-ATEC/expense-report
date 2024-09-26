@@ -77,7 +77,7 @@ const Projects: React.FC<ProjectsProps> = ({
           handleSelectedProjectChange(projects[projects.length]);
         }}
       >
-        Add Project
+        {projects.length === 0 ? "Start Expense Report" : "Add Project"}
       </button>
     </div>
   );

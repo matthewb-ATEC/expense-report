@@ -89,7 +89,7 @@ const Project: React.FC<ProjectProps> = ({
                 Delete
               </button>
               <button onClick={() => handleSelectedProjectChange(project)}>
-                Edit
+                Details
               </button>
             </div>
           </div>

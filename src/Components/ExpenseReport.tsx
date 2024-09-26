@@ -63,7 +63,7 @@ const ExpenseReport: React.FC = () => {
   return (
     <div className="flex p-8 bg-gray-100 justify-center items-center">
       <div className="flex flex-col self-center space-y-8">
-        <Name />
+        {projects.length === 0 && <Name />}
         <div className="flex space-x-8">
           <Projects
             projects={projects}
@@ -71,7 +71,7 @@ const ExpenseReport: React.FC = () => {
             handleProjectChange={handleProjectChange}
             handleSelectedProjectChange={handleSelectedProjectChange}
           />
-          {projects.length > 0 && (
+          {selectedProject?.name !== "" && (
             <Expenses
               project={selectedProject || undefined}
               expenses={selectedProject?.expenses}

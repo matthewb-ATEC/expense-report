@@ -42,7 +42,10 @@ const Expenses: React.FC<ExpensesProps> = ({
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="text-xl font-bold">{project?.name} Expenses</div>
+      <div className="flex flex-col space-y-2">
+        <div className="text-xl font-bold">Expenses</div>
+        <div className="text-gray-500">{project?.name}</div>
+      </div>
       {expenses?.map((expense) => (
         <Expense
           key={expense.id}
