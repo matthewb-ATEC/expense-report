@@ -70,7 +70,7 @@ const Projects: React.FC<ProjectsProps> = ({
         />
       ))}
       <button
-        className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
+        className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
         type="button"
         onClick={() => {
           handleAddProject();

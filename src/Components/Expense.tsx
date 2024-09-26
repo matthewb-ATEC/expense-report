@@ -188,7 +188,7 @@ const Expense: FC<ExpenseProps> = ({
           />
           <div className="flex w-full justify-start">
             <button
-              className="text-red-500 text-nowrap"
+              className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
               onClick={() => handleDeleteExpense(expense.id)}
             >
