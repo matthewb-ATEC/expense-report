@@ -1,12 +1,12 @@
-import Header from "./Components/Header";
-import Home from "./Components/Home";
-import Footer from "./Components/Footer";
+import Header from "./components/Header";
+import ExpenseReport from "./components/ExpenseReport";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <div className="flex flex-col">
       <Header />
-      <Home />
+      <ExpenseReport />
       <Footer />
     </div>
   );

@@ -5,5 +5,10 @@ export const theme = {
       ATECblue: "#0152A1",
     },
   },
+  screens: {
+    md: "640px",
+    lg: "1024px",
+    xl: "1280px",
+  },
 };
 export const plugins = [];
