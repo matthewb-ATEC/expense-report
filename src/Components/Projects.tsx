@@ -71,6 +71,7 @@ const Projects: React.FC<ProjectsProps> = ({
         <Project
           key={project.id}
           project={project}
+          selectedProject={selectedProject}
           handleProjectChange={handleProjectChange}
           handleDeleteProject={handleDeleteProject}
           handleSelectedProjectChange={handleSelectedProjectChange}
