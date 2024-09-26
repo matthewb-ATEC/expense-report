@@ -43,6 +43,16 @@ const Project: React.FC<ProjectProps> = ({
     handleProjectChange(updatedProject);
   };
 
+  const getMinimizedProjectText = () => {
+    return project.name === "Other"
+      ? !project.description || project.description === ""
+        ? "No description"
+        : project.description
+      : project.name === ""
+      ? "Project unassigned"
+      : project.name;
+  };
+
   if (project === selectedProject) {
     return (
       <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
@@ -110,11 +120,7 @@ const Project: React.FC<ProjectProps> = ({
     <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
       <div className="flex w-full justify-between space-x-2">
         <div className="text-gray-600 text-nowrap">
-          {project.name === "Other"
-            ? project.description
-            : project.name === ""
-            ? "Project Unassigned"
-            : project.name}
+          {getMinimizedProjectText()}
         </div>
         <button
           onClick={() => handleSelectedProjectChange(project)}
