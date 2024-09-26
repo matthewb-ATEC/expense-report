@@ -41,7 +41,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex w-full flex-col space-y-4">
       <div className="flex flex-col space-y-2">
         <div className="text-xl font-bold">Expenses</div>
         <div className="text-gray-500">{project?.name}</div>
