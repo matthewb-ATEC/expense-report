@@ -78,9 +78,9 @@ const ExpenseReport: React.FC = () => {
 
   return (
     <div className="flex p-8 bg-gray-100 justify-center items-center">
-      <div className="flex w-2/3 flex-col self-center space-y-8">
+      <div className="flex w-11/12 lg:w-3/4 flex-col self-center space-y-8">
         {projects.length === 0 && <Name />}
-        <div className="flex space-x-8">
+        <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
           <Projects
             projects={projects}
             selectedProject={selectedProject}
