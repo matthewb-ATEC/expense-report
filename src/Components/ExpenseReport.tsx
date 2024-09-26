@@ -18,6 +18,7 @@ const ExpenseReport: React.FC = () => {
       .then((initialProjects) => {
         console.log("Promise fulfilled");
         setProjects(initialProjects);
+        if (initialProjects) setSelectedProject(initialProjects[0]);
       })
       .catch((error) => console.log(error));
   }, []);
