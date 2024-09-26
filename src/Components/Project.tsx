@@ -5,17 +5,19 @@ import { allProjects } from "../data/projects";
 interface ProjectProps {
   project: ProjectType;
   selectedProject: ProjectType | null;
+  filteredProjects: string[];
   handleProjectChange: Function;
   handleDeleteProject: Function;
-  handleSelectedProjectChange: Function;
+  updateSelectedProject: Function;
 }
 
 const Project: React.FC<ProjectProps> = ({
   project,
   selectedProject,
+  filteredProjects,
   handleProjectChange,
   handleDeleteProject,
-  handleSelectedProjectChange,
+  updateSelectedProject,
 }) => {
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newName: string = event.target.value;
@@ -68,9 +70,12 @@ const Project: React.FC<ProjectProps> = ({
               onChange={handleNameChange}
             >
               <option value="">Select a project</option>
-              {allProjects.map((project) => (
-                <option key={project.name} value={project.name}>
-                  {project.name}
+              {project.name && project.name !== "Other" && (
+                <option value={project.name}>{project.name}</option>
+              )}
+              {filteredProjects.map((project) => (
+                <option key={project} value={project}>
+                  {project}
                 </option>
               ))}
               <option value="Other">Other</option>
@@ -104,7 +109,7 @@ const Project: React.FC<ProjectProps> = ({
             </button>
             {project.name !== "" && (
               <button
-                onClick={() => handleSelectedProjectChange(project)}
+                onClick={() => updateSelectedProject(project)}
                 className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 Details
@@ -123,7 +128,7 @@ const Project: React.FC<ProjectProps> = ({
           {getMinimizedProjectText()}
         </div>
         <button
-          onClick={() => handleSelectedProjectChange(project)}
+          onClick={() => updateSelectedProject(project)}
           className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
         >
           Details

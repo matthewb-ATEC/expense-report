@@ -4,11 +4,15 @@ import projectsService from "../services/projectsService";
 import Name from "./Name";
 import Projects from "./Projects";
 import Expenses from "./Expenses";
+import { allProjects } from "../data/projects";
 
 const ExpenseReport: React.FC = () => {
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
+  );
+  const [filteredProjects, setFilteredProjects] = useState<string[]>(
+    allProjects.map((project) => project.name)
   );
 
   useEffect(() => {
@@ -35,6 +39,7 @@ const ExpenseReport: React.FC = () => {
 
         setProjects(updatedProjects);
         setSelectedProject(updatedProject);
+        updateFilteredProjects(updatedProjects);
       })
       .catch((error) => console.log(error));
   };
@@ -55,10 +60,20 @@ const ExpenseReport: React.FC = () => {
     setSelectedProject(updatedProject);
   };
 
-  const handleSelectedProjectChange = (project: ProjectType) => {
+  const updateSelectedProject = (project: ProjectType) => {
     const newSelectedProject = project;
     setSelectedProject(newSelectedProject);
     console.log("Selected project changed to", newSelectedProject);
+  };
+
+  const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
+    const filteredProjects = allProjects
+      .filter(
+        (project) => !updatedProjects.some((p) => p.name === project.name)
+      )
+      .map((project) => project.name);
+    console.log(filteredProjects);
+    setFilteredProjects(filteredProjects);
   };
 
   return (
@@ -69,9 +84,11 @@ const ExpenseReport: React.FC = () => {
           <Projects
             projects={projects}
             selectedProject={selectedProject}
+            filteredProjects={filteredProjects}
             handleProjectsChange={setProjects}
             handleProjectChange={handleProjectChange}
-            handleSelectedProjectChange={handleSelectedProjectChange}
+            updateSelectedProject={updateSelectedProject}
+            updateFilteredProjects={updateFilteredProjects}
           />
           {selectedProject && selectedProject?.name !== "" && (
             <Expenses

@@ -1,49 +1,11 @@
 {
   "projects": [
     {
-      "id": "d260b6da-5c2f-4ec3-a267-b6fbde7855b0",
-      "name": "CRB-BioBloom Design",
-      "expenses": [
-        {
-          "id": "7de3a8a0-d829-4c6e-9fba-272f5774d947",
-          "date": "",
-          "costCategory": "",
-          "costCode": ""
-        }
-      ],
-      "number": 25014
-    },
-    {
-      "id": "e960c83b-4eb3-40df-af8f-dc45c7e34c2c",
-      "name": "CRB AstraZeneca 9950 MCD",
-      "expenses": [
-        {
-          "id": "292aa909-8a93-4087-9c05-eaf0d85ba134",
-          "date": "",
-          "costCategory": "Mileage",
-          "costCode": ""
-        }
-      ],
-      "number": 25010
-    },
-    {
-      "id": "b7ff480b-23a2-4f16-852f-f216e48725e5",
-      "name": "Other",
-      "expenses": [
-        {
-          "id": "8749af79-1490-4798-9138-505bbc2c4fe9",
-          "date": "",
-          "costCategory": "",
-          "costCode": ""
-        }
-      ]
-    },
-    {
-      "id": "22b24b87-bf96-477a-a115-cc1d256a9e2e",
+      "id": "25fcac14-5df5-41e1-98da-14903ca4d02e",
       "name": "",
       "expenses": [
         {
-          "id": "e5be6276-154f-49c8-9f68-434a970468cc",
+          "id": "d67939a0-7694-44ff-8bc3-3ed4e3489416",
           "date": "",
           "costCategory": "",
           "costCode": ""
