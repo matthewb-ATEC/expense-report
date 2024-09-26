@@ -77,20 +77,6 @@ const Expense: FC<ExpenseProps> = ({
     <div className="flex items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
       <div className="flex flex-col space-y-4 items-start">
         <div className="flex flex-col space-y-4">
-          {/* Date Picker */}
-          <div className="flex flex-col items-start space-y-2">
-            <label className="text-gray-600" htmlFor="date">
-              Date
-            </label>
-            <input
-              className="p-2 w-full border-grey-300 border-b-2"
-              type="date"
-              id="date"
-              value={expense.date}
-              onChange={handleDateChange}
-            />
-          </div>
-
           {/* Cost Category Dropdown */}
           <div className="flex flex-col items-start space-y-2">
             <label className="text-gray-600 text-nowrap" htmlFor="costCategory">
@@ -129,6 +115,20 @@ const Expense: FC<ExpenseProps> = ({
               />
             </div>
           )}
+
+          {/* Date Picker */}
+          <div className="flex flex-col items-start space-y-2">
+            <label className="text-gray-600" htmlFor="date">
+              Date
+            </label>
+            <input
+              className="p-2 w-full border-grey-300 border-b-2"
+              type="date"
+              id="date"
+              value={expense.date}
+              onChange={handleDateChange}
+            />
+          </div>
 
           {/* Conditional Rendering for Expense Type */}
           {expense.costCategory === "Reimbursable Gas" && (

@@ -20,7 +20,7 @@
         {
           "id": "292aa909-8a93-4087-9c05-eaf0d85ba134",
           "date": "",
-          "costCategory": "",
+          "costCategory": "Mileage",
           "costCode": ""
         }
       ],
@@ -28,7 +28,7 @@
     },
     {
       "id": "b7ff480b-23a2-4f16-852f-f216e48725e5",
-      "name": "Messer Lilly LP2",
+      "name": "Other",
       "expenses": [
         {
           "id": "8749af79-1490-4798-9138-505bbc2c4fe9",
@@ -36,8 +36,19 @@
           "costCategory": "",
           "costCode": ""
         }
-      ],
-      "number": 25015
+      ]
+    },
+    {
+      "id": "22b24b87-bf96-477a-a115-cc1d256a9e2e",
+      "name": "",
+      "expenses": [
+        {
+          "id": "e5be6276-154f-49c8-9f68-434a970468cc",
+          "date": "",
+          "costCategory": "",
+          "costCode": ""
+        }
+      ]
     }
   ]
 }
