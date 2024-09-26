@@ -43,61 +43,60 @@ const Project: React.FC<ProjectProps> = ({
 
   return (
     <div className="flex items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
-      <div className="flex flex-col space-y-2">
-        <div className="flex flex-col space-y-4">
-          <div className="flex flex-col items-start space-y-2">
-            <label className="text-gray-600 text-nowrap" htmlFor="projectName">
-              Project
-            </label>
-            <select
-              className="p-2 w-full border-grey-300 border-b-2"
-              id="projectName"
-              value={project.name}
-              onChange={handleNameChange}
-            >
-              <option value="">Select a project</option>
-              {allProjects.map((project) => (
-                <option key={project.name} value={project.name}>
-                  {project.name}
-                </option>
-              ))}
-              <option value="Other">Other</option>
-            </select>
-
-            {project.name === "Other" && (
-              <>
-                <label
-                  className="text-gray-600 text-nowrap"
-                  htmlFor="description"
-                >
-                  Description
-                </label>
-                <input
-                  className="p-2 w-full border-grey-300 border-b-2"
-                  id="description"
-                  value={project.description}
-                  onChange={handleDescriptionChange}
-                />
-              </>
-            )}
-            <div className="w-full flex justify-between">
-              <button
-                className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
-                type="button"
-                onClick={() => handleDeleteProject(project.id)}
+      <div className="flex flex-col space-y-4">
+        <div className="flex flex-col items-start space-y-2">
+          <label className="text-gray-600 text-nowrap" htmlFor="projectName">
+            Project
+          </label>
+          <select
+            className="p-2 w-full border-grey-300 border-b-2"
+            id="projectName"
+            value={project.name}
+            onChange={handleNameChange}
+          >
+            <option value="">Select a project</option>
+            {allProjects.map((project) => (
+              <option key={project.name} value={project.name}>
+                {project.name}
+              </option>
+            ))}
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div className="flex flex-col items-start space-y-2">
+          {project.name === "Other" && (
+            <>
+              <label
+                className="text-gray-600 text-nowrap"
+                htmlFor="description"
               >
-                Delete
-              </button>
-              {project.name !== "" && (
-                <button
-                  onClick={() => handleSelectedProjectChange(project)}
-                  className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-                >
-                  Details
-                </button>
-              )}
-            </div>
-          </div>
+                Description
+              </label>
+              <input
+                className="p-2 w-full border-grey-300 border-b-2"
+                id="description"
+                value={project.description}
+                onChange={handleDescriptionChange}
+              />
+            </>
+          )}
+        </div>
+        <div className="w-full flex justify-between">
+          <button
+            className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
+            type="button"
+            onClick={() => handleDeleteProject(project.id)}
+          >
+            Delete
+          </button>
+          {project.name !== "" && (
+            <button
+              onClick={() => handleSelectedProjectChange(project)}
+              className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+            >
+              Details
+            </button>
+          )}
         </div>
       </div>
     </div>

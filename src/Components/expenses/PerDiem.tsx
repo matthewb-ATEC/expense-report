@@ -33,10 +33,10 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-col w-full items-start space-y-2">
+      <div className="flex w-full justify-between">
         <label className="text-gray-600">Breakfast</label>
         <input
-          className="p-2 w-full border-grey-300 border-b-2"
+          className="border-grey-300 border-b-2"
           type="checkbox"
           id="breakfast"
           checked={expense.breakfast}
@@ -44,10 +44,10 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
         />
       </div>
 
-      <div className="flex flex-col w-full items-start space-y-2">
+      <div className="flex w-full justify-between">
         <label className="text-gray-600">Lunch</label>
         <input
-          className="p-2 w-full border-grey-300 border-b-2"
+          className="border-grey-300 border-b-2"
           type="checkbox"
           id="lunch"
           checked={expense.lunch}
@@ -55,10 +55,10 @@ const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {
         />
       </div>
 
-      <div className="flex flex-col w-full items-start space-y-2">
+      <div className="flex w-full justify-between">
         <label className="text-gray-600"> Dinner</label>
         <input
-          className="p-2 w-full border-grey-300 border-b-2"
+          className="border-grey-300 border-b-2"
           type="checkbox"
           id="dinner"
           checked={expense.dinner}
