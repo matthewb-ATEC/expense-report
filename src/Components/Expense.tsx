@@ -74,9 +74,9 @@ const Expense: FC<ExpenseProps> = ({
   };
 
   return (
-    <div className="flex items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
-      <div className="flex flex-col space-y-4 items-start">
-        <div className="flex flex-col space-y-4">
+    <div className="p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+      <div className="w-full flex flex-col space-y-4 items-start">
+        <div className="w-full flex flex-col space-y-4">
           {/* Cost Category Dropdown */}
           <div className="flex flex-col items-start space-y-2">
             <label className="text-gray-600 text-nowrap" htmlFor="costCategory">
@@ -106,7 +106,7 @@ const Expense: FC<ExpenseProps> = ({
                 Cost Code
               </label>
               <input
-                className="p-2 border-grey-300 border-b-2"
+                className="w-full p-2 border-grey-300 border-b-2"
                 type="text"
                 id="costCode"
                 value={expense.costCode}
@@ -173,7 +173,7 @@ const Expense: FC<ExpenseProps> = ({
             <div className="flex flex-col items-start space-y-2">
               <label className="text-gray-600">Cost</label>
               <input
-                className="p-2 border-grey-300 border-b-2"
+                className="w-full p-2 border-grey-300 border-b-2"
                 type="number"
                 id="cost"
                 value={expense.cost}

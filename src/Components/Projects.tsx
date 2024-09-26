@@ -72,17 +72,19 @@ const Projects: React.FC<ProjectsProps> = ({
   return (
     <div className="w-full flex flex-col space-y-4">
       {projects.length > 0 && <div className="text-xl font-bold">Projects</div>}
-      {projects.map((project) => (
-        <Project
-          key={project.id}
-          project={project}
-          selectedProject={selectedProject}
-          filteredProjects={filteredProjects}
-          handleProjectChange={handleProjectChange}
-          handleDeleteProject={handleDeleteProject}
-          updateSelectedProject={updateSelectedProject}
-        />
-      ))}
+      <div className="flex flex-col space-y-4 max-h-64 overflow-y-auto md:max-h-full">
+        {projects.map((project) => (
+          <Project
+            key={project.id}
+            project={project}
+            selectedProject={selectedProject}
+            filteredProjects={filteredProjects}
+            handleProjectChange={handleProjectChange}
+            handleDeleteProject={handleDeleteProject}
+            updateSelectedProject={updateSelectedProject}
+          />
+        ))}
+      </div>
       <button
         className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
         type="button"

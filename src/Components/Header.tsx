@@ -8,10 +8,7 @@ const Header: React.FC = () => {
         src="/images/ATEC Pantone Colors-hort.png"
         alt="AdvanceTEC"
       />
-      <div className="text-xl font-semibold">Expense Report Form</div>
-      <div className="text-xs text-gray-500">
-        Use this form to create and submit an expense report for approval.
-      </div>
+      <div className="text-2xl font-semibold">Expense Report Form</div>
     </div>
   );
 };
