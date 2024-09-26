@@ -9,6 +9,7 @@ import {
   Expense as ExpenseType,
 } from "../Data/types";
 import { v4 as uuidv4 } from "uuid";
+import Project from "./Project";
 
 interface ExpenseProps {
   expense: ExpenseType;
@@ -35,7 +36,11 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   const [costCode, setCostCode] = useState<string>(expense.costCode);
   const [cost, setCost] = useState<string>(expense.cost?.toString() || "0");
   const [attachments, setAttachments] = useState<AttachmentType[]>(
-    expense.attachments || []
+    //expense.attachments || []
+    expense.attachments?.map((att) => ({
+      ...att,
+      text: att.text || selectedDate, // Ensure text is set to selectedDate if it's undefined
+    })) || []
   );
 
   useEffect(() => {
@@ -77,7 +82,7 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       {requiresCostCode() && (
         <div className="flex flex-col space-y-2 items-start">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-            Cost Code
+            Cost Codex
           </label>
           <input
             className="p-2 border-grey-300 border-b-2"
@@ -113,11 +118,15 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   // Function to handle file upload
   const handleUploadAttachment = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-
     if (files) {
       const newAttachments = Array.from(files).map((file, index) => ({
         id: uuidv4(), // Use uuid to generate unique ID
         file,
+        text:
+          "Cost: " +
+          (String(selectedCategory) || "N/A") +
+          " | Date: " +
+          (String(selectedDate) || "N/A"),
       }));
       setAttachments([...attachments, ...newAttachments]);
     }

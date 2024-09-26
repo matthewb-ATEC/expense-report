@@ -1,3 +1,7 @@
+export interface User {
+  name: string;
+}
+
 export interface Project {
   id: string;
   projectNumber: string;
@@ -16,6 +20,7 @@ export interface Expense {
   fromLocation?: string;
   toLocation?: string;
   roundTrip?: boolean;
+  taxable?: boolean;
   breakfast?: number;
   lunch?: number;
   dinner?: number;
@@ -25,4 +30,5 @@ export interface Expense {
 export interface Attachment {
   id: string;
   file: File | null;
+  text: string;
 }

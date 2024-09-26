@@ -3,7 +3,15 @@ import React, { useState } from "react";
 import { allProjects } from "../Data/projects";
 import { Project as ProjectType } from "../Data/types";
 import { jsPDF } from "jspdf";
-import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib";
+import ATEClogo from "../Data/ATEClogo.png";
+import {
+  PDFDocument,
+  rgb,
+  degrees,
+  StandardFonts,
+  PDFPage,
+  PDFFont,
+} from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
 import {
   total,
@@ -13,9 +21,19 @@ import {
   summaries,
   mileageRate,
 } from "../Data/results";
+import { User as UserType } from "../Data/types";
 
 const Home: React.FC = () => {
+  const [name, setName] = useState<string>("");
   const [projects, setProjects] = useState<ProjectType[]>([]);
+
+  interface UserProps {
+    user: UserType;
+  }
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value); // Update state when input changes
+  };
 
   const addProject = () => {
     const newProject: ProjectType = {
@@ -74,7 +92,7 @@ const Home: React.FC = () => {
               exp.sum += Number(expense.mileage) * mileageRate;
             }
           }
-        } else if (expense.costCategory === "Per Diem") {
+        } else if (expense.costCategory === "62-1005-MLJ - Per Diem") {
           if (expense.breakfast !== null) {
             total.value += Number(expense.breakfast);
             totalTaxed.value += Number(expense.breakfast);
@@ -112,7 +130,10 @@ const Home: React.FC = () => {
             expense.cost >= 0
           ) {
             total.value += expense.cost;
-            if (expense.costCategory === "Reimbursable Gas") {
+            if (
+              expense.costCategory === "62-1011-TRV - Reimbursable Gas" &&
+              expense.taxable === false
+            ) {
               totalUntaxed.value += expense.cost;
             } else {
               totalTaxed.value += expense.cost;
@@ -198,8 +219,268 @@ const Home: React.FC = () => {
     }
   };
 
+  const getCurrentDate = (): string => {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const handleDownloadPDF = async () => {
     const pdfDoc = await PDFDocument.create();
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const fontSize = 12;
+    const lineHeight = fontSize + 4;
+    const pageMargin = 50;
+
+    let page = pdfDoc.addPage();
+    let currentY = page.getSize().height - pageMargin;
+
+    const logoImageBytes = await fetch(ATEClogo).then((res) =>
+      res.arrayBuffer()
+    );
+    const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes); // Use embedJpg if JPEG
+
+    // Draw the "EXPENSE REPORT" title and logo on the same line
+    const drawTitleWithLogo = (
+      page: PDFPage,
+      logoImage: any,
+      rightMargin: number
+    ) => {
+      const pageWidth = page.getSize().width;
+
+      // Image dimensions: 1883 × 785
+      const logoWidth = 125.5;
+      const logoHeight = 52.3;
+
+      page.drawImage(logoImage, {
+        x: pageWidth - rightMargin - logoWidth,
+        y: currentY - logoHeight / 2,
+        width: logoWidth,
+        height: logoHeight,
+      });
+
+      currentY -= logoHeight / 2;
+    };
+
+    // Print text with left and right indentation
+    const drawTextWithAlignment = (
+      page: PDFPage,
+      leftText: string,
+      rightText: string,
+      x: number,
+      y: number,
+      fontSize: number,
+      font: PDFFont,
+      rightMargin: number
+    ) => {
+      // Draw the left-aligned text
+      page.drawText(leftText, { x, y, size: fontSize, font });
+
+      // Calculate the position for the right-aligned text
+      const textWidth = font.widthOfTextAtSize(rightText, fontSize);
+      const pageWidth = page.getSize().width;
+      const rightX = pageWidth - rightMargin - textWidth;
+
+      // Draw the right-aligned text
+      page.drawText(rightText, { x: rightX, y, size: fontSize, font });
+    };
+
+    // Projects
+    projects.forEach((project, index) => {
+      if (currentY < lineHeight + pageMargin) {
+        page = pdfDoc.addPage();
+        currentY = page.getSize().height - pageMargin;
+      }
+      drawTitleWithLogo(page, embeddedLogoImage, pageMargin);
+      currentY -= lineHeight;
+
+      drawTextWithAlignment(
+        page,
+        `Expense Report`,
+        name,
+        pageMargin,
+        currentY,
+        fontSize,
+        boldFont,
+        pageMargin
+      );
+      currentY -= lineHeight;
+      drawTextWithAlignment(
+        page,
+        `Billable: ${project.projectNumber}`,
+        getCurrentDate(),
+        pageMargin,
+        currentY,
+        fontSize,
+        boldFont,
+        pageMargin
+      );
+      currentY -= lineHeight * 3;
+
+      project.expenses.forEach((expense) => {
+        const description =
+          `${
+            expense.costCode &&
+            (expense.costCategory === "Mileage" ||
+              expense.costCategory === "Other")
+              ? expense.costCode + " - "
+              : ""
+          }` + (expense.costCategory || "N/A");
+        const amount = `$${expense.cost?.toFixed(2) || "0.00"}`;
+
+        //Constuct expense sub description
+        let subParts: string[] = [];
+        subParts.push(expense.date || "");
+        subParts.push(
+          `${
+            !expense.taxable &&
+            expense.costCategory === "62-1011-TRV - Reimbursable Gas"
+              ? "Untaxed"
+              : ""
+          }`
+        );
+        subParts.push(`${expense.purpose || ""}`);
+        subParts.push(
+          `${
+            expense.costCategory === "62-1005-MLJ - Per Diem"
+              ? "B: $" +
+                (expense.breakfast || 0) +
+                " L: $" +
+                (expense.lunch || 0) +
+                " D: $" +
+                (expense.dinner || 0)
+              : ""
+          }`
+        );
+        subParts.push(
+          `${
+            expense.costCategory === "Mileage"
+              ? "From: " +
+                (expense.fromLocation || "N/A") +
+                " To: " +
+                (expense.toLocation || "N/A")
+              : ""
+          }`
+        );
+        subParts.push(`${expense.description || ""}`);
+
+        console.log("subParts: ", subParts);
+        let subDescription = "";
+
+        for (let i = 0; i < 6; i++) {
+          if (subParts[i] != "") {
+            subDescription += subParts[i];
+            for (let j = i; j < 6; j++) {
+              if (i != j && subParts[j] != "") {
+                subDescription += " | ";
+                break;
+              }
+            }
+          }
+        }
+
+        // Draw the description and amount on the same line
+        if (currentY < lineHeight + pageMargin) {
+          page = pdfDoc.addPage();
+          currentY = page.getSize().height - pageMargin;
+        }
+        drawTextWithAlignment(
+          page,
+          description,
+          `${amount}`,
+          pageMargin,
+          currentY,
+          fontSize,
+          font,
+          pageMargin
+        );
+        currentY -= lineHeight;
+
+        //Sub description
+        if (currentY < lineHeight + pageMargin) {
+          page = pdfDoc.addPage();
+          currentY = page.getSize().height - pageMargin;
+        }
+        let subDescriptionLines = "";
+        for (let i = 0; i < subDescription.length; i++) {
+          subDescriptionLines += subDescription[i];
+          if (i % 100 == 0 && i != 0) {
+            if (currentY < lineHeight + pageMargin) {
+              page = pdfDoc.addPage();
+              currentY = page.getSize().height - pageMargin;
+            }
+            if (i != subDescription.length && subDescription[i] != " ") {
+              subDescriptionLines += "-";
+            }
+            page.drawText(subDescriptionLines, {
+              x: pageMargin,
+              y: currentY,
+              size: fontSize * 0.8,
+              font,
+              color: rgb(0.5, 0.5, 0.5), // Grey
+            });
+            currentY -= lineHeight;
+            subDescriptionLines = "";
+          }
+        }
+        if (subDescriptionLines.length != 0) {
+          if (currentY < lineHeight + pageMargin) {
+            page = pdfDoc.addPage();
+            currentY = page.getSize().height - pageMargin;
+          }
+          page.drawText(subDescriptionLines, {
+            x: pageMargin,
+            y: currentY,
+            size: fontSize * 0.8,
+            font,
+            color: rgb(0.5, 0.5, 0.5), // Grey
+          });
+          currentY -= lineHeight;
+        }
+
+        // Expense divider line
+        if (currentY < lineHeight + pageMargin) {
+          page = pdfDoc.addPage();
+          currentY = page.getSize().height - pageMargin;
+        }
+        const pageWidth = page.getSize().width;
+        page.drawLine({
+          start: { x: pageMargin, y: currentY },
+          end: { x: pageWidth - pageMargin, y: currentY },
+          thickness: 1,
+          color: rgb(0, 0, 0.7), // Blue
+        });
+        currentY -= lineHeight;
+        currentY -= 0.5 * lineHeight;
+      });
+
+      //Print Total
+      if (currentY < lineHeight + pageMargin) {
+        page = pdfDoc.addPage();
+        currentY = page.getSize().height - pageMargin;
+      }
+      drawTextWithAlignment(
+        page,
+        `Total:`,
+        `$${project.expenses
+          .reduce((sum, exp) => sum + (exp.cost || 0), 0)
+          .toFixed(2)}`,
+        pageMargin,
+        currentY,
+        fontSize,
+        boldFont,
+        pageMargin
+      );
+      if (index !== projects.length - 1) {
+        page = pdfDoc.addPage();
+        currentY = page.getSize().height - pageMargin;
+      }
+    });
 
     // Gather all attachment files from all expenses
     const allAttachments = projects.flatMap((project) =>
@@ -236,7 +517,8 @@ const Home: React.FC = () => {
             pdfDoc.addPage(page);
 
             // Add a "post-it note" annotation to the page
-            const noteText = `Note`;
+            console.log("text", attachment.text);
+            const noteText = attachment.text || "N/A";
             const { width, height } = page.getSize();
             const textSize = 12;
             const padding = 5;
@@ -280,7 +562,8 @@ const Home: React.FC = () => {
     // Create a link element and trigger a download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "combined_attachments_with_notes.pdf";
+    link.download =
+      "Expense Report - " + name + " - " + String(getCurrentDate());
     link.click();
   };
 
@@ -297,6 +580,8 @@ const Home: React.FC = () => {
               type="text"
               id="name"
               name="name"
+              value={name} //Bind to state
+              onChange={handleNameChange} // Update state on input change
             />
           </div>
         </div>
