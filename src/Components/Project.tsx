@@ -82,13 +82,16 @@ const Project: React.FC<ProjectProps> = ({
             )}
             <div className="w-full flex justify-between">
               <button
-                className="text-red-500 text-nowrap"
+                className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
                 type="button"
                 onClick={() => handleDeleteProject(project.id)}
               >
                 Delete
               </button>
-              <button onClick={() => handleSelectedProjectChange(project)}>
+              <button
+                onClick={() => handleSelectedProjectChange(project)}
+                className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+              >
                 Details
               </button>
             </div>
