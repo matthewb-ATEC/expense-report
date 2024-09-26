@@ -6,17 +6,21 @@ import { v4 as uuidv4 } from "uuid";
 interface ProjectsProps {
   projects: ProjectType[];
   selectedProject: ProjectType | null;
+  filteredProjects: string[];
   handleProjectsChange: Function;
   handleProjectChange: Function;
-  handleSelectedProjectChange: Function;
+  updateSelectedProject: Function;
+  updateFilteredProjects: Function;
 }
 
 const Projects: React.FC<ProjectsProps> = ({
   projects,
   selectedProject,
+  filteredProjects,
   handleProjectsChange,
   handleProjectChange,
-  handleSelectedProjectChange,
+  updateSelectedProject,
+  updateFilteredProjects,
 }) => {
   const handleAddProject = () => {
     // Create the new default project
@@ -42,7 +46,7 @@ const Projects: React.FC<ProjectsProps> = ({
 
         const updatedProjects = projects.concat(createdProject);
         handleProjectsChange(updatedProjects);
-        handleSelectedProjectChange(createdProject);
+        updateSelectedProject(createdProject);
       })
       .catch((error) => console.log(error));
   };
@@ -58,8 +62,9 @@ const Projects: React.FC<ProjectsProps> = ({
         const updatedProjects = projects.filter((project) => project.id !== id);
         handleProjectsChange(updatedProjects);
 
-        if (projectToDelete === selectedProject)
-          handleSelectedProjectChange(null);
+        if (projectToDelete === selectedProject) updateSelectedProject(null);
+
+        updateFilteredProjects(updatedProjects);
       })
       .catch((error) => console.log(error));
   };
@@ -72,9 +77,10 @@ const Projects: React.FC<ProjectsProps> = ({
           key={project.id}
           project={project}
           selectedProject={selectedProject}
+          filteredProjects={filteredProjects}
           handleProjectChange={handleProjectChange}
           handleDeleteProject={handleDeleteProject}
-          handleSelectedProjectChange={handleSelectedProjectChange}
+          updateSelectedProject={updateSelectedProject}
         />
       ))}
       <button
@@ -82,7 +88,7 @@ const Projects: React.FC<ProjectsProps> = ({
         type="button"
         onClick={() => {
           handleAddProject();
-          handleSelectedProjectChange(projects[projects.length]);
+          updateSelectedProject(projects[projects.length]);
         }}
       >
         {projects.length === 0 ? "Start Expense Report" : "Add Project"}
