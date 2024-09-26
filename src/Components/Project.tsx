@@ -88,12 +88,14 @@ const Project: React.FC<ProjectProps> = ({
               >
                 Delete
               </button>
-              <button
-                onClick={() => handleSelectedProjectChange(project)}
-                className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-              >
-                Details
-              </button>
+              {project.name !== "" && (
+                <button
+                  onClick={() => handleSelectedProjectChange(project)}
+                  className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+                >
+                  Details
+                </button>
+              )}
             </div>
           </div>
         </div>
