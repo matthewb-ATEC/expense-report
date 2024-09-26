@@ -124,9 +124,7 @@ const Project: React.FC<ProjectProps> = ({
   return (
     <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
       <div className="flex w-full justify-between space-x-2">
-        <div className="text-gray-600 text-nowrap">
-          {getMinimizedProjectText()}
-        </div>
+        <div className="text-gray-600">{getMinimizedProjectText()}</div>
         <button
           onClick={() => updateSelectedProject(project)}
           className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"

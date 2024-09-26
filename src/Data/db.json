@@ -2,7 +2,7 @@
   "projects": [
     {
       "id": "25fcac14-5df5-41e1-98da-14903ca4d02e",
-      "name": "",
+      "name": "Messer Lilly LP2",
       "expenses": [
         {
           "id": "d67939a0-7694-44ff-8bc3-3ed4e3489416",
@@ -10,7 +10,34 @@
           "costCategory": "",
           "costCode": ""
         }
-      ]
+      ],
+      "number": 25015
+    },
+    {
+      "id": "0cf444bd-2532-4752-8ca6-b0ef2520c999",
+      "name": "CRB-BioBloom Design",
+      "expenses": [
+        {
+          "id": "cdc1b4e5-7641-43a8-b587-37df44fbd331",
+          "date": "",
+          "costCategory": "",
+          "costCode": ""
+        }
+      ],
+      "number": 25014
+    },
+    {
+      "id": "f82f0ae2-e305-46ba-8bf3-209c76adf289",
+      "name": "Jacobs FDBU DSM-1 Construction",
+      "expenses": [
+        {
+          "id": "8d46ef65-2409-46d2-a1c0-ccafe7fd11a9",
+          "date": "",
+          "costCategory": "",
+          "costCode": ""
+        }
+      ],
+      "number": 23016
     }
   ]
 }
