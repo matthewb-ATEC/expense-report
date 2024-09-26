@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 interface ProjectsProps {
   projects: ProjectType[];
+  selectedProject: ProjectType | null;
   handleProjectsChange: Function;
   handleProjectChange: Function;
   handleSelectedProjectChange: Function;
@@ -12,6 +13,7 @@ interface ProjectsProps {
 
 const Projects: React.FC<ProjectsProps> = ({
   projects,
+  selectedProject,
   handleProjectsChange,
   handleProjectChange,
   handleSelectedProjectChange,
@@ -48,11 +50,16 @@ const Projects: React.FC<ProjectsProps> = ({
   const handleDeleteProject = (id: string) => {
     console.log(`Deleting project ID: ${id}`);
 
+    const projectToDelete = projects.find((project) => project.id === id);
+
     projectsService
       .deleteID(id)
       .then(() => {
         const updatedProjects = projects.filter((project) => project.id !== id);
         handleProjectsChange(updatedProjects);
+
+        if (projectToDelete === selectedProject)
+          handleSelectedProjectChange(null);
       })
       .catch((error) => console.log(error));
   };

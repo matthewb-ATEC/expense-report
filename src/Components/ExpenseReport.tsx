@@ -67,11 +67,12 @@ const ExpenseReport: React.FC = () => {
         <div className="flex space-x-8">
           <Projects
             projects={projects}
+            selectedProject={selectedProject}
             handleProjectsChange={setProjects}
             handleProjectChange={handleProjectChange}
             handleSelectedProjectChange={handleSelectedProjectChange}
           />
-          {selectedProject?.name !== "" && (
+          {selectedProject && selectedProject?.name !== "" && (
             <Expenses
               project={selectedProject || undefined}
               expenses={selectedProject?.expenses}
