@@ -1,5 +1,5 @@
 {
-  "name": "expense-report",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^10.0.0",
+    "json-server": "^1.0.0-beta.3"
   }
 }
