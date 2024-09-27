@@ -19,7 +19,7 @@ const ExpenseReport: React.FC = () => {
     console.log("Initial useEffect");
     projectsService
       .get()
-      .then((initialProjects) => {
+      .then((initialProjects: ProjectType[]) => {
         console.log("Promise fulfilled");
         setProjects(initialProjects);
         if (initialProjects) setSelectedProject(initialProjects[0]);
@@ -77,8 +77,8 @@ const ExpenseReport: React.FC = () => {
   };
 
   return (
-    <div className="flex p-8 bg-gray-100 justify-center items-center">
-      <div className="flex w-11/12 lg:w-fit flex-col self-center space-y-8">
+    <div className="h-full flex p-8 bg-gray-100 justify-center">
+      <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
         {projects.length === 0 && <Name />}
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
           <Projects
