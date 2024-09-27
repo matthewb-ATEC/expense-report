@@ -1,104 +1,137 @@
-import React, { useEffect, useState } from "react";
-import Expense from "./Expense";
-import { Expense as ExpenseType } from "../Data/types";
-import { v4 as uuidv4 } from "uuid";
+import React from "react";
+import { ProjectType } from "../data/types";
+import { allProjects } from "../data/projects";
 
 interface ProjectProps {
-  project: any;
-  allProjects: { number: string }[];
-  updateProject: (updatedProject: any) => void;
+  project: ProjectType;
+  selectedProject: ProjectType | null;
+  filteredProjects: string[];
+  handleProjectChange: Function;
+  handleDeleteProject: Function;
+  updateSelectedProject: Function;
 }
 
 const Project: React.FC<ProjectProps> = ({
   project,
-  allProjects,
-  updateProject,
+  selectedProject,
+  filteredProjects,
+  handleProjectChange,
+  handleDeleteProject,
+  updateSelectedProject,
 }) => {
-  const [selectedProjectNumber, setSelectedProjectNumber] = useState<
-    string | undefined
-  >(project.projectNumber);
-  const [expenses, setExpenses] = useState<ExpenseType[]>(project.expenses);
+  const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newName: string = event.target.value;
+    const newNumber: number | undefined = allProjects.find(
+      (project) => project.name === newName
+    )?.number;
 
-  useEffect(() => {
-    updateProject({
+    const updatedProject: ProjectType = {
       ...project,
-      projectNumber: selectedProjectNumber,
-      expenses,
-    });
-  }, [selectedProjectNumber, expenses]);
-
-  const addExpense = () => {
-    const newExpense: ExpenseType = {
-      id: uuidv4(),
-      date: "",
-      costCategory: "",
-      costCode: "",
+      number: newNumber,
+      name: newName,
     };
-    setExpenses([...expenses, newExpense]);
+
+    handleProjectChange(updatedProject);
   };
 
-  const removeExpense = (id: string) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
-  };
-
-  const handleProjectNumberChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const number = event.target.value;
-    setSelectedProjectNumber(number);
+    const updatedProject: ProjectType = {
+      ...project,
+      description: event.target.value,
+    };
+
+    handleProjectChange(updatedProject);
   };
 
-  const handleExpenseUpdate = (updatedExpense: any) => {
-    setExpenses(
-      expenses.map((expense) =>
-        expense.id === updatedExpense.id ? updatedExpense : expense
-      )
-    );
+  const getMinimizedProjectText = () => {
+    return project.name === "Other"
+      ? !project.description || project.description === ""
+        ? "No description"
+        : project.description
+      : project.name === ""
+      ? "Project unassigned"
+      : project.name;
   };
+
+  if (project === selectedProject) {
+    return (
+      <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+        <div className="flex w-full flex-col space-y-4">
+          <div className="flex w-full flex-col items-start space-y-2">
+            <label className="text-gray-600 text-nowrap" htmlFor="projectName">
+              Project
+            </label>
+            <select
+              className="p-2 w-full border-grey-300 border-b-2"
+              id="projectName"
+              value={project.name}
+              onChange={handleNameChange}
+            >
+              <option value="">Select a project</option>
+              {project.name && project.name !== "Other" && (
+                <option value={project.name}>{project.name}</option>
+              )}
+              {filteredProjects.map((project) => (
+                <option key={project} value={project}>
+                  {project}
+                </option>
+              ))}
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="flex flex-col items-start space-y-2">
+            {project.name === "Other" && (
+              <>
+                <label
+                  className="text-gray-600 text-nowrap"
+                  htmlFor="description"
+                >
+                  Description
+                </label>
+                <input
+                  className="p-2 w-full border-grey-300 border-b-2"
+                  id="description"
+                  value={project.description}
+                  onChange={handleDescriptionChange}
+                />
+              </>
+            )}
+          </div>
+          <div className="w-full flex justify-between">
+            <button
+              className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
+              type="button"
+              onClick={() => handleDeleteProject(project.id)}
+            >
+              Delete
+            </button>
+            {project.name !== "" && (
+              <button
+                onClick={() => updateSelectedProject(project)}
+                className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+              >
+                Details
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex flex-col space-y-4">
-        <div className="flex flex-col items-start space-y-2">
-          <label className="text-gray-600 text-nowrap" htmlFor="projectNumber">
-            Project
-          </label>
-          <select
-            className="p-2 w-full border-grey-300 border-b-2"
-            id="projectNumber"
-            value={selectedProjectNumber || ""}
-            onChange={handleProjectNumberChange}
-          >
-            <option value="">Select a number</option>
-            {allProjects.map((project) => (
-              <option key={project.number} value={project.number}>
-                {project.number}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {expenses.map((expense) => (
-          <div className="flex space-x-4 items-start" key={expense.id}>
-            <Expense expense={expense} updateExpense={handleExpenseUpdate} />
-            <button
-              className="text-red-500 text-nowrap font-bold"
-              type="button"
-              onClick={() => removeExpense(expense.id)}
-            >
-              Remove Expense
-            </button>
-          </div>
-        ))}
+    <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+      <div className="flex w-full justify-between space-x-2">
+        <div className="text-gray-600">{getMinimizedProjectText()}</div>
+        <button
+          onClick={() => updateSelectedProject(project)}
+          className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+        >
+          Details
+        </button>
       </div>
-
-      <button
-        className="text-ATECblue font-bold"
-        type="button"
-        onClick={addExpense}
-      >
-        Add Expense
-      </button>
     </div>
   );
 };

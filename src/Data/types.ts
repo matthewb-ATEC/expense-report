@@ -2,13 +2,15 @@ export interface User {
   name: string;
 }
 
-export interface Project {
+export interface ProjectType {
   id: string;
-  projectNumber: string;
-  expenses: Expense[];
+  number: number | undefined;
+  name: string;
+  description?: string;
+  expenses: ExpenseType[];
 }
 
-export interface Expense {
+export interface ExpenseType {
   id: string;
   date: string;
   costCategory: string;
@@ -20,14 +22,14 @@ export interface Expense {
   fromLocation?: string;
   toLocation?: string;
   roundTrip?: boolean;
+  breakfast?: boolean;
+  lunch?: boolean;
+  dinner?: boolean;
   taxable?: boolean;
-  breakfast?: number;
-  lunch?: number;
-  dinner?: number;
-  attachments?: Attachment[];
+  attachments?: AttachmentType[];
 }
 
-export interface Attachment {
+export interface AttachmentType {
   id: string;
   file: File | null;
   text: string;
