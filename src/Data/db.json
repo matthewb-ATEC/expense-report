@@ -1,3 +1,18 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "id": "0af47961-4b05-4479-96b5-5bfca262f23e",
+      "name": "CRB AstraZeneca 9950 MCD",
+      "expenses": [
+        {
+          "id": "64560640-ead7-43f4-9cc2-7cce9ce6feda",
+          "date": "2024-09-01",
+          "costCategory": "Air Fare",
+          "costCode": "62-1001-TRV",
+          "cost": 1
+        }
+      ],
+      "number": 25010
+    }
+  ]
 }
