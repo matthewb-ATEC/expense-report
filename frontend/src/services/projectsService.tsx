@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ProjectType } from "../data/types";
-const baseURL = "http://localhost:3001/projects";
+const baseURL = "/projects";
 
 const get = async () => {
   console.log("Getting all projects");
