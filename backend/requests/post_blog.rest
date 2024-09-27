@@ -1,0 +1,9 @@
+POST http://localhost:3001/projects
+Content-Type: application/json
+
+{
+    "id": "",
+    "name": "",
+    "number": 0,
+    "expenses": []
+}
