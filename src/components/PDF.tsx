@@ -1,9 +1,7 @@
-import Project from "./Project";
 import React, { useState } from "react";
-import { allProjects } from "../Data/projects";
-import { Project as ProjectType } from "../Data/types";
+import { allProjects } from "../data/projects";
+import { ProjectType } from "../data/types";
 import { jsPDF } from "jspdf";
-import ATEClogo from "../Data/ATEClogo.png";
 import {
   PDFDocument,
   rgb,
@@ -20,54 +18,18 @@ import {
   breakdown,
   summaries,
   mileageRate,
-} from "../Data/results";
-import { User as UserType } from "../Data/types";
+} from "../data/results";
+import { UserType } from "../data/types";
+import Name from "./Name";
 
-const Home: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [projects, setProjects] = useState<ProjectType[]>([]);
+interface PDFProps {
+  projects: ProjectType[];
+  name: string;
+}
 
-  interface UserProps {
-    user: UserType;
-  }
-
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value); // Update state when input changes
-  };
-
-  const addProject = () => {
-    const newProject: ProjectType = {
-      id: uuidv4(),
-      projectNumber: "",
-      expenses: [
-        {
-          id: uuidv4(),
-          date: "",
-          costCategory: "",
-          costCode: "",
-          attachments: [],
-        },
-      ],
-    };
-
-    setProjects([...projects, newProject]);
-  };
-
-  const removeProject = (id: string) => {
-    setProjects(projects.filter((project) => project.id !== id));
-  };
-
-  const handleProjectUpdate = (updatedProject: any) => {
-    setProjects(
-      projects.map((project) =>
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
-  };
-
+const PDF: React.FC<PDFProps> = ({ projects, name }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // calculate(projects); // for the refactor into Calculations.tsx
     console.log(JSON.stringify(projects));
     console.log(projects);
     total.value = 0;
@@ -240,12 +202,12 @@ const Home: React.FC = () => {
     let page = pdfDoc.addPage();
     let currentY = page.getSize().height - pageMargin;
 
-    const logoImageBytes = await fetch(ATEClogo).then((res) =>
+    const logoImageBytes = await fetch("/images/ATEClogo.png").then((res) =>
       res.arrayBuffer()
     );
-    const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes); // Use embedJpg if JPEG
+    const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes);
 
-    // Draw the "EXPENSE REPORT" title and logo on the same line
+    // Draw ATEC logo
     const drawTitleWithLogo = (
       page: PDFPage,
       logoImage: any,
@@ -302,7 +264,7 @@ const Home: React.FC = () => {
       drawTextWithAlignment(
         page,
         `Expense Report`,
-        name,
+        name || `Default User`,
         pageMargin,
         currentY,
         fontSize,
@@ -312,7 +274,7 @@ const Home: React.FC = () => {
       currentY -= lineHeight;
       drawTextWithAlignment(
         page,
-        `Billable: ${project.projectNumber}`,
+        `Billable: ${project.number}`,
         getCurrentDate(),
         pageMargin,
         currentY,
@@ -563,73 +525,25 @@ const Home: React.FC = () => {
     const link = document.createElement("a");
     link.href = url;
     link.download =
-      "Expense Report - " + name + " - " + String(getCurrentDate());
+      "Expense Report - " + name + " - " + String(getCurrentDate()); // Add name reference
     link.click();
   };
 
   return (
-    <div className="flex p-8 bg-gray-100 justify-center items-center">
-      <form className="flex flex-col self-center space-y-8">
-        <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-sm">
-          <div className="flex flex-col w-full items-start space-y-2">
-            <label className="text-gray-600" htmlFor="name">
-              Full Name
-            </label>
-            <input
-              className="p-2 w-full border-grey-300 border-b-2"
-              type="text"
-              id="name"
-              name="name"
-              value={name} //Bind to state
-              onChange={handleNameChange} // Update state on input change
-            />
-          </div>
-        </div>
-
-        {projects.map((project) => (
-          <div
-            className="flex space-x-8 items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md"
-            key={project.id}
-          >
-            <Project
-              project={project}
-              allProjects={allProjects}
-              updateProject={handleProjectUpdate}
-            />
-            <button
-              className="text-red-500 font-bold text-nowrap"
-              type="button"
-              onClick={() => removeProject(project.id)}
-            >
-              Remove Project
-            </button>
-          </div>
-        ))}
-
-        <button
-          className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold"
-          type="button"
-          onClick={addProject}
-        >
-          Add Project
-        </button>
-
-        <div className="flex space-x-8 justify-center">
-          {/* Download PDF button */}
-          <button
-            className="p-4 bg-ATECblue shadow-md text-white font-bold rounded-md"
-            type="button"
-            onClick={(event) => {
-              handleSubmit(event); // Call handleSubmit to handle form submission
-              handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
-            }}
-          >
-            Generate Report
-          </button>
-        </div>
-      </form>
+    <div className="flex space-x-8 justify-center">
+      {/* Download PDF button */}
+      <button
+        className="p-4 bg-ATECblue shadow-md text-white font-bold rounded-md"
+        type="button"
+        onClick={(event) => {
+          handleSubmit(event); // Call handleSubmit to handle form submission
+          handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
+        }}
+      >
+        Generate Report
+      </button>
     </div>
   );
 };
 
-export default Home;
+export default PDF;

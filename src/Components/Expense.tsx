@@ -6,7 +6,6 @@ import PerDiem from "./expenses/PerDiem";
 import Mileage from "./expenses/Mileage";
 import { ExpenseType } from "../data/types";
 import Attachments from "./Attachments";
-import Project from "./Project";
 
 interface ExpenseProps {
   expense: ExpenseType;
@@ -35,38 +34,9 @@ const Expense: FC<ExpenseProps> = ({
       "";
 
     const updatedExpense: ExpenseType = {
-// The following dictionary connect the string parameter to its corresponding component, based on the selectedCategory. The keys are strings, and the strings with spaces require double quotes
-const CATEGORY_COMPONENT_MAP: {
-  [key: string]: React.FC<{ onUpdate: (updatedData: any) => void }>;
-} = {
-  "62-1011-TRV - Reimbursable Gas": ReimbursableGas,
-  "62-1006-MLJ - Client Entertainment": Description,
-  "62-1005-MLJ - Per Diem": PerDiem,
-  Mileage: Mileage,
-  Other: Description,
-  "Job Site Material": Description,
-};
-
-const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
-  const [selectedDate, setSelectedDate] = useState<string>(expense.date);
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    expense.costCategory
-  );
-  const [costCode, setCostCode] = useState<string>(expense.costCode);
-  const [cost, setCost] = useState<string>(expense.cost?.toString() || "0");
-  const [attachments, setAttachments] = useState<AttachmentType[]>(
-    //expense.attachments || []
-    expense.attachments?.map((att) => ({
-      ...att,
-      text: att.text || selectedDate, // Ensure text is set to selectedDate if it's undefined
-    })) || []
-  );
-
-  useEffect(() => {
-    updateExpense({
       ...expense,
-      costCode: newCostCode,
       costCategory: newCostCategory,
+      costCode: newCostCode,
     };
     handleExpenseChange(updatedExpense);
   };
@@ -101,19 +71,20 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
       expense.costCategory !== "Mileage" &&
       expense.costCategory !== "Per Diem"
     );
+  };
   const renderCostCodeInput = () => (
     <>
       {requiresCostCode() && (
         <div className="flex flex-col space-y-2 items-start">
           <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-            Cost Codex
+            Cost Code
           </label>
           <input
             className="p-2 border-grey-300 border-b-2"
             type="text"
             id="costCode"
-            value={costCode}
-            onChange={(e) => setCostCode(e.target.value)}
+            value={expense.costCode}
+            onChange={handleCostCodeChange}
             placeholder="Enter cost code"
           />
         </div>
@@ -122,43 +93,21 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
   );
 
   const renderCostInput = () => (
-    <div className="flex flex-col items-start space-y-2">
-      <label className="text-gray-600">Cost</label>
-      <input
-        className="p-2 border-grey-300 border-b-2"
-        type="number"
-        id="cost"
-        value={cost}
-        onChange={(e) => {
-          const value = Number(e.target.value);
-          if (value >= 0) {
-            setCost(value.toString());
-          }
-        }}
-      />
-    </div>
+    <>
+      {showCostInput() && (
+        <div className="flex flex-col items-start space-y-2">
+          <label className="text-gray-600">Cost</label>
+          <input
+            className="p-2 border-grey-300 border-b-2"
+            type="number"
+            id="cost"
+            value={expense.cost}
+            onChange={handleCostChange}
+          />
+        </div>
+      )}
+    </>
   );
-
-  // Function to handle file upload
-  const handleUploadAttachment = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const newAttachments = Array.from(files).map((file, index) => ({
-        id: uuidv4(), // Use uuid to generate unique ID
-        file,
-        text:
-          "Cost: " +
-          (String(selectedCategory) || "N/A") +
-          " | Date: " +
-          (String(selectedDate) || "N/A"),
-      }));
-      setAttachments([...attachments, ...newAttachments]);
-    }
-  };
-
-  const handleDeleteAttachment = (id: string) => {
-    setAttachments(attachments.filter((attachment) => attachment.id != id));
-  };
 
   return (
     <div className="p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
@@ -187,21 +136,7 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
           </div>
 
           {/* Conditional Rendering for Cost Code */}
-          {expense.costCategory && requiresCostCode() && (
-            <div className="flex flex-col space-y-2 items-start">
-              <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-                Cost Code
-              </label>
-              <input
-                className="w-full p-2 border-grey-300 border-b-2"
-                type="text"
-                id="costCode"
-                value={expense.costCode}
-                onChange={handleCostCodeChange}
-                placeholder="Enter cost code"
-              />
-            </div>
-          )}
+          {expense.costCategory && renderCostCodeInput()}
 
           {/* Date Picker */}
           <div className="flex flex-col items-start space-y-2">
@@ -256,18 +191,7 @@ const Expense: React.FC<ExpenseProps> = ({ expense, updateExpense }) => {
           )}
 
           {/* Conditional Rendering for Cost Input */}
-          {showCostInput() && (
-            <div className="flex flex-col items-start space-y-2">
-              <label className="text-gray-600">Cost</label>
-              <input
-                className="w-full p-2 border-grey-300 border-b-2"
-                type="number"
-                id="cost"
-                value={expense.cost}
-                onChange={handleCostChange}
-              />
-            </div>
-          )}
+          {renderCostInput()}
 
           <Attachments
             expense={expense}

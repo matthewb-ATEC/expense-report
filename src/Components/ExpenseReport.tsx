@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { ExpenseType, ProjectType } from "../data/types";
+import { ExpenseType, ProjectType, UserType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Name from "./Name";
 import Projects from "./Projects";
 import Expenses from "./Expenses";
 import { allProjects } from "../data/projects";
+import PDF from "./PDF";
 
 const ExpenseReport: React.FC = () => {
+  //const [user, setUser] = useState<UserType>();
+  const [name, setName] = useState("");
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
@@ -79,7 +82,7 @@ const ExpenseReport: React.FC = () => {
   return (
     <div className="flex p-8 bg-gray-100 justify-center items-center">
       <div className="flex w-11/12 lg:w-fit flex-col self-center space-y-8">
-        {projects.length === 0 && <Name />}
+        {projects.length === 0 && <Name setName={setName} />}
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
           <Projects
             projects={projects}
@@ -98,6 +101,7 @@ const ExpenseReport: React.FC = () => {
             />
           )}
         </div>
+        <PDF projects={projects} name={name} />
       </div>
     </div>
   );
