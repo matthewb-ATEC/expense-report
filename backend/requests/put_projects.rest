@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/projects
+Content-Type: application/json
+
+{
+    "id": "",
+    "name": "",
+    "number": 0,
+    "expenses": []
+}
