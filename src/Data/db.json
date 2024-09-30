@@ -7,12 +7,52 @@
         {
           "id": "64560640-ead7-43f4-9cc2-7cce9ce6feda",
           "date": "2024-09-01",
-          "costCategory": "Air Fare",
+          "costCategory": "Reimbursable Gas",
           "costCode": "62-1001-TRV",
           "cost": 1
+        },
+        {
+          "id": "ceee7e20-e771-480b-98c4-03a336093af3",
+          "date": "2024-09-24",
+          "costCategory": "Per Diem",
+          "costCode": "62-1001-TRV",
+          "breakfast": true,
+          "lunch": true,
+          "dinner": true
+        },
+        {
+          "id": "b4783db9-1b6f-42d6-86a7-d5accd6cf2b7",
+          "date": "2024-09-27",
+          "costCategory": "Mileage",
+          "costCode": "ABCD",
+          "fromLocation": "A",
+          "toLocation": "B",
+          "mileage": 100
         }
       ],
       "number": 25010
+    },
+    {
+      "id": "ebedadaa-88c1-4d4f-a194-7366a560ba52",
+      "name": "CRB-BioBloom Design",
+      "expenses": [
+        {
+          "id": "5da7ded1-cba8-40bf-b189-d306d1849fee",
+          "date": "2024-09-24",
+          "costCategory": "Hotel",
+          "costCode": "62-1001-TRV",
+          "cost": 15
+        },
+        {
+          "id": "5dc1629e-8536-4f43-b362-aedefefe4533",
+          "date": "2024-09-25",
+          "costCategory": "Other",
+          "costCode": "TEST",
+          "description": "TEST",
+          "cost": 10
+        }
+      ],
+      "number": 25014
     }
   ]
 }

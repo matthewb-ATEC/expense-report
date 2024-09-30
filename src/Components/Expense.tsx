@@ -1,6 +1,5 @@
 import { ChangeEvent, FC } from "react";
 import { categories } from "../data/categories";
-import ReimbursableGas from "./expenses/ReimbursableGas";
 import Description from "./expenses/Description";
 import PerDiem from "./expenses/PerDiem";
 import Mileage from "./expenses/Mileage";
@@ -153,12 +152,6 @@ const Expense: FC<ExpenseProps> = ({
           </div>
 
           {/* Conditional Rendering for Expense Type */}
-          {expense.costCategory === "Reimbursable Gas" && (
-            <ReimbursableGas
-              expense={expense}
-              handleExpenseChange={handleExpenseChange}
-            />
-          )}
           {expense.costCategory === "Client Entertainment" && (
             <Description
               expense={expense}

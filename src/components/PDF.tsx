@@ -9,15 +9,15 @@ import {
   StandardFonts,
   PDFPage,
   PDFFont,
+  RGB,
 } from "pdf-lib";
 import { v4 as uuidv4 } from "uuid";
 import {
   total,
-  totalTaxed,
-  totalUntaxed,
   breakdown,
   summaries,
   mileageRate,
+  perDiem,
 } from "../data/results";
 import { UserType } from "../data/types";
 import Name from "./Name";
@@ -28,95 +28,11 @@ interface PDFProps {
 }
 
 const PDF: React.FC<PDFProps> = ({ projects, name }) => {
+  // CONSIDER Deleting?
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(JSON.stringify(projects));
     console.log(projects);
-    total.value = 0;
-    totalTaxed.value = 0;
-    totalUntaxed.value = 0;
-    breakdown.forEach((item) => {
-      item.sum = 0;
-    });
-
-    for (let p = 0; p < projects.length; p++) {
-      for (let e = 0; e < projects[p].expenses.length; e++) {
-        let expense = projects[p].expenses[e];
-        if (expense.costCategory === "Mileage") {
-          console.log("mileage", expense.mileage, typeof expense.mileage);
-          if (expense.mileage !== null) {
-            total.value += Number(expense.mileage) * mileageRate;
-            totalTaxed.value += Number(expense.mileage) * mileageRate;
-            const exp = breakdown.find(
-              (b) => b.category === expense.costCategory
-            );
-            if (exp) {
-              exp.sum += Number(expense.mileage) * mileageRate;
-            }
-          }
-        } else if (expense.costCategory === "62-1005-MLJ - Per Diem") {
-          if (expense.breakfast !== null) {
-            total.value += Number(expense.breakfast);
-            totalTaxed.value += Number(expense.breakfast);
-            const exp = breakdown.find(
-              (b) => b.category === expense.costCategory
-            );
-            if (exp) {
-              exp.sum += Number(expense.breakfast);
-            }
-          }
-          if (expense.lunch !== null) {
-            total.value += Number(expense.lunch);
-            totalTaxed.value += Number(expense.lunch);
-            const exp = breakdown.find(
-              (b) => b.category === expense.costCategory
-            );
-            if (exp) {
-              exp.sum += Number(expense.lunch);
-            }
-          }
-          if (expense.dinner !== null) {
-            total.value += Number(expense.dinner);
-            totalTaxed.value += Number(expense.dinner);
-            const exp = breakdown.find(
-              (b) => b.category === expense.costCategory
-            );
-            if (exp) {
-              exp.sum += Number(expense.dinner);
-            }
-          }
-        } else {
-          if (
-            expense.cost !== null &&
-            typeof expense.cost === "number" &&
-            expense.cost >= 0
-          ) {
-            total.value += expense.cost;
-            if (
-              expense.costCategory === "62-1011-TRV - Reimbursable Gas" &&
-              expense.taxable === false
-            ) {
-              totalUntaxed.value += expense.cost;
-            } else {
-              totalTaxed.value += expense.cost;
-            }
-            const exp = breakdown.find(
-              (b) => b.category === expense.costCategory
-            );
-            if (exp) {
-              exp.sum += Number(expense.cost);
-            }
-          }
-        }
-
-        // update breakdown
-      }
-    }
-
-    console.log("total: ", total.value);
-    console.log("total taxed: ", totalTaxed.value);
-    console.log("total untaxed: ", totalUntaxed.value);
-    console.log(breakdown);
   };
 
   // Utility function to create a PDF from an image file
@@ -207,6 +123,11 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
     );
     const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes);
 
+    total.value = 0;
+    breakdown.forEach((item) => {
+      item.sum = 0;
+    });
+
     // Draw ATEC logo
     const drawTitleWithLogo = (
       page: PDFPage,
@@ -238,10 +159,11 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
       y: number,
       fontSize: number,
       font: PDFFont,
+      color: RGB,
       rightMargin: number
     ) => {
       // Draw the left-aligned text
-      page.drawText(leftText, { x, y, size: fontSize, font });
+      page.drawText(leftText, { x, y, size: fontSize, font, color });
 
       // Calculate the position for the right-aligned text
       const textWidth = font.widthOfTextAtSize(rightText, fontSize);
@@ -249,10 +171,10 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
       const rightX = pageWidth - rightMargin - textWidth;
 
       // Draw the right-aligned text
-      page.drawText(rightText, { x: rightX, y, size: fontSize, font });
+      page.drawText(rightText, { x: rightX, y, size: fontSize, font, color });
     };
 
-    // Projects
+    // Project loop
     projects.forEach((project, index) => {
       if (currentY < lineHeight + pageMargin) {
         page = pdfDoc.addPage();
@@ -264,48 +186,139 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
       drawTextWithAlignment(
         page,
         `Expense Report`,
-        name || `Default User`,
+        ``,
         pageMargin,
         currentY,
         fontSize,
         boldFont,
+        rgb(0, 0, 0),
+        pageMargin
+      );
+      drawTextWithAlignment(
+        page,
+        ``,
+        getCurrentDate(),
+        pageMargin,
+        currentY,
+        fontSize,
+        font,
+        rgb(0, 0, 0),
         pageMargin
       );
       currentY -= lineHeight;
       drawTextWithAlignment(
         page,
-        `Billable: ${project.number}`,
-        getCurrentDate(),
+        `Billable: ${project.name} | ${project.number}`,
+        ``,
         pageMargin,
         currentY,
         fontSize,
         boldFont,
+        rgb(0, 0, 0),
+        pageMargin
+      );
+      drawTextWithAlignment(
+        page,
+        ``,
+        name || `Default User`,
+        pageMargin,
+        currentY,
+        fontSize,
+        font,
+        rgb(0, 0, 0),
         pageMargin
       );
       currentY -= lineHeight * 3;
 
-      project.expenses.forEach((expense) => {
+      // Expense loop
+      drawTextWithAlignment(
+        page,
+        `Expenses`,
+        ``,
+        pageMargin,
+        currentY,
+        fontSize,
+        boldFont,
+        rgb(0, 0, 0),
+        pageMargin
+      );
+      currentY -= lineHeight * 2;
+
+      project.expenses.forEach((expense, index) => {
+        // Mileage Calculation
+        if (expense.costCategory === "Mileage") {
+          if (expense.mileage !== null) {
+            total.value += Number(expense.mileage) * mileageRate;
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.mileage) * mileageRate;
+            }
+          }
+          expense.cost = Number(expense.mileage) * mileageRate;
+        }
+        // Per Diem Calculation
+        else if (expense.costCategory === "Per Diem") {
+          expense.cost = 0;
+          if (expense.breakfast) {
+            total.value += perDiem.breakfast;
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += perDiem.breakfast;
+            }
+            expense.cost += perDiem.breakfast;
+          }
+          if (expense.lunch) {
+            total.value += perDiem.lunch;
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += perDiem.lunch;
+            }
+            expense.cost += perDiem.lunch;
+          }
+          if (expense.dinner) {
+            total.value += perDiem.dinner;
+
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += perDiem.dinner;
+            }
+            expense.cost += perDiem.dinner;
+          }
+        }
+        // Standard Cost Category Calculations
+        else {
+          if (
+            expense.cost !== null &&
+            typeof expense.cost === "number" &&
+            expense.cost >= 0
+          ) {
+            total.value += expense.cost;
+            const exp = breakdown.find(
+              (b) => b.category === expense.costCategory
+            );
+            if (exp) {
+              exp.sum += Number(expense.cost);
+            }
+          } else {
+            console.log("Invalid cost input");
+          }
+        }
+
         const description =
-          `${
-            expense.costCode &&
-            (expense.costCategory === "Mileage" ||
-              expense.costCategory === "Other")
-              ? expense.costCode + " - "
-              : ""
-          }` + (expense.costCategory || "N/A");
+          (expense.costCategory || "N/A") + " | " + (expense.costCode || "N/A");
         const amount = `$${expense.cost?.toFixed(2) || "0.00"}`;
 
         //Constuct expense sub description
         let subParts: string[] = [];
         subParts.push(expense.date || "");
-        subParts.push(
-          `${
-            !expense.taxable &&
-            expense.costCategory === "62-1011-TRV - Reimbursable Gas"
-              ? "Untaxed"
-              : ""
-          }`
-        );
         subParts.push(`${expense.purpose || ""}`);
         subParts.push(
           `${
@@ -322,22 +335,26 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         subParts.push(
           `${
             expense.costCategory === "Mileage"
-              ? "From: " +
+              ? "From " +
                 (expense.fromLocation || "N/A") +
-                " To: " +
+                " to " +
                 (expense.toLocation || "N/A")
               : ""
           }`
         );
+        subParts.push(
+          `${
+            expense.costCategory === "Mileage"
+              ? (expense.mileage || "N/A") + " Miles"
+              : ""
+          }`
+        );
         subParts.push(`${expense.description || ""}`);
-
-        console.log("subParts: ", subParts);
         let subDescription = "";
-
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < subParts.length; i++) {
           if (subParts[i] != "") {
             subDescription += subParts[i];
-            for (let j = i; j < 6; j++) {
+            for (let j = i; j < subParts.length; j++) {
               if (i != j && subParts[j] != "") {
                 subDescription += " | ";
                 break;
@@ -359,6 +376,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
           currentY,
           fontSize,
           font,
+          rgb(0, 0, 0),
           pageMargin
         );
         currentY -= lineHeight;
@@ -406,29 +424,32 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         }
 
         // Expense divider line
-        if (currentY < lineHeight + pageMargin) {
-          page = pdfDoc.addPage();
-          currentY = page.getSize().height - pageMargin;
+        if (index !== project.expenses.length - 1) {
+          if (currentY < lineHeight + pageMargin) {
+            page = pdfDoc.addPage();
+            currentY = page.getSize().height - pageMargin;
+          }
+          const pageWidth = page.getSize().width;
+          page.drawLine({
+            start: { x: pageMargin, y: currentY },
+            end: { x: pageWidth - pageMargin, y: currentY },
+            thickness: 1,
+            color: rgb(0, 0, 0.7), // Blue
+          });
+          currentY -= lineHeight;
+          currentY -= 0.5 * lineHeight;
         }
-        const pageWidth = page.getSize().width;
-        page.drawLine({
-          start: { x: pageMargin, y: currentY },
-          end: { x: pageWidth - pageMargin, y: currentY },
-          thickness: 1,
-          color: rgb(0, 0, 0.7), // Blue
-        });
-        currentY -= lineHeight;
-        currentY -= 0.5 * lineHeight;
       });
 
       //Print Total
+      currentY -= lineHeight;
       if (currentY < lineHeight + pageMargin) {
         page = pdfDoc.addPage();
         currentY = page.getSize().height - pageMargin;
       }
       drawTextWithAlignment(
         page,
-        `Total:`,
+        `Total`,
         `$${project.expenses
           .reduce((sum, exp) => sum + (exp.cost || 0), 0)
           .toFixed(2)}`,
@@ -436,14 +457,66 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         currentY,
         fontSize,
         boldFont,
+        rgb(0, 0, 0),
         pageMargin
       );
+      currentY -= lineHeight;
+
+      // Breakdown
+      if (currentY < lineHeight + pageMargin) {
+        page = pdfDoc.addPage();
+        currentY = page.getSize().height - pageMargin;
+      }
+      currentY -= lineHeight;
+      drawTextWithAlignment(
+        page,
+        "Breakdown",
+        ``,
+        pageMargin,
+        currentY,
+        fontSize,
+        font,
+        rgb(0, 0, 0),
+        pageMargin
+      );
+      currentY -= lineHeight;
+
+      if (currentY < lineHeight + pageMargin) {
+        page = pdfDoc.addPage();
+        currentY = page.getSize().height - pageMargin;
+      }
+      let nonZeroItems = breakdown.filter((item) => item.sum !== 0);
+      nonZeroItems.forEach((item, second_index) => {
+        if (currentY < lineHeight + pageMargin) {
+          page = pdfDoc.addPage();
+          currentY = page.getSize().height - pageMargin;
+        }
+        // Breakdown total category
+        drawTextWithAlignment(
+          page,
+          item.category + (item.costCode ? " | " + item.costCode : ""),
+          `$${item.sum.toFixed(2) || "0.00"}`,
+          pageMargin,
+          currentY,
+          fontSize * 0.8,
+          font,
+          rgb(0.5, 0.5, 0.5),
+          pageMargin
+        );
+        currentY -= lineHeight;
+      });
+
+      breakdown.forEach((item) => {
+        item.sum = 0;
+      });
+
+      // New page
       if (index !== projects.length - 1) {
         page = pdfDoc.addPage();
         currentY = page.getSize().height - pageMargin;
       }
     });
-
+    console.log(total.value);
     // Gather all attachment files from all expenses
     const allAttachments = projects.flatMap((project) =>
       project.expenses.flatMap((expense) => expense.attachments || [])
