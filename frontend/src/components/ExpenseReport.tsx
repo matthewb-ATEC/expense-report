@@ -72,7 +72,6 @@ const ExpenseReport: React.FC = () => {
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
       .map((project) => project.name);
-    console.log(filteredProjects);
     setFilteredProjects(filteredProjects);
   };
 
