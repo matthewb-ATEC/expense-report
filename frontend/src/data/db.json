@@ -1,3 +1,31 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "id": "29b9fa53-ce41-41e4-bbbc-c59f2efca983",
+      "name": "Jacobs FDBU DSM-1 Construction",
+      "expenses": [
+        {
+          "id": "4a208712-8f8d-498e-af5f-a094e0ec20e9",
+          "date": "",
+          "costCategory": "Mileage",
+          "costCode": ""
+        }
+      ],
+      "number": 23016
+    },
+    {
+      "id": "63803b8e-223b-45b1-9d37-e5f0af6e4d46",
+      "name": "CRB-BioBloom Design",
+      "expenses": [
+        {
+          "id": "048f19b1-5aa7-43a2-9d6a-44e293bf2e9d",
+          "date": "",
+          "costCategory": "Mileage",
+          "costCode": "",
+          "fromLocation": "w"
+        }
+      ],
+      "number": 25014
+    }
+  ]
 }

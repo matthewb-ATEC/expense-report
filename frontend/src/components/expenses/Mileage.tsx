@@ -1,32 +1,60 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ExpenseType } from "../../data/types";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { Libraries } from "@react-google-maps/api/dist/utils/make-load-script-url";
 
 interface MileageProps {
   expense: ExpenseType;
   handleExpenseChange: Function;
 }
 
+const libraries: Libraries = ["places"];
+
 const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
+  const [fromAutocomplete, setFromAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const [toAutocomplete, setToAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Update here
+    libraries,
+  });
+
+  console.log("All environment variables:", import.meta.env);
+
+  console.log("Google Maps API Key:", import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+
+  const onFromPlaceChanged = () => {
+    if (fromAutocomplete) {
+      const place = fromAutocomplete.getPlace();
+      const updatedExpense: ExpenseType = {
+        ...expense,
+        fromLocation: place.formatted_address || "",
+      };
+      handleExpenseChange(updatedExpense);
+    }
+  };
+
+  const onToPlaceChanged = () => {
+    if (toAutocomplete) {
+      const place = toAutocomplete.getPlace();
+      const updatedExpense: ExpenseType = {
+        ...expense,
+        toLocation: place.formatted_address || "",
+      };
+      handleExpenseChange(updatedExpense);
+    }
+  };
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
   const handlePurposeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
       purpose: event.target.value,
-    };
-    handleExpenseChange(updatedExpense);
-  };
-
-  const handleFromChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedExpense: ExpenseType = {
-      ...expense,
-      fromLocation: event.target.value,
-    };
-    handleExpenseChange(updatedExpense);
-  };
-
-  const handleToChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedExpense: ExpenseType = {
-      ...expense,
-      toLocation: event.target.value,
     };
     handleExpenseChange(updatedExpense);
   };
@@ -67,24 +95,40 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
 
       <div className="flex flex-col w-full items-start space-y-2">
         <label>From</label>
-        <input
-          className="p-2 w-full border-grey-300 border-b-2"
-          type="text"
-          id="from"
-          value={expense.fromLocation}
-          onChange={handleFromChange}
-        />
+        <Autocomplete
+          className="w-full"
+          onLoad={(autocomplete) => setFromAutocomplete(autocomplete)}
+          onPlaceChanged={onFromPlaceChanged}
+        >
+          <input
+            className="p-2 w-full border-grey-300 border-b-2"
+            type="text"
+            id="from"
+            value={expense.fromLocation}
+            onChange={(e) =>
+              handleExpenseChange({ ...expense, fromLocation: e.target.value })
+            }
+          />
+        </Autocomplete>
       </div>
 
       <div className="flex flex-col w-full items-start space-y-2">
         <label>To</label>
-        <input
-          className="p-2 w-full border-grey-300 border-b-2"
-          type="text"
-          id="to"
-          value={expense.toLocation}
-          onChange={handleToChange}
-        />
+        <Autocomplete
+          className="w-full"
+          onLoad={(autocomplete) => setToAutocomplete(autocomplete)}
+          onPlaceChanged={onToPlaceChanged}
+        >
+          <input
+            className="p-2 w-full border-grey-300 border-b-2"
+            type="text"
+            id="to"
+            value={expense.toLocation}
+            onChange={(e) =>
+              handleExpenseChange({ ...expense, toLocation: e.target.value })
+            }
+          />
+        </Autocomplete>
       </div>
 
       <div className="flex flex-col w-full items-start space-y-2">
