@@ -25,7 +25,6 @@ export interface ExpenseType {
   breakfast?: boolean;
   lunch?: boolean;
   dinner?: boolean;
-  taxable?: boolean;
   attachments?: AttachmentType[];
 }
 
