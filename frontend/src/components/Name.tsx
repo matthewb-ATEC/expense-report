@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Name = ({ setName }: { setName: (name: string) => void }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

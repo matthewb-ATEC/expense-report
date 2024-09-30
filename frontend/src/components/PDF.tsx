@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { allProjects } from "../data/projects";
+import React from "react";
+//import { allProjects } from "../data/projects";
 import { ProjectType } from "../data/types";
-import { jsPDF } from "jspdf";
+//import { jsPDF } from "jspdf";
 import {
   PDFDocument,
   rgb,
@@ -11,16 +11,16 @@ import {
   PDFFont,
   RGB,
 } from "pdf-lib";
-import { v4 as uuidv4 } from "uuid";
+//import { v4 as uuidv4 } from "uuid";
 import {
   total,
   breakdown,
-  summaries,
+  //summaries,
   mileageRate,
   perDiem,
 } from "../data/results";
-import { UserType } from "../data/types";
-import Name from "./Name";
+//import { UserType } from "../data/types";
+//import Name from "./Name";
 
 interface PDFProps {
   projects: ProjectType[];
@@ -247,16 +247,29 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
       project.expenses.forEach((expense, index) => {
         // Mileage Calculation
         if (expense.costCategory === "Mileage") {
+          const roundedMileage: number = Number(expense.mileage?.toFixed(1));
           if (expense.mileage !== null) {
-            total.value += Number(expense.mileage) * mileageRate;
+            if (expense.roundTrip) {
+              total.value += 2 * roundedMileage * mileageRate;
+            } else {
+              total.value += roundedMileage * mileageRate;
+            }
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
             );
             if (exp) {
-              exp.sum += Number(expense.mileage) * mileageRate;
+              if (expense.roundTrip) {
+                exp.sum += 2 * (roundedMileage * mileageRate);
+              } else {
+                exp.sum += roundedMileage * mileageRate;
+              }
             }
           }
-          expense.cost = Number(expense.mileage) * mileageRate;
+          if (expense.roundTrip) {
+            expense.cost = 2 * (roundedMileage * mileageRate);
+          } else {
+            expense.cost = roundedMileage * mileageRate;
+          }
         }
         // Per Diem Calculation
         else if (expense.costCategory === "Per Diem") {
@@ -345,7 +358,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         subParts.push(
           `${
             expense.costCategory === "Mileage"
-              ? (expense.mileage || "N/A") + " Miles"
+              ? (Number(expense.mileage).toFixed(1) || "N/A") + " Miles"
               : ""
           }`
         );
@@ -486,7 +499,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         currentY = page.getSize().height - pageMargin;
       }
       let nonZeroItems = breakdown.filter((item) => item.sum !== 0);
-      nonZeroItems.forEach((item, second_index) => {
+      nonZeroItems.forEach((item) => {
         if (currentY < lineHeight + pageMargin) {
           page = pdfDoc.addPage();
           currentY = page.getSize().height - pageMargin;
@@ -548,7 +561,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
 
           const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-          copiedPages.forEach((page, pageIndex) => {
+          copiedPages.forEach((page) => {
             pdfDoc.addPage(page);
 
             // Add a "post-it note" annotation to the page
@@ -557,6 +570,8 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
             const { width, height } = page.getSize();
             const textSize = 12;
             const padding = 5;
+
+            console.log(width); // used for keeping width variable
 
             // Measure the width of the text
             const textWidth = font.widthOfTextAtSize(noteText, textSize);
