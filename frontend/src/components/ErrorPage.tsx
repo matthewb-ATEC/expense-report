@@ -1,6 +1,6 @@
 const ErrorPage = () => {
   return (
-    <div className="flex flex-col flex-grow justify-center items-center">
+    <div className="h-screen flex flex-col flex-grow justify-center items-center">
       <div className="p-8 text-3xl font-bold text-black">Oops!</div>
       <div className="p-4 text-black">
         Sorry, an unexpected error has occurred.
