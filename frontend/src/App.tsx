@@ -1,40 +1,26 @@
-import Nav from "./components/Nav";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-
+import Layout from "./components/Layout";
+import ErrorPage from "./components/ErrorPage";
 import ExpenseReport from "./components/ExpenseReport";
 import Settings from "./components/Settings";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./components/ErrorPage";
 
+// Define routes using createBrowserRouter
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ExpenseReport />,
+    element: <Layout />, // Use Layout to wrap components
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "/report",
-    element: <ExpenseReport />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/settings",
-    element: <Settings />,
-    errorElement: <ErrorPage />,
+    children: [
+      { path: "/", element: <ExpenseReport /> },
+      { path: "/report", element: <ExpenseReport /> },
+      { path: "/settings", element: <Settings /> },
+    ],
   },
 ]);
 
 function App() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Nav />
-      <Header />
-      <RouterProvider router={router} />
-      <Footer />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
