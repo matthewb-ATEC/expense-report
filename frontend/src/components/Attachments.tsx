@@ -23,11 +23,14 @@ const Attachments: React.FC<AttachmentsProps> = ({
     const newAttachments = Array.from(files).map((file) => ({
       id: uuidv4(),
       file,
+      text: "TEST TEXT", //Change to attachment text
     }));
 
     const updatedExpense: ExpenseType = {
       ...expense,
-      attachments: expense.attachments?.concat(newAttachments),
+      attachments: expense.attachments
+        ? expense.attachments?.concat(newAttachments)
+        : newAttachments,
     };
     handleExpenseChange(updatedExpense);
   };

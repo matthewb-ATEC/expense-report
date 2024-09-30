@@ -1,6 +1,5 @@
 import { ChangeEvent, FC } from "react";
 import { categories } from "../data/categories";
-import ReimbursableGas from "./expenses/ReimbursableGas";
 import Description from "./expenses/Description";
 import PerDiem from "./expenses/PerDiem";
 import Mileage from "./expenses/Mileage";
@@ -35,8 +34,8 @@ const Expense: FC<ExpenseProps> = ({
 
     const updatedExpense: ExpenseType = {
       ...expense,
-      costCode: newCostCode,
       costCategory: newCostCategory,
+      costCode: newCostCode,
     };
     handleExpenseChange(updatedExpense);
   };
@@ -72,6 +71,42 @@ const Expense: FC<ExpenseProps> = ({
       expense.costCategory !== "Per Diem"
     );
   };
+  const renderCostCodeInput = () => (
+    <>
+      {requiresCostCode() && (
+        <div className="flex flex-col space-y-2 items-start">
+          <label className="text-gray-600 text-nowrap" htmlFor="costCode">
+            Cost Code
+          </label>
+          <input
+            className="p-2 border-grey-300 border-b-2"
+            type="text"
+            id="costCode"
+            value={expense.costCode}
+            onChange={handleCostCodeChange}
+            placeholder="Enter cost code"
+          />
+        </div>
+      )}
+    </>
+  );
+
+  const renderCostInput = () => (
+    <>
+      {showCostInput() && (
+        <div className="flex flex-col items-start space-y-2">
+          <label className="text-gray-600">Cost</label>
+          <input
+            className="p-2 border-grey-300 border-b-2"
+            type="number"
+            id="cost"
+            value={expense.cost}
+            onChange={handleCostChange}
+          />
+        </div>
+      )}
+    </>
+  );
 
   return (
     <div className="p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
@@ -100,21 +135,7 @@ const Expense: FC<ExpenseProps> = ({
           </div>
 
           {/* Conditional Rendering for Cost Code */}
-          {expense.costCategory && requiresCostCode() && (
-            <div className="flex flex-col space-y-2 items-start">
-              <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-                Cost Code
-              </label>
-              <input
-                className="w-full p-2 border-grey-300 border-b-2"
-                type="text"
-                id="costCode"
-                value={expense.costCode}
-                onChange={handleCostCodeChange}
-                placeholder="Enter cost code"
-              />
-            </div>
-          )}
+          {expense.costCategory && renderCostCodeInput()}
 
           {/* Date Picker */}
           <div className="flex flex-col items-start space-y-2">
@@ -131,12 +152,6 @@ const Expense: FC<ExpenseProps> = ({
           </div>
 
           {/* Conditional Rendering for Expense Type */}
-          {expense.costCategory === "Reimbursable Gas" && (
-            <ReimbursableGas
-              expense={expense}
-              handleExpenseChange={handleExpenseChange}
-            />
-          )}
           {expense.costCategory === "Client Entertainment" && (
             <Description
               expense={expense}
@@ -169,18 +184,7 @@ const Expense: FC<ExpenseProps> = ({
           )}
 
           {/* Conditional Rendering for Cost Input */}
-          {showCostInput() && (
-            <div className="flex flex-col items-start space-y-2">
-              <label className="text-gray-600">Cost</label>
-              <input
-                className="w-full p-2 border-grey-300 border-b-2"
-                type="number"
-                id="cost"
-                value={expense.cost}
-                onChange={handleCostChange}
-              />
-            </div>
-          )}
+          {renderCostInput()}
 
           <Attachments
             expense={expense}

@@ -1,3 +1,7 @@
+export interface UserType {
+  name: string;
+}
+
 export interface ProjectType {
   id: string;
   number: number | undefined;
@@ -21,11 +25,11 @@ export interface ExpenseType {
   breakfast?: boolean;
   lunch?: boolean;
   dinner?: boolean;
-  taxable?: boolean;
   attachments?: AttachmentType[];
 }
 
 export interface AttachmentType {
   id: string;
   file: File | null;
+  text: string;
 }
