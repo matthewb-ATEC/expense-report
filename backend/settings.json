@@ -1,1 +1,8 @@
-"{\n  \"mileageRate\": 0.66,\n  \"perDiem\": {\n    \"breakfast\": 12,\n    \"lunch\": 22,\n    \"dinner\": 40\n  }\n}"
+{
+  "mileageRate": 0.66,
+  "perDiem": {
+    "breakfast": 12,
+    "lunch": 22,
+    "dinner": 40
+  }
+}

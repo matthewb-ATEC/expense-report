@@ -24,7 +24,7 @@ settingsRouter.get("/", (request, response) => {
 
 settingsRouter.post("/", (request, response) => {
   const settingsData = JSON.stringify(request.body, null, 2);
-  fs.writeFile("./settings.json", JSON.stringify(settingsData), (err) => {
+  fs.writeFile("./settings.json", settingsData, (err) => {
     if (err) {
       console.error("Error writing to settings file:", err);
       return response.status(500).json({ error: "Failed to save settings" });
