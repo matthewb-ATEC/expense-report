@@ -24,14 +24,15 @@ settingsRouter.get("/", (request, response) => {
 
 settingsRouter.post("/", (request, response) => {
   const settingsData = JSON.stringify(request.body, null, 2);
-  try {
-    fs.writeFileSync("./settings.json", settingsData); // Write the string to the file
+  fs.writeFile("./settings.json", JSON.stringify(settingsData), (err) => {
+    if (err) {
+      console.error("Error writing to settings file:", err);
+      return response.status(500).json({ error: "Failed to save settings" });
+    }
+
+    // Send the response only after the file write is successful
     response.status(200).send("Settings saved successfully!");
-  } catch (err) {
-    console.error("Error writing settings file:", err);
-    response.status(500).json({ error: "Could not save settings file" });
-  }
-  response.send("Settings saved successfully!");
+  });
 });
 
 module.exports = settingsRouter;
