@@ -20,8 +20,14 @@ const Settings = () => {
   const handleSave = async () => {
     settingsService
       .set(settings)
-      .then((response) => console.log("Settings updated to", response))
-      .catch((error) => console.log(error));
+      .then((response) => {
+        console.log("Settings updated to", response);
+        alert("Settings updated successfully!");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Failed to update settings.");
+      });
   };
 
   const handleMileageRateChange = (newMileageRate: number) => {
