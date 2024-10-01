@@ -3,12 +3,14 @@ import { useState } from "react";
 interface ConfigurableProps {
   name: string;
   value: number;
+  isAdmin: boolean;
   onChange: (newValue: number) => void;
 }
 
 const Configurable: React.FC<ConfigurableProps> = ({
   name,
   value,
+  isAdmin,
   onChange,
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -49,12 +51,14 @@ const Configurable: React.FC<ConfigurableProps> = ({
       <div className="text-gray-600 text-nowrap">{name}</div>
       <div className="flex space-x-2">
         <div>${newValue}</div>
-        <button
-          className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-          onClick={() => setIsEditing(!isEditing)}
-        >
-          Edit
-        </button>
+        {isAdmin && (
+          <button
+            className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );

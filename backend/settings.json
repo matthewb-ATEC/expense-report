@@ -1,8 +1,8 @@
 {
   "mileageRate": 0.66,
   "perDiem": {
-    "breakfast": 10,
-    "lunch": 225,
+    "breakfast": 12,
+    "lunch": 22,
     "dinner": 40
   }
 }
