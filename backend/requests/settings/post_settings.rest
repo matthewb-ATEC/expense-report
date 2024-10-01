@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/settings
+Content-Type: application/json
+
+{
+  "mileageRate": 0.5,
+  "perDiem": {
+    "breakfast": 10,
+    "lunch": 220,
+    "dinner": 400
+  }
+}

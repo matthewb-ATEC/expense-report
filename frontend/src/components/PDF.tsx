@@ -1,7 +1,5 @@
-import React from "react";
-//import { allProjects } from "../data/projects";
+import React, { useEffect, useState } from "react";
 import { ProjectType } from "../data/types";
-//import { jsPDF } from "jspdf";
 import {
   PDFDocument,
   rgb,
@@ -11,15 +9,8 @@ import {
   PDFFont,
   RGB,
 } from "pdf-lib";
-//import { v4 as uuidv4 } from "uuid";
-import {
-  total,
-  breakdown,
-  //summaries,
-} from "../data/results";
-import { mileageRate, perDiem } from "../data/config";
-//import { UserType } from "../data/types";
-//import Name from "./Name";
+import { total, breakdown } from "../data/results";
+import settingsService from "../services/settingsService";
 
 interface PDFProps {
   projects: ProjectType[];
@@ -27,6 +18,25 @@ interface PDFProps {
 }
 
 const PDF: React.FC<PDFProps> = ({ projects, name }) => {
+  const [settings, setSettings] = useState({
+    mileageRate: 0,
+    perDiem: {
+      breakfast: 0,
+      lunch: 0,
+      dinner: 0,
+    },
+  });
+
+  useEffect(() => {
+    settingsService
+      .get()
+      .then((response) => {
+        setSettings(response);
+        console.log("Settings fetched", response);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   // CONSIDER Deleting?
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -249,60 +259,60 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
           const roundedMileage: number = Number(expense.mileage?.toFixed(1));
           if (expense.mileage !== null) {
             if (expense.roundTrip) {
-              total.value += 2 * roundedMileage * mileageRate;
+              total.value += 2 * roundedMileage * settings.mileageRate;
             } else {
-              total.value += roundedMileage * mileageRate;
+              total.value += roundedMileage * settings.mileageRate;
             }
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
             );
             if (exp) {
               if (expense.roundTrip) {
-                exp.sum += 2 * (roundedMileage * mileageRate);
+                exp.sum += 2 * (roundedMileage * settings.mileageRate);
               } else {
-                exp.sum += roundedMileage * mileageRate;
+                exp.sum += roundedMileage * settings.mileageRate;
               }
             }
           }
           if (expense.roundTrip) {
-            expense.cost = 2 * (roundedMileage * mileageRate);
+            expense.cost = 2 * (roundedMileage * settings.mileageRate);
           } else {
-            expense.cost = roundedMileage * mileageRate;
+            expense.cost = roundedMileage * settings.mileageRate;
           }
         }
         // Per Diem Calculation
         else if (expense.costCategory === "Per Diem") {
           expense.cost = 0;
           if (expense.breakfast) {
-            total.value += perDiem.breakfast;
+            total.value += settings.perDiem.breakfast;
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
             );
             if (exp) {
-              exp.sum += perDiem.breakfast;
+              exp.sum += settings.perDiem.breakfast;
             }
-            expense.cost += perDiem.breakfast;
+            expense.cost += settings.perDiem.breakfast;
           }
           if (expense.lunch) {
-            total.value += perDiem.lunch;
+            total.value += settings.perDiem.lunch;
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
             );
             if (exp) {
-              exp.sum += perDiem.lunch;
+              exp.sum += settings.perDiem.lunch;
             }
-            expense.cost += perDiem.lunch;
+            expense.cost += settings.perDiem.lunch;
           }
           if (expense.dinner) {
-            total.value += perDiem.dinner;
+            total.value += settings.perDiem.dinner;
 
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
             );
             if (exp) {
-              exp.sum += perDiem.dinner;
+              exp.sum += settings.perDiem.dinner;
             }
-            expense.cost += perDiem.dinner;
+            expense.cost += settings.perDiem.dinner;
           }
         }
         // Standard Cost Category Calculations
