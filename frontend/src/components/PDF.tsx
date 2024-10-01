@@ -16,9 +16,8 @@ import {
   total,
   breakdown,
   //summaries,
-  mileageRate,
-  perDiem,
 } from "../data/results";
+import { mileageRate, perDiem } from "../data/config";
 //import { UserType } from "../data/types";
 //import Name from "./Name";
 
