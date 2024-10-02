@@ -25,9 +25,10 @@ import {
 interface PDFProps {
   projects: ProjectType[];
   name: string;
+  //setIsNameInvalid: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PDF: React.FC<PDFProps> = ({ projects, name }) => {
+const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
   // CONSIDER Deleting?
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -107,6 +108,121 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
   };
 
   const handleDownloadPDF = async () => {
+    // Input Validation (Name)
+    let alertText = "";
+    if (!name) {
+      //setIsNameInvalid(true);
+      console.log("Invalid name field");
+      alertText += "Invalid name field.\n";
+    }
+    //setIsNameInvalid(false);
+
+    // Input Validation (Expenses)
+    projects.forEach((project, index) => {
+      project.expenses.forEach((expense, sub_index) => {
+        // Category
+        if (!expense?.costCategory.trim()) {
+          alertText +=
+            `Required cost category for expense ${sub_index + 1} in project ${
+              index + 1
+            }.` + "\n";
+        }
+
+        // Code
+        if (!expense?.costCode.trim()) {
+          alertText +=
+            `Required cost code for expense ${sub_index + 1} in project ${
+              index + 1
+            }.` + "\n";
+        }
+
+        // Date
+        if (!expense?.date.trim()) {
+          alertText +=
+            `Required date for expense ${sub_index + 1} in project ${
+              index + 1
+            }.` + "\n";
+        }
+
+        // Cost
+        if (
+          expense.costCategory != "Mileage" &&
+          expense.costCategory != "Per Diem"
+        ) {
+          const cost = expense.cost;
+          if (
+            !cost ||
+            cost <= 0 ||
+            !/^\d+(\.\d{1,2})?$/.test(cost.toString())
+          ) {
+            alertText +=
+              `Invalid cost for expense ${sub_index + 1} in project ${
+                index + 1
+              }.` + "\n";
+            // Highlight invalid input field here, similar to the name field
+          }
+        }
+
+        // Description
+        if (
+          expense.costCategory == "Client Entertainment" ||
+          expense.costCategory == "Other"
+        ) {
+          if (!expense?.description?.trim()) {
+            alertText +=
+              `Required description for expense ${sub_index + 1} in project ${
+                index + 1
+              }.` + "\n";
+          }
+        }
+
+        // Purpose + From + To
+        if (expense.costCategory == "Mileage") {
+          if (!expense?.purpose?.trim()) {
+            alertText +=
+              `Required purpose for expense ${sub_index + 1} in project ${
+                index + 1
+              }.` + "\n";
+          }
+          if (!expense?.fromLocation?.trim()) {
+            alertText +=
+              `Required origin for expense ${sub_index + 1} in project ${
+                index + 1
+              }.` + "\n";
+          }
+          if (!expense?.toLocation?.trim()) {
+            alertText +=
+              `Required destination for expense ${sub_index + 1} in project ${
+                index + 1
+              }.` + "\n";
+          }
+        }
+
+        // Per Diem
+        if (expense.costCategory == "Per Diem") {
+          if (
+            (expense?.breakfast === false ||
+              expense?.breakfast === undefined) &&
+            (expense?.lunch === false || expense?.lunch === undefined) &&
+            (expense?.dinner === false || expense?.dinner === undefined)
+          ) {
+            alertText +=
+              `Required at least 1 meal for expense ${
+                sub_index + 1
+              } in project ${index + 1}.` + "\n";
+          }
+        }
+      });
+    });
+
+    // Alert bad input
+    console.log("alertText", alertText);
+    if (alertText != "") {
+      alert(alertText);
+      alertText = "";
+      return;
+    }
+
     const pdfDoc = await PDFDocument.create();
 
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -335,13 +451,12 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         subParts.push(`${expense.purpose || ""}`);
         subParts.push(
           `${
-            expense.costCategory === "62-1005-MLJ - Per Diem"
-              ? "B: $" +
-                (expense.breakfast || 0) +
-                " L: $" +
-                (expense.lunch || 0) +
-                " D: $" +
-                (expense.dinner || 0)
+            expense.costCategory === "Per Diem"
+              ? `${
+                  expense.breakfast ? `Breakfast: ${perDiem.breakfast}` : ""
+                }` +
+                `${expense.lunch ? ` Lunch: ${perDiem.lunch}` : ""}` +
+                `${expense.dinner ? ` Dinner: ${perDiem.dinner}` : ""}`
               : ""
           }`
         );
