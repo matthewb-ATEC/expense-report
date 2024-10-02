@@ -24,9 +24,11 @@ const ExpenseReport: React.FC = () => {
       .then((initialProjects: ProjectType[]) => {
         console.log("Promise fulfilled");
         setProjects(initialProjects);
-        if (initialProjects) setSelectedProject(initialProjects[0]);
+        setSelectedProject(initialProjects[0]);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   }, []);
 
   const handleProjectChange = (updatedProject: ProjectType) => {
@@ -43,11 +45,13 @@ const ExpenseReport: React.FC = () => {
         setSelectedProject(updatedProject);
         updateFilteredProjects(updatedProjects);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   };
 
   const handleExpensesChange = (updatedExpenses: ExpenseType[]) => {
-    console.log(`Expenses changed to ${updatedExpenses}`);
+    console.log("Expenses changed to", updatedExpenses);
 
     if (!selectedProject) {
       console.log("No project selected");
@@ -62,7 +66,7 @@ const ExpenseReport: React.FC = () => {
     setSelectedProject(updatedProject);
   };
 
-  const updateSelectedProject = (project: ProjectType) => {
+  const updateSelectedProject = (project: ProjectType | null) => {
     const newSelectedProject = project;
     setSelectedProject(newSelectedProject);
     console.log("Selected project changed to", newSelectedProject);
@@ -91,10 +95,10 @@ const ExpenseReport: React.FC = () => {
             updateSelectedProject={updateSelectedProject}
             updateFilteredProjects={updateFilteredProjects}
           />
-          {selectedProject && selectedProject?.name !== "" && (
+          {selectedProject && selectedProject.name !== "" && (
             <Expenses
-              project={selectedProject || undefined}
-              expenses={selectedProject?.expenses}
+              project={selectedProject}
+              expenses={selectedProject.expenses}
               handleExpensesChange={handleExpensesChange}
             />
           )}

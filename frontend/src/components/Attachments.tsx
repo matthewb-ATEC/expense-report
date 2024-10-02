@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from "react";
-import { ExpenseType } from "../data/types";
+import { AttachmentType, ExpenseType } from "../data/types";
 import { v4 as uuidv4 } from "uuid";
 import Attachment from "./Attachment";
 
 interface AttachmentsProps {
-  expense: ExpenseType;
-  handleExpenseChange: Function;
+  expense: ExpenseType & { attachments?: AttachmentType[] };
+  handleExpenseChange: (updatedExpense: ExpenseType) => void;
 }
 
 const Attachments: React.FC<AttachmentsProps> = ({
@@ -20,7 +20,8 @@ const Attachments: React.FC<AttachmentsProps> = ({
       return;
     }
 
-    const newAttachments = Array.from(files).map((file) => ({
+    const newAttachments: AttachmentType[] = Array.from(files).map((file) => ({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       id: uuidv4(),
       file,
       text: "TEST TEXT", //Change to attachment text
@@ -29,7 +30,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
     const updatedExpense: ExpenseType = {
       ...expense,
       attachments: expense.attachments
-        ? expense.attachments?.concat(newAttachments)
+        ? [...expense.attachments, ...newAttachments]
         : newAttachments,
     };
     handleExpenseChange(updatedExpense);
@@ -61,13 +62,18 @@ const Attachments: React.FC<AttachmentsProps> = ({
       </div>
 
       {/* List of Attachments */}
-      <div className="flex">
+      <div className="flex flex-col space-y-2">
         {expense.attachments?.map((attachment) => (
-          <div key={attachment.id}>
+          <div
+            className="w-full flex justify-between items-start"
+            key={attachment.id}
+          >
             <Attachment attachment={attachment} />
             <button
-              className="p-2 text-red-500 font-bold"
-              onClick={() => handleDeleteAttachment(attachment.id)}
+              className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
+              onClick={() => {
+                handleDeleteAttachment(attachment.id);
+              }}
             >
               Delete
             </button>

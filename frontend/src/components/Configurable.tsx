@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 
 interface ConfigurableProps {
@@ -32,7 +33,9 @@ const Configurable: React.FC<ConfigurableProps> = ({
           </label>
           <button
             className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => {
+              setIsEditing(!isEditing);
+            }}
           >
             Close
           </button>
@@ -54,7 +57,9 @@ const Configurable: React.FC<ConfigurableProps> = ({
         {isAdmin && (
           <button
             className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => {
+              setIsEditing(!isEditing);
+            }}
           >
             Edit
           </button>
