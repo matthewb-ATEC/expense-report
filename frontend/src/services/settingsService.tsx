@@ -1,3 +1,15 @@
+/**
+ * @file settingsService.tsx - ./frontend/src/services
+ * @description [Add description here]
+ * @author matthewb
+ * @date Created: 2024-10-01 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage [Add usage information here]
+ * @dependencies [Add dependencies here]
+ * @relatedFiles [Add related files here]
+ */
+
 import axios from "axios";
 import { SettingsType } from "../data/types";
 const baseURL = "/api/settings";
