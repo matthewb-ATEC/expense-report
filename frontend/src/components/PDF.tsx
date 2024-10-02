@@ -555,11 +555,15 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
 
           if (fileType === "application/pdf") {
             // If the file is a PDF, load it directly
-            uploadedPdfDoc = await PDFDocument.load(fileBytes);
+            uploadedPdfDoc = await PDFDocument.load(fileBytes, {
+              ignoreEncryption: true,
+            });
           } else {
             // Convert non-PDF files to PDF format
             const pdfBytes = await convertFileToPdf(attachment.file);
-            uploadedPdfDoc = await PDFDocument.load(pdfBytes);
+            uploadedPdfDoc = await PDFDocument.load(pdfBytes, {
+              ignoreEncryption: true,
+            });
           }
 
           // Copy pages from the attachment PDF to the main PDF document
