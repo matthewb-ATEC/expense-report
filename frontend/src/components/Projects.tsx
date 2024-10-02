@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { ProjectType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
@@ -7,10 +8,10 @@ interface ProjectsProps {
   projects: ProjectType[];
   selectedProject: ProjectType | null;
   filteredProjects: string[];
-  handleProjectsChange: Function;
-  handleProjectChange: Function;
-  updateSelectedProject: Function;
-  updateFilteredProjects: Function;
+  handleProjectsChange: (updatedProjects: ProjectType[]) => void;
+  handleProjectChange: (updatedProject: ProjectType) => void;
+  updateSelectedProject: (project: ProjectType | null) => void;
+  updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
 }
 
 const Projects: React.FC<ProjectsProps> = ({
@@ -25,11 +26,13 @@ const Projects: React.FC<ProjectsProps> = ({
   const handleAddProject = () => {
     // Create the new default project
     const newProject: ProjectType = {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       id: uuidv4(),
       number: undefined,
       name: "",
       expenses: [
         {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
           id: uuidv4(),
           date: "",
           costCategory: "",
@@ -48,7 +51,9 @@ const Projects: React.FC<ProjectsProps> = ({
         handleProjectsChange(updatedProjects);
         updateSelectedProject(createdProject);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   };
 
   const handleDeleteProject = (id: string) => {
@@ -66,7 +71,9 @@ const Projects: React.FC<ProjectsProps> = ({
 
         updateFilteredProjects(updatedProjects);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   };
 
   return (

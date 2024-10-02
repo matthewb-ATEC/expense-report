@@ -4,9 +4,9 @@ import { ExpenseType, ProjectType } from "../data/types";
 import { v4 as uuidv4 } from "uuid";
 
 interface ExpensesProps {
-  project: ProjectType | undefined;
-  expenses: ExpenseType[] | undefined;
-  handleExpensesChange: Function;
+  project: ProjectType;
+  expenses: ExpenseType[];
+  handleExpensesChange: (updatedExpenses: ExpenseType[]) => void;
 }
 
 const Expenses: React.FC<ExpensesProps> = ({
@@ -15,26 +15,27 @@ const Expenses: React.FC<ExpensesProps> = ({
   handleExpensesChange,
 }) => {
   const handleExpenseChange = (updatedExpense: ExpenseType) => {
-    const updatedExpenses: ExpenseType[] | undefined = expenses?.map(
-      (expense) => (expense.id === updatedExpense.id ? updatedExpense : expense)
+    const updatedExpenses: ExpenseType[] | undefined = expenses.map((expense) =>
+      expense.id === updatedExpense.id ? updatedExpense : expense
     );
     handleExpensesChange(updatedExpenses);
   };
 
   const handleAddExpense = () => {
     const newExpense: ExpenseType = {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       id: uuidv4(),
       date: "",
       costCategory: "",
       costCode: "",
     };
 
-    const updatedExpenses = expenses?.concat(newExpense);
+    const updatedExpenses = expenses.concat(newExpense);
     handleExpensesChange(updatedExpenses);
   };
 
   const handleDeleteExpense = (id: string) => {
-    const updatedExpenses: ExpenseType[] | undefined = expenses?.filter(
+    const updatedExpenses: ExpenseType[] | undefined = expenses.filter(
       (expense) => expense.id !== id
     );
     handleExpensesChange(updatedExpenses);
@@ -44,9 +45,9 @@ const Expenses: React.FC<ExpensesProps> = ({
     <div className="flex w-full flex-col space-y-4">
       <div className="flex flex-col space-y-2">
         <div className="text-xl font-bold">Expenses</div>
-        <div className="text-gray-500">{project?.name}</div>
+        <div className="text-gray-500">{project.name}</div>
       </div>
-      {expenses?.map((expense) => (
+      {expenses.map((expense) => (
         <Expense
           key={expense.id}
           expense={expense}

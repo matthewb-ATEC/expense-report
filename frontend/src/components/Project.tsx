@@ -6,9 +6,9 @@ interface ProjectProps {
   project: ProjectType;
   selectedProject: ProjectType | null;
   filteredProjects: string[];
-  handleProjectChange: Function;
-  handleDeleteProject: Function;
-  updateSelectedProject: Function;
+  handleProjectChange: (updatedProject: ProjectType) => void;
+  handleDeleteProject: (id: string) => void;
+  updateSelectedProject: (project: ProjectType) => void;
 }
 
 const Project: React.FC<ProjectProps> = ({
@@ -103,13 +103,17 @@ const Project: React.FC<ProjectProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
-              onClick={() => handleDeleteProject(project.id)}
+              onClick={() => {
+                handleDeleteProject(project.id);
+              }}
             >
               Delete
             </button>
             {project.name !== "" && (
               <button
-                onClick={() => updateSelectedProject(project)}
+                onClick={() => {
+                  updateSelectedProject(project);
+                }}
                 className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 Details
@@ -126,7 +130,9 @@ const Project: React.FC<ProjectProps> = ({
       <div className="flex w-full justify-between space-x-2">
         <div className="text-gray-600">{getMinimizedProjectText()}</div>
         <button
-          onClick={() => updateSelectedProject(project)}
+          onClick={() => {
+            updateSelectedProject(project);
+          }}
           className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
         >
           Details

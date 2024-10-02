@@ -4,7 +4,7 @@ import settingsService from "../services/settingsService";
 import { SettingsType } from "../data/types";
 
 const Settings = () => {
-  const [settings, setSettings] = useState<SettingsType | undefined>(undefined);
+  const [settings, setSettings] = useState<SettingsType>();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
@@ -14,17 +14,21 @@ const Settings = () => {
         setSettings(response);
         console.log("Settings fetched", response);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   }, []);
 
-  const handleSave = async () => {
+  const handleSave = () => {
+    if (!settings) return;
+
     settingsService
       .set(settings)
       .then((response) => {
         console.log("Settings updated to", response);
         alert("Settings updated successfully!");
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.log(error);
         alert("Failed to update settings.");
       });
@@ -80,21 +84,25 @@ const Settings = () => {
                 name="Breakfast"
                 value={settings.perDiem.breakfast}
                 isAdmin={isAdmin}
-                onChange={(newValue) =>
-                  handlePerDiemChange("breakfast", newValue)
-                }
+                onChange={(newValue) => {
+                  handlePerDiemChange("breakfast", newValue);
+                }}
               />
               <Configurable
                 name="Lunch"
                 isAdmin={isAdmin}
                 value={settings.perDiem.lunch}
-                onChange={(newValue) => handlePerDiemChange("lunch", newValue)}
+                onChange={(newValue) => {
+                  handlePerDiemChange("lunch", newValue);
+                }}
               />
               <Configurable
                 name="Dinner"
                 isAdmin={isAdmin}
                 value={settings.perDiem.dinner}
-                onChange={(newValue) => handlePerDiemChange("dinner", newValue)}
+                onChange={(newValue) => {
+                  handlePerDiemChange("dinner", newValue);
+                }}
               />
             </div>
           </div>
@@ -105,7 +113,9 @@ const Settings = () => {
                 name="Mileage Rate"
                 isAdmin={isAdmin}
                 value={settings.mileageRate}
-                onChange={(newValue) => handleMileageRateChange(newValue)}
+                onChange={(newValue) => {
+                  handleMileageRateChange(newValue);
+                }}
               />
             </div>
           </div>
@@ -133,7 +143,9 @@ const Settings = () => {
                 className="p-2 w-full border-grey-300 border-b-2"
                 type="password"
                 placeholder="Password"
-                onChange={(e) => handlePasswordChange(e)}
+                onChange={(e) => {
+                  handlePasswordChange(e);
+                }}
               />
             </div>
           </div>

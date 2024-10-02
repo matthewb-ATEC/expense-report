@@ -34,11 +34,11 @@ export interface AttachmentType {
   text: string;
 }
 
-export type SettingsType = {
+export interface SettingsType {
   mileageRate: number;
   perDiem: {
     breakfast: number;
     lunch: number;
     dinner: number;
   };
-};
+}

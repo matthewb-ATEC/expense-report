@@ -8,8 +8,8 @@ import Attachments from "./Attachments";
 
 interface ExpenseProps {
   expense: ExpenseType;
-  handleExpenseChange: Function;
-  handleDeleteExpense: Function;
+  handleExpenseChange: (updatedExpense: ExpenseType) => void;
+  handleDeleteExpense: (id: string) => void;
 }
 
 const Expense: FC<ExpenseProps> = ({
@@ -29,7 +29,7 @@ const Expense: FC<ExpenseProps> = ({
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCostCategory = event.target.value;
     const newCostCode =
-      categories.find((item) => item.category === newCostCategory)?.costCode ||
+      categories.find((item) => item.category === newCostCategory)?.costCode ??
       "";
 
     const updatedExpense: ExpenseType = {
@@ -94,12 +94,13 @@ const Expense: FC<ExpenseProps> = ({
   const renderCostInput = () => (
     <>
       {showCostInput() && (
-        <div className="flex flex-col items-start space-y-2">
+        <div className="w-full flex flex-col items-start space-y-2">
           <label className="text-gray-600">Cost</label>
           <input
-            className="p-2 border-grey-300 border-b-2"
+            className="w-full p-2 border-grey-300 border-b-2"
             type="number"
             id="cost"
+            placeholder="$"
             value={expense.cost}
             onChange={handleCostChange}
           />
@@ -194,7 +195,9 @@ const Expense: FC<ExpenseProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
-              onClick={() => handleDeleteExpense(expense.id)}
+              onClick={() => {
+                handleDeleteExpense(expense.id);
+              }}
             >
               Delete
             </button>

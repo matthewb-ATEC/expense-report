@@ -3,7 +3,7 @@ import { ExpenseType } from "../../data/types";
 
 interface PerDiemProps {
   expense: ExpenseType;
-  handleExpenseChange: Function;
+  handleExpenseChange: (updatedExpense: ExpenseType) => void;
 }
 
 const PerDiem: React.FC<PerDiemProps> = ({ expense, handleExpenseChange }) => {

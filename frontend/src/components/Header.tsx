@@ -1,13 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-const headers: { [key: string]: string } = {
+const headers: Record<string, string> = {
   "/": "Expense Report",
   "/report": "Expense Report",
   "/settings": "Settings",
 };
 
-const subheaders: { [key: string]: string } = {
+const subheaders: Record<string, string> = {
   "/": "File an expense report using the form below.",
   "/report": "File an expense report using the form below.",
   "/settings": "View and edit the parameters underlying expense calculations.",

@@ -5,7 +5,7 @@ import { Libraries } from "@react-google-maps/api/dist/utils/make-load-script-ur
 
 interface MileageProps {
   expense: ExpenseType;
-  handleExpenseChange: Function;
+  handleExpenseChange: (updatedExpense: ExpenseType) => void;
 }
 
 const libraries: Libraries = ["places"];
@@ -21,27 +21,31 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     libraries,
   });
 
-  const calculateMileage = (fromLocation: string, toLocation: string) => {
-    if (!expense.fromLocation || !expense.toLocation) {
-      console.error("Both locations must be set to calculate mileage.");
-      return;
-    }
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    console.log(`From: ${expense.fromLocation} To ${expense.toLocation}`);
 
-    const service = new google.maps.DistanceMatrixService();
+    const calculateMileage = (fromLocation: string, toLocation: string) => {
+      if (!expense.fromLocation || !expense.toLocation) {
+        console.error("Both locations must be set to calculate mileage.");
+        return;
+      }
 
-    try {
-      service.getDistanceMatrix(
-        {
-          origins: [fromLocation],
-          destinations: [toLocation],
-          travelMode: google.maps.TravelMode.DRIVING,
-        },
-        (response, status) => {
-          if (status === google.maps.DistanceMatrixStatus.OK && response) {
-            // Check if response contains the expected data
-            const distanceElement = response.rows[0]?.elements[0];
-            if (distanceElement && distanceElement.status === "OK") {
-              const distanceInMeters = distanceElement.distance?.value;
+      const service = new google.maps.DistanceMatrixService();
+
+      try {
+        void service.getDistanceMatrix(
+          {
+            origins: [fromLocation],
+            destinations: [toLocation],
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          (response, status) => {
+            if (status === google.maps.DistanceMatrixStatus.OK && response) {
+              // Check if response contains the expected data
+              const distanceElement = response.rows[0]?.elements[0];
+
+              const distanceInMeters = distanceElement.distance.value;
               if (distanceInMeters) {
                 const distanceInMiles = distanceInMeters / 1609.34; // Convert meters to miles
 
@@ -52,41 +56,34 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
                 handleExpenseChange(updatedExpense);
 
                 console.log(
-                  `Mileage from ${fromLocation} to ${toLocation}: ${distanceInMiles}`
+                  `Mileage from ${fromLocation} to ${toLocation}: ${String(
+                    distanceInMiles
+                  )}`
                 );
               } else {
                 console.error("Distance value is not available.");
               }
             } else {
-              console.error(
-                "Distance Element is not available or status is not OK:",
-                distanceElement
-              );
+              console.error("Error with Distance Matrix Service:", status);
             }
-          } else {
-            console.error("Error with Distance Matrix Service:", status);
           }
-        }
-      );
-    } catch (error) {
-      console.error("An error occurred while calculating mileage:", error);
-    }
-  };
-
-  useEffect(() => {
-    console.log(`From: ${expense.fromLocation} To ${expense.toLocation}`);
+        );
+      } catch (error) {
+        console.error("An error occurred while calculating mileage:", error);
+      }
+    };
 
     if (expense.fromLocation && expense.toLocation) {
       calculateMileage(expense.fromLocation, expense.toLocation);
     }
-  }, [expense.fromLocation, expense.toLocation]);
+  }, [expense, expense.fromLocation, expense.toLocation, handleExpenseChange]);
 
   const onFromPlaceChanged = () => {
     if (fromAutocomplete) {
       const place = fromAutocomplete.getPlace();
       const updatedExpense: ExpenseType = {
         ...expense,
-        fromLocation: place.formatted_address || "",
+        fromLocation: place.formatted_address ?? "",
       };
       handleExpenseChange(updatedExpense);
     }
@@ -97,7 +94,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
       const place = toAutocomplete.getPlace();
       const updatedExpense: ExpenseType = {
         ...expense,
-        toLocation: place.formatted_address || "",
+        toLocation: place.formatted_address ?? "",
       };
       handleExpenseChange(updatedExpense);
     }
@@ -145,7 +142,9 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <label>From</label>
         <Autocomplete
           className="w-full"
-          onLoad={(autocomplete) => setFromAutocomplete(autocomplete)}
+          onLoad={(autocomplete) => {
+            setFromAutocomplete(autocomplete);
+          }}
           onPlaceChanged={onFromPlaceChanged}
         >
           <input
@@ -153,9 +152,9 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             type="text"
             id="from"
             value={expense.fromLocation}
-            onChange={(e) =>
-              handleExpenseChange({ ...expense, fromLocation: e.target.value })
-            }
+            onChange={(e) => {
+              handleExpenseChange({ ...expense, fromLocation: e.target.value });
+            }}
           />
         </Autocomplete>
       </div>
@@ -164,7 +163,9 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <label>To</label>
         <Autocomplete
           className="w-full"
-          onLoad={(autocomplete) => setToAutocomplete(autocomplete)}
+          onLoad={(autocomplete) => {
+            setToAutocomplete(autocomplete);
+          }}
           onPlaceChanged={onToPlaceChanged}
         >
           <input
@@ -172,9 +173,9 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             type="text"
             id="to"
             value={expense.toLocation}
-            onChange={(e) =>
-              handleExpenseChange({ ...expense, toLocation: e.target.value })
-            }
+            onChange={(e) => {
+              handleExpenseChange({ ...expense, toLocation: e.target.value });
+            }}
           />
         </Autocomplete>
       </div>
