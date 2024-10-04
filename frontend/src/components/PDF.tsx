@@ -480,10 +480,12 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
           `${
             expense.costCategory === "Per Diem"
               ? `${
-                  expense.breakfast ? `Breakfast: ${perDiem.breakfast}` : ""
+                  expense.breakfast
+                    ? `Breakfast: ${settings.perDiem.breakfast}`
+                    : ""
                 }` +
-                `${expense.lunch ? ` Lunch: ${perDiem.lunch}` : ""}` +
-                `${expense.dinner ? ` Dinner: ${perDiem.dinner}` : ""}`
+                `${expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : ""}` +
+                `${expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : ""}`
               : ""
           }`
         );
