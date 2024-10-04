@@ -14,7 +14,12 @@
 
 import React from "react";
 
-const Name = ({ setName }: { setName: (name: string) => void }) => {
+interface NameProps {
+  setName: (name: string) => void;
+  name: string;
+}
+
+const Name: React.FC<NameProps> = ({ setName, name }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -27,9 +32,13 @@ const Name = ({ setName }: { setName: (name: string) => void }) => {
         </label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
+          //className={`p-2 w-full border-b-2 ${
+          //  isInvalid ? "border-red-500" : "border-gray-300"
+          //}`}
           type="text"
           id="name"
           name="name"
+          value={name}
           onChange={handleInputChange}
         />
       </div>
