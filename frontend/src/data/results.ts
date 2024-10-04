@@ -1,11 +1,3 @@
-// Administration Parameters
-export const mileageRate = 0.66;
-export const perDiem = {
-  breakfast: 12,
-  lunch: 22,
-  dinner: 40,
-};
-
 export const total = { value: 0 };
 export const breakdown = [
   { category: "Air Fare", costCode: "62-1001-TRV", sum: 0 },
