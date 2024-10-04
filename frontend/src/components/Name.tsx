@@ -1,12 +1,11 @@
 import React from "react";
 
-const Name = ({
-  setName,
-}: //isInvalid,
-{
+interface NameProps {
   setName: (name: string) => void;
-  //isInvalid: boolean;
-}) => {
+  name: string;
+}
+
+const Name: React.FC<NameProps> = ({ setName, name }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
@@ -25,6 +24,7 @@ const Name = ({
           type="text"
           id="name"
           name="name"
+          value={name}
           onChange={handleInputChange}
         />
       </div>
