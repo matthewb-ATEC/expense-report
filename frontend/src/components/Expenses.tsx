@@ -1,3 +1,16 @@
+/**
+ * @file Expenses.tsx - ./frontend/src/components
+ * @description The `Expenses` component manages a list of expenses related to a specific project. It allows users to view, add, update, and delete expenses efficiently. This component handles expense state management and integrates with the `Expense` sub-component to render individual expense entries.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component is intended to be used within the context of a project management application. It should receive a `project` object, a list of `expenses`, and a handler function for updating expenses. Example usage:
+ *        `<Expenses project={selectedProject} expenses={selectedProject.expenses} handleExpensesChange={handleExpensesChange} />`
+ * @dependencies React for building the component and managing state, `uuid` for generating unique IDs for new expenses, and the `Expense` component for rendering individual expense items.
+ * @relatedFiles Related files include `Expense.tsx`, which defines the structure and functionality of individual expense items, and `ExpenseReport.tsx`, which may utilize this component to manage expenses for the selected project.
+ */
+
 import React from "react";
 import Expense from "./Expense";
 import { ExpenseType, ProjectType } from "../data/types";

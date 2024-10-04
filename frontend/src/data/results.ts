@@ -1,3 +1,21 @@
+/**
+ * @file results.ts - ./frontend/src/data
+ * @description Holds data structures for tracking and summarizing expense categories,
+ *              including a total sum and a breakdown by category and cost code.
+ *              This file is used to store and update expense totals as part of the financial
+ *              tracking system within the application.
+ * @author matthewb
+ * @date Created: 2024-10-01 | Last Modified: 2024-10-04
+ * @version 1.0.0
+ * @license MIT
+ * @usage Import the `total`, `breakdown`, and `summaries` arrays where needed to display, calculate, or manipulate financial data in the app:
+ *        `import { total, breakdown, summaries } from './results';`
+ *        Example:
+ *        `total.value += newExpenseAmount; breakdown.find(b => b.category === category).sum += newExpenseAmount;`
+ * @dependencies None
+ * @relatedFiles ../components/PDF.tsx
+ */
+
 export const total = { value: 0 };
 export const breakdown = [
   { category: "Air Fare", costCode: "62-1001-TRV", sum: 0 },

@@ -1,6 +1,24 @@
-export interface UserType {
-  name: string;
-}
+/**
+ * @file types.ts - ./frontend/src/data
+ * @description Defines TypeScript interfaces for core data models such as
+ *              projects, expenses, attachments, and settings. These types are used
+ *              throughout the application to ensure type safety when handling data
+ *              related to expenses, projects, and settings configuration. By
+ *              standardizing these types, the codebase maintains consistency and
+ *              reduces errors related to data structure mismatches.
+ * @author matthewb
+ * @date Created: 2024-10-01 | Last Modified: 2024-10-04
+ * @version 1.0.0
+ * @license MIT
+ * @usage Import and use these types to define the shape of data objects in the application:
+ *        Example:
+ *        `import { ProjectType, ExpenseType, SettingsType } from './types';`
+ *        These types can be used for type annotations in function parameters, return values, or state management to ensure consistency:
+ *        `const newProject: ProjectType = { id: '1', number: 123, name: 'New Project', expenses: [] };`
+ * @dependencies None
+ * @relatedFiles Components or services that manipulate user, project, or expense data,
+ *               such as `projects.ts`, `expenses.ts`, or `settingsService.ts`.
+ */
 
 export interface ProjectType {
   id: string;

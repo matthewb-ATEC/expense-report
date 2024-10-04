@@ -1,3 +1,21 @@
+/**
+ * @file Projects.tsx - ./frontend/src/components
+ * @description A component that manages and displays a list of projects, allowing users to add, delete, and select projects for further editing.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component is used to render a list of projects and provides functionality to add new projects, delete existing ones, and select a project for editing.
+ *        It integrates with a project service for database operations.
+ * @dependencies
+ *  - react: ^18.0.0 // React library for building user interfaces
+ *  - uuid: ^9.0.0 // Library for generating unique identifiers
+ *  - ../data/types: ProjectType // Type definition for project data
+ *  - ../services/projectsService: projectsService // Service for managing project-related API calls
+ * @relatedFiles
+ *  - Project.tsx: ./Project // Child component for displaying individual project details
+ */
+
 /* eslint-disable react/prop-types */
 import { ProjectType } from "../data/types";
 import projectsService from "../services/projectsService";

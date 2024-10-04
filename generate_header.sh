@@ -15,7 +15,7 @@ generate_header() {
     if [ "$CREATED_DATE" -eq "0" ]; then
         CREATED_DATE=$(stat -f "%m" "$FILE") # Use last modified time if creation time is not available
     fi
-    CREATED_DATE=$(date -r "$CREATED_DATE" +"%Y-%m-%d-%Y")
+    CREATED_DATE=$(date -r "$CREATED_DATE" +"%Y-%m-%d")
     LAST_MODIFIED_DATE=$(stat -f "%m" "$FILE")
     LAST_MODIFIED_DATE=$(date -r "$LAST_MODIFIED_DATE" +"%Y-%m-%d")
 

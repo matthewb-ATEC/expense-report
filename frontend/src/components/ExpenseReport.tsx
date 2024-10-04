@@ -1,3 +1,16 @@
+/**
+ * @file ExpenseReport.tsx - ./frontend/src/components
+ * @description The `ExpenseReport` component serves as a comprehensive interface for managing and displaying expenses associated with various projects. It allows users to select projects, view and modify expenses, and generate reports in PDF format. The component utilizes state management to handle project and expense data efficiently.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component should be used within a larger expense management application, where it can interact with a backend service to fetch and update project and expense data. Example usage:
+ *        `<ExpenseReport />`
+ * @dependencies React for managing component state and lifecycle, along with `projectsService` for API interactions. It also depends on custom components like `Name`, `Projects`, `Expenses`, and `PDF` for specific functionalities.
+ * @relatedFiles Related components include `Name.tsx`, `Projects.tsx`, `Expenses.tsx`, and `PDF.tsx`, which are utilized to build the complete expense reporting functionality.
+ */
+
 import React, { useEffect, useState } from "react";
 import { ExpenseType, ProjectType } from "../data/types";
 import projectsService from "../services/projectsService";

@@ -1,3 +1,17 @@
+/**
+ * @file Configurable.tsx - ./frontend/src/components
+ * @description The `Configurable` component provides a user interface for displaying and editing a numeric value. It allows admin users to switch between view and edit modes, enabling them to modify the value as needed. The component manages its internal state to reflect changes and triggers a callback function (`onChange`) whenever the value is updated. This component is useful in scenarios where configurable settings or parameters need to be displayed and modified by authorized users.
+ * @author matthewb
+ * @date Created: 2024-10-01 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage Use this component to create editable fields for admin users. For example:
+ *        `<Configurable name="Setting Name" value={currentValue} isAdmin={isAdminUser} onChange={handleValueChange} />`
+ *        Where `name` is the label of the setting, `value` is the current value to display, `isAdmin` determines edit permissions, and `onChange` is the function to handle value updates.
+ * @dependencies React for managing state and handling user interactions.
+ * @relatedFiles This component may be related to other settings or configuration components, such as `SettingsForm.tsx`.
+ */
+
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
