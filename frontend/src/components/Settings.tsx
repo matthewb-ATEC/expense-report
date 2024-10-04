@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import Configurable from "./Configurable";
 import settingsService from "../services/settingsService";
 import { SettingsType } from "../data/types";
+import Loading from "./Loading";
 
 const Settings = () => {
   const [settings, setSettings] = useState<SettingsType>();
@@ -81,16 +82,7 @@ const Settings = () => {
       setIsAdmin(true);
   };
 
-  if (!settings)
-    return (
-      <div className="h-full flex flex-col flex-grow justify-center items-center">
-        <div className="p-8 text-3xl font-bold text-black">Loading</div>
-        <div className="p-4 text-black">
-          Waiting for response from server...
-        </div>
-        <div className="p-4 italic text-gray-400">Not Found</div>
-      </div>
-    );
+  if (!settings) return <Loading />;
 
   return (
     <div className="h-full flex flex-col p-8 bg-gray-100 items-center flex-grow">

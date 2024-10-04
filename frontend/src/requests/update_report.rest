@@ -1,0 +1,10 @@
+PUT http://localhost:3001/api/reports/670038785e6273ddaff7bd7c
+Content-Type: application/json
+
+{
+    "id": "2",
+    "user" : {
+        "name": "Tested"
+    },
+    "projects": []
+}

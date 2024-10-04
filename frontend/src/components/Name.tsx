@@ -12,16 +12,26 @@
  * @relatedFiles Related components may include other input components or forms that gather user information, such as `Email.tsx` or `Address.tsx`.
  */
 
-import React from "react";
+import React, { ChangeEvent } from "react";
+import { ReportType } from "../data/types";
 
 interface NameProps {
-  setName: (name: string) => void;
-  name: string;
+  report: ReportType;
+  handleReportChange: (updatedReport: ReportType) => void;
 }
 
-const Name: React.FC<NameProps> = ({ setName, name }) => {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    const updatedReport: ReportType = {
+      ...report,
+      user: {
+        ...report.user,
+        name: event.target.value,
+      },
+    };
+
+    handleReportChange(updatedReport);
   };
 
   return (
@@ -32,14 +42,11 @@ const Name: React.FC<NameProps> = ({ setName, name }) => {
         </label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
-          //className={`p-2 w-full border-b-2 ${
-          //  isInvalid ? "border-red-500" : "border-gray-300"
-          //}`}
           type="text"
           id="name"
           name="name"
-          value={name}
-          onChange={handleInputChange}
+          value={report.user.name}
+          onChange={handleNameChange}
         />
       </div>
     </div>
