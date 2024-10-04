@@ -21,7 +21,8 @@ import { allProjects } from "../data/projects";
 import PDF from "./PDF";
 
 const ExpenseReport: React.FC = () => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
+  //const [isNameInvalid, setIsNameInvalid] = useState(false);
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
@@ -97,7 +98,9 @@ const ExpenseReport: React.FC = () => {
   return (
     <div className="h-full flex p-8 bg-gray-100 justify-center flex-grow">
       <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
-        {projects.length === 0 && <Name setName={setName} />}
+        {projects.length === 0 && (
+          <Name setName={setName} name={name} /*isInvalid={isNameInvalid}*/ />
+        )}
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
           <Projects
             projects={projects}
@@ -116,7 +119,13 @@ const ExpenseReport: React.FC = () => {
             />
           )}
         </div>
-        <PDF projects={projects} name={name} />
+        {projects.some((project) => project.expenses.length > 0) && (
+          <PDF
+            projects={projects}
+            name={name}
+            //setIsNameInvalid={setIsNameInvalid}
+          />
+        )}
       </div>
     </div>
   );

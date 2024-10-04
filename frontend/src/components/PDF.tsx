@@ -27,14 +27,16 @@ import {
   RGB,
 } from "pdf-lib";
 import { total, breakdown } from "../data/results";
+import Description from "./expenses/Description";
 import settingsService from "../services/settingsService";
 
 interface PDFProps {
   projects: ProjectType[];
   name: string;
+  //setIsNameInvalid: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PDF: React.FC<PDFProps> = ({ projects, name }) => {
+const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
   const [settings, setSettings] = useState({
     mileageRate: 0,
     perDiem: {
@@ -133,6 +135,134 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
   };
 
   const handleDownloadPDF = async () => {
+    // Input Validation (Name)
+    let alertText = "";
+    if (!name) {
+      //setIsNameInvalid(true);
+      console.log("Invalid name field");
+      alertText += "Invalid name field.\n";
+    }
+    //setIsNameInvalid(false);
+
+    // Input Validation (Expenses)
+    projects.forEach((project, index) => {
+      // Name
+      if (project.name == "") {
+        alertText += `Required name in project ${index + 1}.` + "\n";
+      }
+
+      // Description
+      else if (project.name == "Other") {
+        if (project.description == undefined || project.description == "") {
+          alertText +=
+            `Required description in project ${project.name}.` + "\n";
+        }
+      }
+
+      project.expenses.forEach((expense, sub_index) => {
+        // Category
+        if (!expense?.costCategory.trim()) {
+          alertText +=
+            `Required cost category for expense ${sub_index + 1} in project ${
+              project.name
+            }.` + "\n";
+        }
+
+        // Code
+        if (!expense?.costCode.trim()) {
+          alertText +=
+            `Required cost code for expense ${sub_index + 1} in project ${
+              project.name
+            }.` + "\n";
+        }
+
+        // Date
+        if (!expense?.date.trim()) {
+          alertText +=
+            `Required date for expense ${sub_index + 1} in project ${
+              project.name
+            }.` + "\n";
+        }
+
+        // Cost
+        if (
+          expense.costCategory != "Mileage" &&
+          expense.costCategory != "Per Diem"
+        ) {
+          const cost = expense.cost;
+          if (
+            !cost ||
+            cost <= 0 ||
+            !/^\d+(\.\d{1,2})?$/.test(cost.toString())
+          ) {
+            alertText +=
+              `Invalid cost for expense ${sub_index + 1} in project ${
+                project.name
+              }.` + "\n";
+            // Highlight invalid input field here, similar to the name field
+          }
+        }
+
+        // Description
+        if (
+          expense.costCategory == "Client Entertainment" ||
+          expense.costCategory == "Other"
+        ) {
+          if (!expense?.description?.trim()) {
+            alertText +=
+              `Required description for expense ${sub_index + 1} in project ${
+                project.name
+              }.` + "\n";
+          }
+        }
+
+        // Purpose + From + To
+        if (expense.costCategory == "Mileage") {
+          if (!expense?.purpose?.trim()) {
+            alertText +=
+              `Required purpose for expense ${sub_index + 1} in project ${
+                project.name
+              }.` + "\n";
+          }
+          if (!expense?.fromLocation?.trim()) {
+            alertText +=
+              `Required origin for expense ${sub_index + 1} in project ${
+                project.name
+              }.` + "\n";
+          }
+          if (!expense?.toLocation?.trim()) {
+            alertText +=
+              `Required destination for expense ${sub_index + 1} in project ${
+                project.name
+              }.` + "\n";
+          }
+        }
+
+        // Per Diem
+        if (expense.costCategory == "Per Diem") {
+          if (
+            (expense?.breakfast === false ||
+              expense?.breakfast === undefined) &&
+            (expense?.lunch === false || expense?.lunch === undefined) &&
+            (expense?.dinner === false || expense?.dinner === undefined)
+          ) {
+            alertText +=
+              `Required at least 1 meal for expense ${
+                sub_index + 1
+              } in project ${project.name}.` + "\n";
+          }
+        }
+      });
+    });
+
+    // Alert bad input
+    console.log("alertText", alertText);
+    if (alertText != "") {
+      alert(alertText);
+      alertText = "";
+      return;
+    }
+
     const pdfDoc = await PDFDocument.create();
 
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -234,7 +364,11 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
       currentY -= lineHeight;
       drawTextWithAlignment(
         page,
-        `Billable: ${project.name} | ${project.number}`,
+        `Billable: ${
+          project.name === "Other"
+            ? "N/A"
+            : `${project.name} | ${project.number}`
+        }`,
         ``,
         pageMargin,
         currentY,
@@ -361,13 +495,14 @@ const PDF: React.FC<PDFProps> = ({ projects, name }) => {
         subParts.push(`${expense.purpose || ""}`);
         subParts.push(
           `${
-            expense.costCategory === "62-1005-MLJ - Per Diem"
-              ? "B: $" +
-                (expense.breakfast || 0) +
-                " L: $" +
-                (expense.lunch || 0) +
-                " D: $" +
-                (expense.dinner || 0)
+            expense.costCategory === "Per Diem"
+              ? `${
+                  expense.breakfast
+                    ? `Breakfast: ${settings.perDiem.breakfast}`
+                    : ""
+                }` +
+                `${expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : ""}` +
+                `${expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : ""}`
               : ""
           }`
         );
