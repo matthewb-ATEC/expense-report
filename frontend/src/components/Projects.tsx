@@ -17,29 +17,29 @@
  */
 
 /* eslint-disable react/prop-types */
-import { ProjectType } from "../data/types";
+import { ProjectType, ReportType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
 import { v4 as uuidv4 } from "uuid";
 
 interface ProjectsProps {
-  projects: ProjectType[];
+  report: ReportType;
   selectedProject: ProjectType | null;
   filteredProjects: string[];
   handleProjectsChange: (updatedProjects: ProjectType[]) => void;
-  handleProjectChange: (updatedProject: ProjectType) => void;
   updateSelectedProject: (project: ProjectType | null) => void;
   updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
+  handleProjectChange: (updatedProject: ProjectType) => void;
 }
 
 const Projects: React.FC<ProjectsProps> = ({
-  projects,
+  report,
   selectedProject,
   filteredProjects,
   handleProjectsChange,
-  handleProjectChange,
   updateSelectedProject,
   updateFilteredProjects,
+  handleProjectChange,
 }) => {
   const handleAddProject = () => {
     // Create the new default project
@@ -61,11 +61,11 @@ const Projects: React.FC<ProjectsProps> = ({
 
     // Use the projects service to create the new project in the database
     projectsService
-      .create(newProject)
+      .create(report.id, newProject)
       .then((createdProject) => {
         console.log("Successfully created project", createdProject);
 
-        const updatedProjects = projects.concat(createdProject);
+        const updatedProjects = report.projects.concat(createdProject);
         handleProjectsChange(updatedProjects);
         updateSelectedProject(createdProject);
       })
@@ -77,12 +77,16 @@ const Projects: React.FC<ProjectsProps> = ({
   const handleDeleteProject = (id: string) => {
     console.log(`Deleting project ID: ${id}`);
 
-    const projectToDelete = projects.find((project) => project.id === id);
+    const projectToDelete = report.projects.find(
+      (project) => project.id === id
+    );
 
     projectsService
-      .deleteID(id)
+      .deleteProject(report.id, id)
       .then(() => {
-        const updatedProjects = projects.filter((project) => project.id !== id);
+        const updatedProjects = report.projects.filter(
+          (project) => project.id !== id
+        );
         handleProjectsChange(updatedProjects);
 
         if (projectToDelete === selectedProject) updateSelectedProject(null);
@@ -96,9 +100,12 @@ const Projects: React.FC<ProjectsProps> = ({
 
   return (
     <div className="w-full flex flex-col space-y-4">
-      {projects.length > 0 && <div className="text-xl font-bold">Projects</div>}
+      {report.projects.length > 0 && (
+        <div className="text-xl font-bold">Projects</div>
+      )}
+
       <div className="flex flex-col space-y-4 max-h-64 overflow-y-auto md:max-h-full">
-        {projects.map((project) => (
+        {report.projects.map((project) => (
           <Project
             key={project.id}
             project={project}
@@ -115,10 +122,10 @@ const Projects: React.FC<ProjectsProps> = ({
         type="button"
         onClick={() => {
           handleAddProject();
-          updateSelectedProject(projects[projects.length]);
+          updateSelectedProject(report.projects[report.projects.length]);
         }}
       >
-        {projects.length === 0 ? "Start Expense Report" : "Add Project"}
+        {report.projects.length <= 0 ? "Start Expense Report" : "Add Project"}
       </button>
     </div>
   );
