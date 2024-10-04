@@ -33,3 +33,12 @@ export interface AttachmentType {
   file: File | null;
   text: string;
 }
+
+export type SettingsType = {
+  mileageRate: number;
+  perDiem: {
+    breakfast: number;
+    lunch: number;
+    dinner: number;
+  };
+};
