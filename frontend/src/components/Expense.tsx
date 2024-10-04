@@ -1,3 +1,16 @@
+/**
+ * @file Expense.tsx - ./frontend/src/components
+ * @description The `Expense` component manages the rendering and editing of an individual expense item within an expense tracking application. It allows users to select categories, input costs, dates, and add attachments while dynamically displaying additional fields based on the selected category.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component is designed to be used within a larger expense management application. It should be instantiated with the necessary `expense` data and handler functions for updating and deleting expenses. Example usage:
+ *        `<Expense expense={expenseData} handleExpenseChange={updateExpense} handleDeleteExpense={deleteExpense} />`
+ * @dependencies React for component structure, ChangeEvent for type safety on events, and any external components like `Description`, `PerDiem`, `Mileage`, and `Attachments` for specialized functionality.
+ * @relatedFiles This component is related to `Attachments.tsx`, `Description.tsx`, `PerDiem.tsx`, and `Mileage.tsx`, which provide additional functionality for specific expense types.
+ */
+
 import { ChangeEvent, FC } from "react";
 import { categories } from "../data/categories";
 import Description from "./expenses/Description";

@@ -1,3 +1,17 @@
+/**
+ * @file Mileage.tsx - ./frontend/src/components/expenses
+ * @description This component allows users to enter and manage mileage-related information for an expense. It includes fields for selecting the purpose of the trip, entering 'From' and 'To' locations with Google Places Autocomplete, and a round trip checkbox. It also calculates the distance between the two locations using the Google Distance Matrix API and updates the expense with the calculated mileage value. This component is part of the expense tracking system, designed to handle travel-related costs more efficiently by automating mileage calculations based on input locations and providing round-trip options when necessary. It uses Google Maps APIs for autocomplete and distance calculations, enhancing the user experience with location-based inputs and data processing in real-time.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage Import and use the `Mileage` component in forms related to travel expenses where users need to log trip details. This component requires passing an `ExpenseType` object and a handler to manage state updates.
+ *        Example usage:
+ *        `<Mileage expense={expense} handleExpenseChange={updateExpense} />`
+ * @dependencies React, `ExpenseType` from `../../data/types`, `@react-google-maps/api` for Google Maps Autocomplete and Distance Matrix APIs.
+ * @relatedFiles Parent components like `ExpenseForm.tsx`, and types file `types.ts` for `ExpenseType`.
+ */
+
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { ExpenseType } from "../../data/types";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";

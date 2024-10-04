@@ -1,3 +1,22 @@
+/**
+ * @file Settings.tsx - ./frontend/src/components
+ * @description A component for managing application settings, including per diem rates and mileage rates, with admin-level access for editing.
+ *              It fetches settings from the server and allows updates to be saved.
+ * @author matthewb
+ * @date Created: 2024-10-01 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component is used to display and modify application settings related to expenses, including per diem rates and mileage rates.
+ *        Admin-level access is required for editing these settings. The component integrates with a settings service for data fetching and updates.
+ * @dependencies
+ *  - react: ^18.0.0 // React library for building user interfaces
+ *  - ../services/settingsService: settingsService // Service for managing settings-related API calls
+ *  - ../data/types: SettingsType // Type definition for settings data
+ *  - ./Configurable: Configurable // Child component for rendering editable settings fields
+ * @relatedFiles
+ *  - Configurable.tsx: ./Configurable // Child component for configuring individual settings
+ */
+
 import { useEffect, useState } from "react";
 import Configurable from "./Configurable";
 import settingsService from "../services/settingsService";

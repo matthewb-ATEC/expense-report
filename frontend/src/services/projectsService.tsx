@@ -1,13 +1,21 @@
 /**
  * @file projectsService.tsx - ./frontend/src/services
- * @description [Add description here]
+ * @description This service module handles CRUD operations for projects,
+ *              including fetching all projects, getting a project by ID,
+ *              creating a new project, updating an existing project by ID,
+ *              and deleting a project by ID.
  * @author matthewb
  * @date Created: 2024-10-01 | Last Modified: 2024-10-02
  * @version 1.0.0
  * @license MIT
- * @usage [Add usage information here]
- * @dependencies [Add dependencies here]
- * @relatedFiles [Add related files here]
+ * @usage Import the service to interact with the API:
+ *        `import projectsService from "./projectsService";`
+ *        Example usage:
+ *        `const projects = await projectsService.get();`
+ *        `const project = await projectsService.getID("123");`
+ * @dependencies Axios is used for making HTTP requests,
+ *               and `ProjectType` is imported from the types module.
+ * @relatedFiles ../data/types (for `ProjectType`)
  */
 
 import axios from "axios";

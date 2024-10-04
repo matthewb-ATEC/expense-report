@@ -1,3 +1,17 @@
+/**
+ * @file Name.tsx - ./frontend/src/components
+ * @description The `Name` component is a functional React component that renders an input field for users to enter their full name. It utilizes a prop function `setName` to update the parent component's state whenever the input value changes. This component enhances form usability by providing clear labeling and structured styling.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-09-30
+ * @version 1.0.0
+ * @license MIT
+ * @usage The `Name` component should be used within a form or user input section where capturing the user's full name is required. It requires a `setName` function as a prop to handle updates to the name state in the parent component. Example usage:
+ *        `<Name setName={setNameFunction} />`
+ * @dependencies
+ *  - React for building the component.
+ * @relatedFiles Related components may include other input components or forms that gather user information, such as `Email.tsx` or `Address.tsx`.
+ */
+
 import React from "react";
 
 const Name = ({ setName }: { setName: (name: string) => void }) => {

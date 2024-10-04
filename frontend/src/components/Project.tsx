@@ -1,3 +1,19 @@
+/**
+ * @file Project.tsx - ./frontend/src/components
+ * @description A component that manages project details, allowing selection, editing, and deletion of projects.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage This component is used to display and manage project information in the application.
+ *        It allows users to select a project, update its details, and delete it from the list.
+ * @dependencies
+ *  - react: ^18.0.0 // React library for building user interfaces
+ * @relatedFiles
+ *  - types.ts: ../data/types // Type definitions for the project data
+ *  - projects.ts: ../data/projects // Contains all project data
+ */
+
 import React from "react";
 import { ProjectType } from "../data/types";
 import { allProjects } from "../data/projects";

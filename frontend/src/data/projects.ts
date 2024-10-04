@@ -1,3 +1,20 @@
+/**
+ * @file projects.ts - ./frontend/src/data
+ * @description Contains a predefined list of all projects with their respective
+ *              project numbers and names. Used for populating project dropdowns
+ *              and for project management functionality within the application.
+ * @author matthewb
+ * @date Created: 2024-09-30 | Last Modified: 2024-10-04
+ * @version 1.0.0
+ * @license MIT
+ * @usage Import the `allProjects` array wherever needed to access or display project data:
+ *        `import { allProjects } from './projects';`
+ *        Example:
+ *        `allProjects.map(project => console.log(project.number, project.name));`
+ * @dependencies None
+ * @relatedFiles ../components/ExpenseReport.tsx, ../components/Project.tsx
+ */
+
 export const allProjects = [
   { number: 22010, name: "CRB - Merck Freedom V Construction" },
   { number: 22098, name: "NC New Warehouse - Engr/Const" },

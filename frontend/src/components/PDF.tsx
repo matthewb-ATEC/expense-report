@@ -1,3 +1,20 @@
+/**
+ * @file PDF.tsx - ./frontend/src/components
+ * @description Component to generate PDF reports from project and expense data.
+ * @author tanujk
+ * @date Created: 2024-10-02 | Last Modified: 2024-10-02
+ * @version 1.0.0
+ * @license MIT
+ * @usage Pass in `projects` and `name` props to render a detailed expense report.
+ * @dependencies
+ *  - pdf-lib: ^1.17.1 // For creating and manipulating PDF documents
+ *  - react: ^18.0.0 // React library for building user interfaces
+ * @relatedFiles
+ *  - types.ts: ../data/types // Type definitions for the project
+ *  - results.ts: ../data/results // Data results for calculations
+ *  - settingsService.ts: ../services/settingsService // Service for fetching settings
+ */
+
 import React, { useEffect, useState } from "react";
 import { ProjectType } from "../data/types";
 import {
