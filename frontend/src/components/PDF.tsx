@@ -19,6 +19,7 @@ import {
   mileageRate,
   perDiem,
 } from "../data/results";
+import Description from "./expenses/Description";
 //import { UserType } from "../data/types";
 //import Name from "./Name";
 
@@ -119,12 +120,25 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
 
     // Input Validation (Expenses)
     projects.forEach((project, index) => {
+      // Name
+      if (project.name == "") {
+        alertText += `Required name in project ${index + 1}.` + "\n";
+      }
+
+      // Description
+      else if (project.name == "Other") {
+        if (project.description == undefined || project.description == "") {
+          alertText +=
+            `Required description in project ${project.name}.` + "\n";
+        }
+      }
+
       project.expenses.forEach((expense, sub_index) => {
         // Category
         if (!expense?.costCategory.trim()) {
           alertText +=
             `Required cost category for expense ${sub_index + 1} in project ${
-              index + 1
+              project.name
             }.` + "\n";
         }
 
@@ -132,7 +146,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         if (!expense?.costCode.trim()) {
           alertText +=
             `Required cost code for expense ${sub_index + 1} in project ${
-              index + 1
+              project.name
             }.` + "\n";
         }
 
@@ -140,7 +154,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         if (!expense?.date.trim()) {
           alertText +=
             `Required date for expense ${sub_index + 1} in project ${
-              index + 1
+              project.name
             }.` + "\n";
         }
 
@@ -157,7 +171,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
           ) {
             alertText +=
               `Invalid cost for expense ${sub_index + 1} in project ${
-                index + 1
+                project.name
               }.` + "\n";
             // Highlight invalid input field here, similar to the name field
           }
@@ -171,7 +185,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
           if (!expense?.description?.trim()) {
             alertText +=
               `Required description for expense ${sub_index + 1} in project ${
-                index + 1
+                project.name
               }.` + "\n";
           }
         }
@@ -181,19 +195,19 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
           if (!expense?.purpose?.trim()) {
             alertText +=
               `Required purpose for expense ${sub_index + 1} in project ${
-                index + 1
+                project.name
               }.` + "\n";
           }
           if (!expense?.fromLocation?.trim()) {
             alertText +=
               `Required origin for expense ${sub_index + 1} in project ${
-                index + 1
+                project.name
               }.` + "\n";
           }
           if (!expense?.toLocation?.trim()) {
             alertText +=
               `Required destination for expense ${sub_index + 1} in project ${
-                index + 1
+                project.name
               }.` + "\n";
           }
         }
@@ -209,7 +223,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
             alertText +=
               `Required at least 1 meal for expense ${
                 sub_index + 1
-              } in project ${index + 1}.` + "\n";
+              } in project ${project.name}.` + "\n";
           }
         }
       });
@@ -324,7 +338,11 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
       currentY -= lineHeight;
       drawTextWithAlignment(
         page,
-        `Billable: ${project.name} | ${project.number}`,
+        `Billable: ${
+          project.name === "Other"
+            ? "N/A"
+            : `${project.name} | ${project.number}`
+        }`,
         ``,
         pageMargin,
         currentY,
