@@ -146,6 +146,11 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
 
     // Input Validation (Expenses)
     projects.forEach((project, index) => {
+      // Expenses present
+      if (project.expenses.length === 0) {
+        alertText += `Required expenses in project ${index + 1}.` + "\n";
+      }
+
       // Name
       if (project.name == "") {
         alertText += `Required name in project ${index + 1}.` + "\n";
@@ -487,8 +492,10 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
 
         const description =
           (expense.costCategory || "N/A") + " | " + (expense.costCode || "N/A");
-        const amount = `$${expense.cost?.toFixed(2) || "0.00"}`;
-
+        const amount = `$${(expense.cost?.toFixed(2) || "0.00").replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          ","
+        )}`;
         //Constuct expense sub description
         let subParts: string[] = [];
         subParts.push(expense.date || "");
@@ -626,7 +633,8 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         `Total`,
         `$${project.expenses
           .reduce((sum, exp) => sum + (exp.cost || 0), 0)
-          .toFixed(2)}`,
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`,
         pageMargin,
         currentY,
         fontSize,
@@ -669,7 +677,10 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         drawTextWithAlignment(
           page,
           item.category + (item.costCode ? " | " + item.costCode : ""),
-          `$${item.sum.toFixed(2) || "0.00"}`,
+          `$${(item.sum.toFixed(2) || "0.00").replace(
+            /\d(?=(\d{3})+\.)/g,
+            "$&,"
+          )}`,
           pageMargin,
           currentY,
           fontSize * 0.8,
