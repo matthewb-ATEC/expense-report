@@ -37,7 +37,7 @@ const getID = async (id: string) => {
 };
 
 const create = async (newReport: ReportType) => {
-  console.log("Creating Report", newReport);
+  console.log("Creating Report");
   const request = axios.post<ReportType>(baseURL, newReport);
   const response = await request;
   return response.data;

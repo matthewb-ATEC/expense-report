@@ -13,7 +13,7 @@
  */
 
 import React, { ChangeEvent } from "react";
-import { ReportType } from "../data/types";
+import { ReportType, UserType } from "../data/types";
 
 interface NameProps {
   report: ReportType;
@@ -21,17 +21,26 @@ interface NameProps {
 }
 
 const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
+  const handleUserChange = (updatedUser: UserType) => {
     const updatedReport: ReportType = {
       ...report,
-      user: {
-        ...report.user,
-        name: event.target.value,
-      },
+      user: updatedUser,
     };
 
+    console.log("Updated report", updatedReport);
+
     handleReportChange(updatedReport);
+  };
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedUser: UserType = {
+      ...report.user,
+      name: event.target.value,
+    };
+
+    console.log("Updated user", updatedUser);
+
+    handleUserChange(updatedUser);
   };
 
   return (
