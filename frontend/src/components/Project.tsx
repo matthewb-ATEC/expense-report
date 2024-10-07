@@ -71,7 +71,7 @@ const Project: React.FC<ProjectProps> = ({
       : project.name;
   };
 
-  if (project === selectedProject) {
+  if (selectedProject && project.id === selectedProject.id) {
     return (
       <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
         <div className="flex w-full flex-col space-y-4">

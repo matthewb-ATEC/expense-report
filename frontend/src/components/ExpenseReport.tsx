@@ -57,9 +57,9 @@ const ExpenseReport: React.FC = () => {
 
     reportsService
       .updateID(updatedReport.id, updatedReport)
-      .then((result) => {
-        console.log("Report updated", result);
-        setReport(result);
+      .then((newReport) => {
+        console.log("Report updated", newReport);
+        setReport(newReport);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -112,9 +112,8 @@ const ExpenseReport: React.FC = () => {
   };
 
   const updateSelectedProject = (project: ProjectType | null) => {
-    const newSelectedProject = project;
-    setSelectedProject(newSelectedProject);
-    console.log("Selected project changed to", newSelectedProject);
+    setSelectedProject(project);
+    console.log("Selected project changed to", project);
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
