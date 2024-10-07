@@ -18,9 +18,28 @@ projectsRouter.get(
 
     Report.findById(reportId)
       .then((report) => {
-        response.json(
-          report.projects.find((project) => project.id === projectId)
+        // If the report doesn't exist, return a 404 error
+        if (!report) {
+          return response.status(404).json({ error: "Report not found" });
+        }
+
+        const project = report.projects.find(
+          (project) => project.id === projectId
         );
+
+        if (!project) {
+          return response.status(404).json({
+            error: report.projects[0].id,
+          });
+        }
+
+        // If the project doesn't exist, return a 404 error
+        if (!project) {
+          return response.status(404).json({ error: "Project not found" });
+        }
+
+        // Return the project details
+        response.json(project);
       })
       .catch((error) => next(error));
   }
@@ -47,12 +66,28 @@ projectsRouter.delete(
 
 projectsRouter.post("/:reportId/projects", (request, response, next) => {
   const reportId = request.params.reportId;
-  const project = request.body;
 
   Report.findById(reportId)
     .then((report) => {
-      report.projects.push(project);
-      response.status(201).json(project);
+      if (!report) {
+        return response.status(404).json({ error: "Report not found" });
+      }
+
+      const newProject = request.body; // Capture the project data from the request body
+
+      // Push the new project into the report's projects array
+      report.projects.push(newProject);
+
+      // Save the report with the new project
+      report
+        .save()
+        .then((updatedReport) => {
+          // Respond with the newly added project
+          const addedProject =
+            updatedReport.projects[updatedReport.projects.length - 1];
+          response.status(201).json(addedProject);
+        })
+        .catch((error) => next(error));
     })
     .catch((error) => next(error));
 });

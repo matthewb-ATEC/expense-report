@@ -20,7 +20,6 @@
 import { ProjectType, ReportType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
-import { v4 as uuidv4 } from "uuid";
 
 interface ProjectsProps {
   report: ReportType;
@@ -46,14 +45,12 @@ const Projects: React.FC<ProjectsProps> = ({
 
     // Create the new default project
     const newProject: ProjectType = {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      id: uuidv4(),
+      id: "",
       number: undefined,
       name: "",
       expenses: [
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-          id: uuidv4(),
+          id: "",
           date: "",
           costCategory: "",
           costCode: "",
@@ -68,6 +65,7 @@ const Projects: React.FC<ProjectsProps> = ({
         console.log("Successfully created project", createdProject);
 
         const updatedProjects = report.projects.concat(createdProject);
+
         handleProjectsChange(updatedProjects);
         updateSelectedProject(createdProject);
       })
@@ -126,7 +124,6 @@ const Projects: React.FC<ProjectsProps> = ({
         type="button"
         onClick={() => {
           handleAddProject();
-          updateSelectedProject(report.projects[report.projects.length]);
         }}
       >
         {report.projects.length <= 0 ? "Start Expense Report" : "Add Project"}

@@ -165,7 +165,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="from"
-            value={expense.fromLocation}
+            value={expense.fromLocation ?? ""}
             onChange={(e) => {
               handleExpenseChange({ ...expense, fromLocation: e.target.value });
             }}
@@ -186,7 +186,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="to"
-            value={expense.toLocation}
+            value={expense.toLocation ?? ""}
             onChange={(e) => {
               handleExpenseChange({ ...expense, toLocation: e.target.value });
             }}
