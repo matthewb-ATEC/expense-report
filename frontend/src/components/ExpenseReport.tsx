@@ -42,9 +42,10 @@ const ExpenseReport: React.FC = () => {
 
     reportsService
       .create(newReport)
-      .then(() => {
+      .then((reponse) => {
         console.log("Promise fulfilled");
-        setReport(newReport);
+        console.log("Report set to", reponse);
+        setReport(reponse);
       })
       .catch((error: unknown) => {
         console.log(error);
