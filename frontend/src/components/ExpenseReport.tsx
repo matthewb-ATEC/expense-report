@@ -129,7 +129,7 @@ const ExpenseReport: React.FC = () => {
   if (!report) return <Loading />;
 
   return (
-    <div className="h-full flex p-8 bg-gray-100 justify-center flex-grow">
+    <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
       <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
         <Name report={report} handleReportChange={handleReportChange} />
 

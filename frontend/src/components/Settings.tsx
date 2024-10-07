@@ -85,7 +85,7 @@ const Settings = () => {
   if (!settings) return <Loading />;
 
   return (
-    <div className="h-full flex flex-col p-8 bg-gray-100 items-center flex-grow">
+    <div className="h-full flex flex-col p-8 bg-gray-50 items-center flex-grow">
       <div className="flex flex-col space-y-8 w-11/12 lg:w-fit">
         <div className="w-full flex flex-col space-y-8 lg:grid lg:grid-cols-2 lg:space-x-4 lg:space-y-0">
           <div className="w-full flex flex-col space-y-4">
