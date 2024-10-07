@@ -42,6 +42,8 @@ const Projects: React.FC<ProjectsProps> = ({
   handleProjectChange,
 }) => {
   const handleAddProject = () => {
+    if (!report.id) return;
+
     // Create the new default project
     const newProject: ProjectType = {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -75,6 +77,8 @@ const Projects: React.FC<ProjectsProps> = ({
   };
 
   const handleDeleteProject = (id: string) => {
+    if (!report.id) return;
+
     console.log(`Deleting project ID: ${id}`);
 
     const projectToDelete = report.projects.find(

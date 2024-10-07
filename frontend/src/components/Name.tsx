@@ -12,7 +12,8 @@
  * @relatedFiles Related components may include other input components or forms that gather user information, such as `Email.tsx` or `Address.tsx`.
  */
 
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
+import { debounce } from "lodash";
 import { ReportType, UserType } from "../data/types";
 
 interface NameProps {
@@ -21,26 +22,32 @@ interface NameProps {
 }
 
 const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
-  const handleUserChange = (updatedUser: UserType) => {
-    const updatedReport: ReportType = {
-      ...report,
-      user: updatedUser,
-    };
+  const [name, setName] = useState(report.user.name);
 
-    console.log("Updated report", updatedReport);
+  // Use lodash debounce to delay the state update function
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const debouncedUpdate = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    debounce((updatedName: string) => {
+      const updatedUser: UserType = {
+        ...report.user,
+        name: updatedName,
+      };
 
-    handleReportChange(updatedReport);
-  };
+      const updatedReport: ReportType = {
+        ...report,
+        user: updatedUser,
+      };
+
+      handleReportChange(updatedReport);
+    }, 300),
+    [report, handleReportChange]
+  );
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const updatedUser: UserType = {
-      ...report.user,
-      name: event.target.value,
-    };
-
-    console.log("Updated user", updatedUser);
-
-    handleUserChange(updatedUser);
+    setName(event.target.value); // Update local state immediately
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    debouncedUpdate(event.target.value); // Update parent state after debounce
   };
 
   return (
@@ -54,7 +61,7 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
           type="text"
           id="name"
           name="name"
-          value={report.user.name}
+          value={name}
           onChange={handleNameChange}
         />
       </div>

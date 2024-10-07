@@ -13,7 +13,7 @@
 import axios from "axios";
 import { ProjectType } from "../data/types";
 
-const baseURL = "/api/reports";
+const baseURL = "/api/reports/";
 
 // Fetch all projects for a given report
 const getProjects = async (reportId: string) => {
