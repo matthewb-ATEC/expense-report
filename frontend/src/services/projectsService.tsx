@@ -24,7 +24,7 @@ const baseURL = "/api/projects";
 
 const get = async () => {
   console.log("Getting all projects");
-  const request = axios.get<ProjectType>(baseURL);
+  const request = axios.get<ProjectType[]>(baseURL);
   const response = await request;
   return response.data;
 };

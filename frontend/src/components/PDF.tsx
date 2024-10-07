@@ -27,7 +27,6 @@ import {
   RGB,
 } from "pdf-lib";
 import { total, breakdown } from "../data/results";
-import Description from "./expenses/Description";
 import settingsService from "../services/settingsService";
 
 interface PDFProps {
