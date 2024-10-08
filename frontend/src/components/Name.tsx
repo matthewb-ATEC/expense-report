@@ -51,7 +51,7 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
   };
 
   return (
-    <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-sm">
+    <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-md">
       <div className="flex flex-col w-full items-start space-y-2">
         <label className="text-gray-600" htmlFor="name">
           Full Name

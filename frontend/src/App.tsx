@@ -13,7 +13,7 @@
 import Layout from "./components/Layout";
 import ErrorPage from "./components/ErrorPage";
 import ExpenseReport from "./components/ExpenseReport";
-import Settings from "./components/Settings";
+import Settings from "./components/settings/Settings";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 

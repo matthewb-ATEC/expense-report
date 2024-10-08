@@ -61,6 +61,7 @@ export interface AttachmentType {
   text: string;
 }
 
+// Settings
 export interface SettingsType {
   mileageRate: number;
   perDiem: {
@@ -68,4 +69,16 @@ export interface SettingsType {
     lunch: number;
     dinner: number;
   };
+  projects: ProjectDropdownType[];
+  costCodes: CostCodeDropdownType[];
+}
+
+export interface ProjectDropdownType {
+  name: string;
+  number: number;
+}
+
+export interface CostCodeDropdownType {
+  category: string;
+  costCode: string;
 }

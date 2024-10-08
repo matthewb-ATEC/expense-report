@@ -127,7 +127,7 @@ const Expense: FC<ExpenseProps> = ({
   );
 
   return (
-    <div className="p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+    <div className="p-8 bg-white shadow-md border-gray-100 border-2 rounded-md">
       <div className="w-full flex flex-col space-y-4 items-start">
         <div className="w-full flex flex-col space-y-4">
           {/* Cost Category Dropdown */}

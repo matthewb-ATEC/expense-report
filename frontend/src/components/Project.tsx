@@ -73,7 +73,7 @@ const Project: React.FC<ProjectProps> = ({
 
   if (selectedProject && project.id === selectedProject.id) {
     return (
-      <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+      <div className="flex w-full items-start p-8 bg-white shadow-md border-gray-100 border-2 rounded-md">
         <div className="flex w-full flex-col space-y-4">
           <div className="flex w-full flex-col items-start space-y-2">
             <label className="text-gray-600 text-nowrap" htmlFor="projectName">
@@ -142,7 +142,7 @@ const Project: React.FC<ProjectProps> = ({
   }
 
   return (
-    <div className="flex w-full items-start p-8 bg-white shadow-sm border-gray-100 border-2 rounded-md">
+    <div className="flex w-full items-start p-8 bg-white shadow-md border-gray-100 border-2 rounded-md">
       <div className="flex w-full justify-between space-x-2">
         <div className="text-gray-600">{getMinimizedProjectText()}</div>
         <button
