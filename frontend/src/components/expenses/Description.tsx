@@ -39,7 +39,7 @@ const Description: FC<DescriptionProps> = ({
         className="p-2 w-full border-grey-300 border-b-2"
         type="text"
         id="description"
-        value={expense.description}
+        value={expense.description ?? ""}
         onChange={handleDescriptionChange}
       />
     </div>

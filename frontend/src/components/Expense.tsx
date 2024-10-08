@@ -114,7 +114,11 @@ const Expense: FC<ExpenseProps> = ({
             type="number"
             id="cost"
             placeholder="$"
-            value={expense.cost}
+            value={
+              expense.cost !== undefined && expense.cost !== 0
+                ? expense.cost
+                : ""
+            }
             onChange={handleCostChange}
           />
         </div>

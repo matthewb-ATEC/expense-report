@@ -12,16 +12,42 @@
  * @relatedFiles Related components may include other input components or forms that gather user information, such as `Email.tsx` or `Address.tsx`.
  */
 
-import React from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
+import { debounce } from "lodash";
+import { ReportType, UserType } from "../data/types";
 
 interface NameProps {
-  setName: (name: string) => void;
-  name: string;
+  report: ReportType;
+  handleReportChange: (updatedReport: ReportType) => void;
 }
 
-const Name: React.FC<NameProps> = ({ setName, name }) => {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
+  const [name, setName] = useState(report.user.name);
+
+  // Use lodash debounce to delay the state update function
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const debouncedUpdate = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    debounce((updatedName: string) => {
+      const updatedUser: UserType = {
+        ...report.user,
+        name: updatedName,
+      };
+
+      const updatedReport: ReportType = {
+        ...report,
+        user: updatedUser,
+      };
+
+      handleReportChange(updatedReport);
+    }, 300),
+    [report, handleReportChange]
+  );
+
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value); // Update local state immediately
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    debouncedUpdate(event.target.value); // Update parent state after debounce
   };
 
   return (
@@ -32,14 +58,11 @@ const Name: React.FC<NameProps> = ({ setName, name }) => {
         </label>
         <input
           className="p-2 w-full border-grey-300 border-b-2"
-          //className={`p-2 w-full border-b-2 ${
-          //  isInvalid ? "border-red-500" : "border-gray-300"
-          //}`}
           type="text"
           id="name"
           name="name"
           value={name}
-          onChange={handleInputChange}
+          onChange={handleNameChange}
         />
       </div>
     </div>
