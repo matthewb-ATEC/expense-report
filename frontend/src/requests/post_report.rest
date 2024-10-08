@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/reports
+Content-Type: application/json
+
+{
+    "id": "1",
+    "user" : {
+        "name": "Test"
+    },
+    "projects": []
+}
