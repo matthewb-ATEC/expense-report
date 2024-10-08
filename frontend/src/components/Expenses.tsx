@@ -14,7 +14,6 @@
 import React from "react";
 import Expense from "./Expense";
 import { ExpenseType, ProjectType } from "../data/types";
-import { v4 as uuidv4 } from "uuid";
 
 interface ExpensesProps {
   project: ProjectType;
@@ -36,8 +35,7 @@ const Expenses: React.FC<ExpensesProps> = ({
 
   const handleAddExpense = () => {
     const newExpense: ExpenseType = {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      id: uuidv4(),
+      id: "",
       date: "",
       costCategory: "",
       costCode: "",
@@ -60,9 +58,9 @@ const Expenses: React.FC<ExpensesProps> = ({
         <div className="text-xl font-bold">Expenses</div>
         <div className="text-gray-500">{project.name}</div>
       </div>
-      {expenses.map((expense) => (
+      {expenses.map((expense, index) => (
         <Expense
-          key={expense.id}
+          key={index}
           expense={expense}
           handleExpenseChange={handleExpenseChange}
           handleDeleteExpense={handleDeleteExpense}

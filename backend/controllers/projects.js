@@ -1,41 +1,119 @@
+const Report = require("../models/report");
 const projectsRouter = require("express").Router();
 
-let projects = [];
-
-projectsRouter.get("/", (request, response) => {
-  response.json(projects);
+projectsRouter.get("/:reportId/projects", async (request, response, next) => {
+  const reportId = request.params.reportId;
+  Report.findById(reportId)
+    .then((report) => {
+      response.json(report.projects);
+    })
+    .catch((error) => next(error));
 });
 
-projectsRouter.delete("/:id", (request, response, next) => {
-  const id = request.params.id;
+projectsRouter.get(
+  "/:reportId/projects/:projectId",
+  async (request, response, next) => {
+    const reportId = request.params.reportId;
+    const projectId = request.params.projectId;
 
-  // Filter out the project to delete
-  projects = projects.filter((project) => project.id !== id);
+    Report.findById(reportId)
+      .then((report) => {
+        // If the report doesn't exist, return a 404 error
+        if (!report) {
+          return response.status(404).json({ error: "Report not found" });
+        }
 
-  response.status(204).end();
-});
+        const project = report.projects.find(
+          (project) => project.id === projectId
+        );
 
-projectsRouter.post("/", (request, response) => {
-  const project = request.body;
+        if (!project) {
+          return response.status(404).json({
+            error: report.projects[0].id,
+          });
+        }
 
-  if (!project.id) {
-    project.id = (projects.length + 1).toString(); // Simple id generation
+        // If the project doesn't exist, return a 404 error
+        if (!project) {
+          return response.status(404).json({ error: "Project not found" });
+        }
+
+        // Return the project details
+        response.json(project);
+      })
+      .catch((error) => next(error));
   }
+);
 
-  projects.push(project);
-  response.status(201).json(project);
+projectsRouter.delete(
+  "/:reportId/projects/:projectId",
+  (request, response, next) => {
+    const reportId = request.params.reportId;
+    const projectId = request.params.projectId;
+
+    Report.findById(reportId)
+      .then((report) => {
+        // Filter out the project to delete
+        report.projects = report.projects.filter(
+          (project) => project.id !== projectId
+        );
+
+        response.status(204).end();
+      })
+      .catch((error) => next(error));
+  }
+);
+
+projectsRouter.post("/:reportId/projects", (request, response, next) => {
+  const reportId = request.params.reportId;
+
+  Report.findById(reportId)
+    .then((report) => {
+      if (!report) {
+        return response.status(404).json({ error: "Report not found" });
+      }
+
+      const newProject = request.body; // Capture the project data from the request body
+
+      // Push the new project into the report's projects array
+      report.projects.push(newProject);
+
+      // Save the report with the new project
+      report
+        .save()
+        .then((updatedReport) => {
+          // Respond with the newly added project
+          const addedProject =
+            updatedReport.projects[updatedReport.projects.length - 1];
+          response.status(201).json(addedProject);
+        })
+        .catch((error) => next(error));
+    })
+    .catch((error) => next(error));
 });
 
-projectsRouter.put("/:id", (request, response, next) => {
-  const updatedProject = request.body;
-  const id = request.params.id;
+projectsRouter.put(
+  "/:reportId/projects/:projectId",
+  (request, response, next) => {
+    const updatedProject = request.body;
+    const reportId = request.params.reportId;
+    const projectId = request.params.projectId;
 
-  // Find the project to update
-  projects = projects.map((project) =>
-    project.id === id ? updatedProject : project
-  );
+    Report.findById(reportId)
+      .then((report) => {
+        // Find the project to update
+        report.projects = report.projects.map((project) =>
+          project.id === projectId ? updatedProject : project
+        );
 
-  response.status(200).json(updatedProject);
-});
+        const result = report.projects.find(
+          (project) => project.id === projectId
+        );
+
+        response.status(200).json(result);
+      })
+      .catch((error) => next(error));
+  }
+);
 
 module.exports = projectsRouter;

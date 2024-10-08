@@ -19,6 +19,15 @@
  * @relatedFiles Components or services that manipulate user, project, or expense data,
  *               such as `projects.ts`, `expenses.ts`, or `settingsService.ts`.
  */
+export interface ReportType {
+  id: string | undefined;
+  user: UserType;
+  projects: ProjectType[];
+}
+
+export interface UserType {
+  name: string;
+}
 
 export interface ProjectType {
   id: string;

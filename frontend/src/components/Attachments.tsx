@@ -14,7 +14,6 @@
 
 import React, { ChangeEvent } from "react";
 import { AttachmentType, ExpenseType } from "../data/types";
-import { v4 as uuidv4 } from "uuid";
 import Attachment from "./Attachment";
 
 interface AttachmentsProps {
@@ -35,10 +34,9 @@ const Attachments: React.FC<AttachmentsProps> = ({
     }
 
     const newAttachments: AttachmentType[] = Array.from(files).map((file) => ({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      id: uuidv4(),
+      id: "",
       file,
-      text: "TEST TEXT", //Change to attachment text
+      text: "",
     }));
 
     const updatedExpense: ExpenseType = {
@@ -50,7 +48,9 @@ const Attachments: React.FC<AttachmentsProps> = ({
     handleExpenseChange(updatedExpense);
   };
 
-  const handleDeleteAttachment = (id: string) => {
+  const handleDeleteAttachment = (id: string | undefined) => {
+    if (!id) return;
+
     const updatedExpense: ExpenseType = {
       ...expense,
       attachments: expense.attachments?.filter(
@@ -77,11 +77,8 @@ const Attachments: React.FC<AttachmentsProps> = ({
 
       {/* List of Attachments */}
       <div className="flex flex-col space-y-2">
-        {expense.attachments?.map((attachment) => (
-          <div
-            className="w-full flex justify-between items-start"
-            key={attachment.id}
-          >
+        {expense.attachments?.map((attachment, index) => (
+          <div className="w-full flex justify-between items-start" key={index}>
             <Attachment attachment={attachment} />
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"

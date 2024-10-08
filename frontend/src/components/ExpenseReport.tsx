@@ -12,18 +12,17 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { ExpenseType, ProjectType } from "../data/types";
-import projectsService from "../services/projectsService";
+import { ExpenseType, ProjectType, ReportType } from "../data/types";
+import reportsService from "../services/reportsService";
 import Name from "./Name";
 import Projects from "./Projects";
 import Expenses from "./Expenses";
 import { allProjects } from "../data/projects";
 import PDF from "./PDF";
+import Loading from "./Loading";
 
 const ExpenseReport: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  //const [isNameInvalid, setIsNameInvalid] = useState(false);
-  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [report, setReport] = useState<ReportType>();
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
@@ -35,35 +34,67 @@ const ExpenseReport: React.FC = () => {
 
   useEffect(() => {
     console.log("Initial useEffect");
-    projectsService
-      .get()
-      .then((initialProjects: ProjectType[]) => {
+    const newReport: ReportType = {
+      id: undefined,
+      user: {
+        name: "",
+      },
+      projects: [],
+    };
+
+    reportsService
+      .create(newReport)
+      .then((reponse) => {
         console.log("Promise fulfilled");
-        setProjects(initialProjects);
-        setSelectedProject(initialProjects[0]);
+        console.log("Report set to", reponse);
+        setReport(reponse);
       })
       .catch((error: unknown) => {
         console.log(error);
       });
   }, []);
 
-  const handleProjectChange = (updatedProject: ProjectType) => {
-    projectsService
-      .updateID(updatedProject.id, updatedProject)
-      .then(() => {
-        console.log(`Project changed to`, updatedProject);
+  const handleReportChange = (updatedReport: ReportType) => {
+    if (!updatedReport.id) return;
 
-        const updatedProjects = projects.map((project) =>
-          project.id === updatedProject.id ? updatedProject : project
-        );
-
-        setProjects(updatedProjects);
-        setSelectedProject(updatedProject);
-        updateFilteredProjects(updatedProjects);
+    reportsService
+      .updateID(updatedReport.id, updatedReport)
+      .then((newReport) => {
+        console.log("Report updated", newReport);
+        setReport(newReport);
       })
       .catch((error: unknown) => {
         console.log(error);
       });
+  };
+
+  const handleProjectsChange = (updatedProjects: ProjectType[]) => {
+    if (!report) return;
+
+    const updatedReport: ReportType = {
+      ...report,
+      projects: updatedProjects,
+    };
+
+    handleReportChange(updatedReport);
+  };
+
+  const handleProjectChange = (updatedProject: ProjectType) => {
+    if (!report) return;
+    console.log(`Project changed to`, updatedProject);
+
+    const updatedProjects: ProjectType[] = report.projects.map((project) =>
+      project.id === updatedProject.id ? updatedProject : project
+    );
+
+    const updatedReport: ReportType = {
+      ...report,
+      projects: updatedProjects,
+    };
+
+    handleReportChange(updatedReport);
+    setSelectedProject(updatedProject);
+    updateFilteredProjects(updatedProjects);
   };
 
   const handleExpensesChange = (updatedExpenses: ExpenseType[]) => {
@@ -83,9 +114,8 @@ const ExpenseReport: React.FC = () => {
   };
 
   const updateSelectedProject = (project: ProjectType | null) => {
-    const newSelectedProject = project;
-    setSelectedProject(newSelectedProject);
-    console.log("Selected project changed to", newSelectedProject);
+    setSelectedProject(project);
+    console.log("Selected project changed to", project);
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
@@ -100,21 +130,22 @@ const ExpenseReport: React.FC = () => {
     setFilteredProjects(filteredProjects);
   };
 
+  if (!report) return <Loading />;
+
   return (
-    <div className="h-full flex p-8 bg-gray-100 justify-center flex-grow">
+    <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
       <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
-        {projects.length === 0 && (
-          <Name setName={setName} name={name} /*isInvalid={isNameInvalid}*/ />
-        )}
+        <Name report={report} handleReportChange={handleReportChange} />
+
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
           <Projects
-            projects={projects}
+            report={report}
             selectedProject={selectedProject}
-            filteredProjects={filteredProjects}
-            handleProjectsChange={setProjects}
-            handleProjectChange={handleProjectChange}
+            handleProjectsChange={handleProjectsChange}
             updateSelectedProject={updateSelectedProject}
             updateFilteredProjects={updateFilteredProjects}
+            filteredProjects={filteredProjects}
+            handleProjectChange={handleProjectChange}
           />
           {selectedProject && selectedProject.name !== "" && (
             <Expenses
@@ -124,8 +155,8 @@ const ExpenseReport: React.FC = () => {
             />
           )}
         </div>
-        {projects.some((project) => project.expenses.length > 0) && (
-          <PDF projects={projects} name={name} />
+        {report.projects.some((project) => project.expenses.length > 0) && (
+          <PDF report={report} />
         )}
       </div>
     </div>
