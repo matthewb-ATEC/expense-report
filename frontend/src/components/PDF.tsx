@@ -5,7 +5,7 @@
  * @date Created: 2024-10-02 | Last Modified: 2024-10-02
  * @version 1.0.0
  * @license MIT
- * @usage Pass in `projects` and `name` props to render a detailed expense report.
+ * @usage Pass in `report.projects` and `name` props to render a detailed expense report.
  * @dependencies
  *  - pdf-lib: ^1.17.1 // For creating and manipulating PDF documents
  *  - react: ^18.0.0 // React library for building user interfaces
@@ -16,7 +16,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { ProjectType } from "../data/types";
+import { ReportType } from "../data/types";
 import {
   PDFDocument,
   rgb,
@@ -30,12 +30,10 @@ import { total, breakdown } from "../data/results";
 import settingsService from "../services/settingsService";
 
 interface PDFProps {
-  projects: ProjectType[];
-  name: string;
-  //setIsNameInvalid: React.Dispatch<React.SetStateAction<boolean>>;
+  report: ReportType;
 }
 
-const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
+const PDF: React.FC<PDFProps> = ({ report }) => {
   const [settings, setSettings] = useState({
     mileageRate: 0,
     perDiem: {
@@ -58,8 +56,8 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
   // CONSIDER Deleting?
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(JSON.stringify(projects));
-    console.log(projects);
+    console.log(JSON.stringify(report.projects));
+    console.log(report.projects);
   };
 
   // Utility function to create a PDF from an image file
@@ -127,7 +125,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
   const getCurrentDate = (): string => {
     const today = new Date();
 
-    const year = today.getFullYear();
+    const year = String(today.getFullYear());
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
@@ -136,13 +134,14 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
   const handleDownloadPDF = async () => {
     // Input Validation (Name)
     let alertText = "";
-    if (!name) {
+    if (!report.user.name) {
+      //setIsNameInvalid(true);
       console.log("Invalid name field");
       alertText += "Invalid name field.\n";
     }
 
     // Input Validation (Expenses)
-    projects.forEach((project, index) => {
+    report.projects.forEach((project, index) => {
       // Expenses present
       if (project.expenses.length === 0) {
         alertText += `Required expenses in project: ${index + 1}.` + "\n";
@@ -163,7 +162,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
 
       project.expenses.forEach((expense, sub_index) => {
         // Category
-        if (!expense?.costCategory.trim()) {
+        if (!expense.costCategory.trim()) {
           alertText +=
             `Required cost category for expense ${sub_index + 1} in project: ${
               project.name
@@ -171,7 +170,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         }
 
         // Date
-        if (!expense?.date.trim()) {
+        if (!expense.date.trim()) {
           alertText +=
             `Required date for expense ${sub_index + 1} in project: ${
               project.name
@@ -205,7 +204,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
           expense.costCategory == "Relocation" ||
           expense.costCategory == "Job Site Material"
         ) {
-          if (!expense?.description?.trim()) {
+          if (!expense.description?.trim()) {
             alertText +=
               `Required description for expense ${sub_index + 1} in project: ${
                 project.name
@@ -221,7 +220,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
                 project.name
               }.` + "\n";
           }
-          if (!expense?.toLocation?.trim()) {
+          if (!expense.toLocation?.trim()) {
             alertText +=
               `Required destination for expense ${sub_index + 1} in project: ${
                 project.name
@@ -232,10 +231,9 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         // Per Diem
         if (expense.costCategory == "Per Diem") {
           if (
-            (expense?.breakfast === false ||
-              expense?.breakfast === undefined) &&
-            (expense?.lunch === false || expense?.lunch === undefined) &&
-            (expense?.dinner === false || expense?.dinner === undefined)
+            (expense.breakfast === false || expense.breakfast === undefined) &&
+            (expense.lunch === false || expense.lunch === undefined) &&
+            (expense.dinner === false || expense.dinner === undefined)
           ) {
             alertText +=
               `Required at least 1 meal for expense ${
@@ -283,7 +281,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
     ) => {
       const pageWidth = page.getSize().width;
 
-      // Image dimensions: 1883 × 785
+      // Image dimensions: 1883×785
       const logoWidth = 125.5;
       const logoHeight = 52.3;
 
@@ -322,7 +320,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
     };
 
     // Project loop
-    projects.forEach((project, index) => {
+    report.projects.forEach((project, index) => {
       if (currentY < lineHeight + pageMargin) {
         page = pdfDoc.addPage();
         currentY = page.getSize().height - pageMargin;
@@ -371,7 +369,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
       drawTextWithAlignment(
         page,
         ``,
-        name || `Default User`,
+        report.user.name || `Default User`,
         pageMargin,
         currentY,
         fontSize,
@@ -478,43 +476,35 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
 
         const description =
           (expense.costCategory || "N/A") + " | " + (expense.costCode || "N/A");
-        const amount = `$${(expense.cost?.toFixed(2) || "0.00").replace(
+        const amount = `$${(expense.cost?.toFixed(2) ?? "0.00").replace(
           /\B(?=(\d{3})+(?!\d))/g,
           ","
         )}`;
         //Constuct expense sub description
-        let subParts: string[] = [];
+        const subParts: string[] = [];
         subParts.push(expense.date || "");
-        subParts.push(`${expense.purpose || ""}`);
+        subParts.push(expense.purpose || "");
         subParts.push(
-          `${
-            expense.costCategory === "Per Diem"
-              ? `${
-                  expense.breakfast
-                    ? `Breakfast: ${settings.perDiem.breakfast}`
-                    : ""
-                }` +
-                `${expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : ""}` +
-                `${expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : ""}`
-              : ""
-          }`
+          expense.costCategory === "Per Diem"
+            ? (expense.breakfast
+                ? `Breakfast: ${settings.perDiem.breakfast}`
+                : "") +
+                (expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : "") +
+                (expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : "")
+            : ""
         );
         subParts.push(
-          `${
-            expense.costCategory === "Mileage"
-              ? "From " +
-                (expense.fromLocation || "N/A") +
+          expense.costCategory === "Mileage"
+            ? "From " +
+                (expense.fromLocation ?? "N/A") +
                 " to " +
-                (expense.toLocation || "N/A")
-              : ""
-          }`
+                (expense.toLocation ?? "N/A")
+            : ""
         );
         subParts.push(
-          `${
-            expense.costCategory === "Mileage"
-              ? (Number(expense.mileage).toFixed(1) || "N/A") + " Miles"
-              : ""
-          }`
+          expense.costCategory === "Mileage"
+            ? (Number(expense.mileage).toFixed(1) || "N/A") + " Miles"
+            : ""
         );
         console.log("subParts: ", subParts);
         subParts.push(`${expense.description || ""}`);
@@ -539,7 +529,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         drawTextWithAlignment(
           page,
           description,
-          `${amount}`,
+          amount,
           pageMargin,
           currentY,
           fontSize,
@@ -619,7 +609,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         page,
         `Total`,
         `$${project.expenses
-          .reduce((sum, exp) => sum + (exp.cost || 0), 0)
+          .reduce((sum, exp) => sum + (exp.cost ?? 0), 0)
           .toFixed(2)
           .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`,
         pageMargin,
@@ -654,7 +644,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         page = pdfDoc.addPage();
         currentY = page.getSize().height - pageMargin;
       }
-      let nonZeroItems = breakdown.filter((item) => item.sum !== 0);
+      const nonZeroItems = breakdown.filter((item) => item.sum !== 0);
       nonZeroItems.forEach((item) => {
         if (currentY < lineHeight + pageMargin) {
           page = pdfDoc.addPage();
@@ -683,14 +673,14 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
       });
 
       // New page
-      if (index !== projects.length - 1) {
+      if (index !== report.projects.length - 1) {
         page = pdfDoc.addPage();
         currentY = page.getSize().height - pageMargin;
       }
     });
     console.log(total.value);
     // Gather all attachment files from all expenses
-    const allAttachments = projects.flatMap((project) =>
+    const allAttachments = report.projects.flatMap((project) =>
       project.expenses.flatMap((expense) => expense.attachments || [])
     );
 
@@ -776,7 +766,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
     const link = document.createElement("a");
     link.href = url;
     link.download =
-      "Expense Report - " + name + " - " + String(getCurrentDate()); // Add name reference
+      "Expense Report - " + report.user.name + " - " + String(getCurrentDate()); // Add name reference
     link.click();
   };
 

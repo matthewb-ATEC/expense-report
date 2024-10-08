@@ -12,7 +12,7 @@
  * @relatedFiles Parent components like `ExpenseForm.tsx`, and types file `types.ts` for `ExpenseType`.
  */
 
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ExpenseType } from "../../data/types";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Libraries } from "@react-google-maps/api/dist/utils/make-load-script-url";
@@ -35,62 +35,50 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     libraries,
   });
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    console.log(`From: ${expense.fromLocation} To ${expense.toLocation}`);
-
-    const calculateMileage = (fromLocation: string, toLocation: string) => {
-      if (!expense.fromLocation || !expense.toLocation) {
-        console.error("Both locations must be set to calculate mileage.");
-        return;
-      }
-
-      const service = new google.maps.DistanceMatrixService();
-
-      try {
-        void service.getDistanceMatrix(
-          {
-            origins: [fromLocation],
-            destinations: [toLocation],
-            travelMode: google.maps.TravelMode.DRIVING,
-          },
-          (response, status) => {
-            if (status === google.maps.DistanceMatrixStatus.OK && response) {
-              // Check if response contains the expected data
-              const distanceElement = response.rows[0]?.elements[0];
-
-              const distanceInMeters = distanceElement.distance.value;
-              if (distanceInMeters) {
-                const distanceInMiles = distanceInMeters / 1609.34; // Convert meters to miles
-
-                const updatedExpense: ExpenseType = {
-                  ...expense,
-                  mileage: distanceInMiles,
-                };
-                handleExpenseChange(updatedExpense);
-
-                console.log(
-                  `Mileage from ${fromLocation} to ${toLocation}: ${String(
-                    distanceInMiles
-                  )}`
-                );
-              } else {
-                console.error("Distance value is not available.");
-              }
-            } else {
-              console.error("Error with Distance Matrix Service:", status);
-            }
-          }
-        );
-      } catch (error) {
-        console.error("An error occurred while calculating mileage:", error);
-      }
-    };
-
-    if (expense.fromLocation && expense.toLocation) {
-      calculateMileage(expense.fromLocation, expense.toLocation);
+  const calculateMileage = (expense: ExpenseType) => {
+    if (!expense.fromLocation || !expense.toLocation) {
+      console.log("Cannot calculate mileage without both locations.");
+      console.log("From", expense.fromLocation, "To", expense.toLocation);
+      return;
     }
-  }, [expense, expense.fromLocation, expense.toLocation, handleExpenseChange]);
+
+    const fromLocation = expense.fromLocation;
+    const toLocation = expense.toLocation;
+
+    const service = new google.maps.DistanceMatrixService();
+
+    service
+      .getDistanceMatrix({
+        origins: [fromLocation],
+        destinations: [toLocation],
+        travelMode: google.maps.TravelMode.DRIVING,
+      })
+      .then((response) => {
+        const distanceElement = response.rows[0]?.elements[0];
+
+        const distanceInMeters = distanceElement.distance.value;
+        if (distanceInMeters) {
+          const distanceInMiles = distanceInMeters / 1609.34; // Convert meters to miles
+
+          const updatedExpense: ExpenseType = {
+            ...expense,
+            mileage: distanceInMiles,
+          };
+          handleExpenseChange(updatedExpense);
+
+          console.log(
+            `Mileage from ${fromLocation} to ${toLocation}: ${String(
+              distanceInMiles
+            )}`
+          );
+        } else {
+          console.error("Distance value is not available.");
+        }
+      })
+      .catch((error: unknown) => {
+        console.error("An error occurred while calculating mileage:", error);
+      });
+  };
 
   const onFromPlaceChanged = () => {
     if (fromAutocomplete) {
@@ -100,6 +88,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         fromLocation: place.formatted_address ?? "",
       };
       handleExpenseChange(updatedExpense);
+      calculateMileage(updatedExpense);
     }
   };
 
@@ -111,6 +100,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         toLocation: place.formatted_address ?? "",
       };
       handleExpenseChange(updatedExpense);
+      calculateMileage(updatedExpense);
     }
   };
 
@@ -165,7 +155,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="from"
-            value={expense.fromLocation}
+            value={expense.fromLocation ?? ""}
             onChange={(e) => {
               handleExpenseChange({ ...expense, fromLocation: e.target.value });
             }}
@@ -186,7 +176,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="to"
-            value={expense.toLocation}
+            value={expense.toLocation ?? ""}
             onChange={(e) => {
               handleExpenseChange({ ...expense, toLocation: e.target.value });
             }}
