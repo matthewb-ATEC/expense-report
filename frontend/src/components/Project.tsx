@@ -89,11 +89,13 @@ const Project: React.FC<ProjectProps> = ({
               <option value="">Select a project</option>
               {project.name && project.name !== "Other" && (
                 <option value={project.name}>
+                  {/* eslint-disable-next-line @typescript-eslint/restrict-template-expressions*/}
                   {`${project.number} - ${project.name}`}
                 </option>
               )}
               {filteredProjects.map((project) => (
                 <option key={project.name} value={project.name}>
+                  {/* eslint-disable-next-line @typescript-eslint/restrict-template-expressions*/}
                   {`${project.number} - ${project.name}`}
                 </option>
               ))}

@@ -31,7 +31,8 @@ const ExpenseReport: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
-  const [filteredProjects, setFilteredProjects] = useState<string[]>();
+  const [filteredProjects, setFilteredProjects] =
+    useState<ProjectDropdownType[]>();
   const [allProjects, setAllProjects] = useState<ProjectDropdownType[]>();
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const ExpenseReport: React.FC = () => {
       .get()
       .then((settings) => {
         setAllProjects(settings.projects);
-        setFilteredProjects(settings.projects.map((project) => project.name));
+        setFilteredProjects(settings.projects);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -133,7 +134,7 @@ const ExpenseReport: React.FC = () => {
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
     if (!allProjects) return;
 
-    const filteredProjects: string[] = allProjects
+    const filteredProjects: ProjectDropdownType[] = allProjects
       .filter(
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
