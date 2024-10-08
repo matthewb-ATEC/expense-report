@@ -12,23 +12,27 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { ExpenseType, ProjectType, ReportType } from "../data/types";
+import {
+  ExpenseType,
+  ProjectDropdownType,
+  ProjectType,
+  ReportType,
+} from "../data/types";
 import reportsService from "../services/reportsService";
 import Name from "./Name";
 import Projects from "./Projects";
 import Expenses from "./Expenses";
-import { allProjects } from "../data/projects";
 import PDF from "./PDF";
 import Loading from "./Loading";
+import settingsService from "../services/settingsService";
 
 const ExpenseReport: React.FC = () => {
   const [report, setReport] = useState<ReportType>();
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
-  const [filteredProjects, setFilteredProjects] = useState<string[]>(
-    allProjects.map((project) => project.name)
-  );
+  const [filteredProjects, setFilteredProjects] = useState<string[]>();
+  const [allProjects, setAllProjects] = useState<ProjectDropdownType[]>();
 
   useEffect(() => {
     console.log("Initial useEffect");
@@ -46,6 +50,16 @@ const ExpenseReport: React.FC = () => {
         console.log("Promise fulfilled");
         console.log("Report set to", reponse);
         setReport(reponse);
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+
+    settingsService
+      .get()
+      .then((settings) => {
+        setAllProjects(settings.projects);
+        setFilteredProjects(settings.projects.map((project) => project.name));
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -117,7 +131,9 @@ const ExpenseReport: React.FC = () => {
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
-    const filteredProjects = allProjects
+    if (!allProjects) return;
+
+    const filteredProjects: string[] = allProjects
       .filter(
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
@@ -125,7 +141,7 @@ const ExpenseReport: React.FC = () => {
     setFilteredProjects(filteredProjects);
   };
 
-  if (!report) return <Loading />;
+  if (!report || !allProjects || !filteredProjects) return <Loading />;
 
   return (
     <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
@@ -141,6 +157,7 @@ const ExpenseReport: React.FC = () => {
             updateFilteredProjects={updateFilteredProjects}
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
+            allProjects={allProjects}
           />
           {selectedProject && selectedProject.name !== "" && (
             <Expenses

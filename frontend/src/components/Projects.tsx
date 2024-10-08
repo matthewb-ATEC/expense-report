@@ -17,7 +17,7 @@
  */
 
 /* eslint-disable react/prop-types */
-import { ProjectType, ReportType } from "../data/types";
+import { ProjectDropdownType, ProjectType, ReportType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
 
@@ -29,6 +29,7 @@ interface ProjectsProps {
   updateSelectedProject: (project: ProjectType | null) => void;
   updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
   handleProjectChange: (updatedProject: ProjectType) => void;
+  allProjects: ProjectDropdownType[];
 }
 
 const Projects: React.FC<ProjectsProps> = ({
@@ -39,6 +40,7 @@ const Projects: React.FC<ProjectsProps> = ({
   updateSelectedProject,
   updateFilteredProjects,
   handleProjectChange,
+  allProjects,
 }) => {
   const handleAddProject = () => {
     if (!report.id) return;
@@ -116,6 +118,7 @@ const Projects: React.FC<ProjectsProps> = ({
             handleProjectChange={handleProjectChange}
             handleDeleteProject={handleDeleteProject}
             updateSelectedProject={updateSelectedProject}
+            allProjects={allProjects}
           />
         ))}
       </div>

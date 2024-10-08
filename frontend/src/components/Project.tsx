@@ -15,8 +15,7 @@
  */
 
 import React from "react";
-import { ProjectType } from "../data/types";
-import { allProjects } from "../data/projects";
+import { ProjectDropdownType, ProjectType } from "../data/types";
 
 interface ProjectProps {
   project: ProjectType;
@@ -25,6 +24,7 @@ interface ProjectProps {
   handleProjectChange: (updatedProject: ProjectType) => void;
   handleDeleteProject: (id: string) => void;
   updateSelectedProject: (project: ProjectType) => void;
+  allProjects: ProjectDropdownType[];
 }
 
 const Project: React.FC<ProjectProps> = ({
@@ -34,6 +34,7 @@ const Project: React.FC<ProjectProps> = ({
   handleProjectChange,
   handleDeleteProject,
   updateSelectedProject,
+  allProjects,
 }) => {
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newName: string = event.target.value;
