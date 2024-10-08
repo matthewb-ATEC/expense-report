@@ -25,7 +25,7 @@ import { v4 as uuidv4 } from "uuid";
 interface ProjectsProps {
   projects: ProjectType[];
   selectedProject: ProjectType | null;
-  filteredProjects: string[];
+  filteredProjects: { name: string; number: number }[];
   handleProjectsChange: (updatedProjects: ProjectType[]) => void;
   handleProjectChange: (updatedProject: ProjectType) => void;
   updateSelectedProject: (project: ProjectType | null) => void;

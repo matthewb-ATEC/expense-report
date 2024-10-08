@@ -27,9 +27,11 @@ const ExpenseReport: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
-  const [filteredProjects, setFilteredProjects] = useState<string[]>(
-    allProjects.map((project) => project.name)
-  );
+  //const [filteredProjects, setFilteredProjects] = useState<string[]>(
+  //  allProjects.map((project) => project.name)
+  //);
+  const [filteredProjects, setFilteredProjects] =
+    useState<{ name: string; number: number }[]>(allProjects);
 
   useEffect(() => {
     console.log("Initial useEffect");
@@ -91,7 +93,10 @@ const ExpenseReport: React.FC = () => {
       .filter(
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
-      .map((project) => project.name);
+      .map((project) => ({
+        name: project.name,
+        number: project.number, // Keep track of both name and number
+      }));
     setFilteredProjects(filteredProjects);
   };
 
@@ -120,11 +125,7 @@ const ExpenseReport: React.FC = () => {
           )}
         </div>
         {projects.some((project) => project.expenses.length > 0) && (
-          <PDF
-            projects={projects}
-            name={name}
-            //setIsNameInvalid={setIsNameInvalid}
-          />
+          <PDF projects={projects} name={name} />
         )}
       </div>
     </div>

@@ -53,15 +53,6 @@ const Expense: FC<ExpenseProps> = ({
     handleExpenseChange(updatedExpense);
   };
 
-  const handleCostCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(`Cost code changed ${event.target.value}`);
-    const updatedExpense: ExpenseType = {
-      ...expense,
-      costCode: event.target.value,
-    };
-    handleExpenseChange(updatedExpense);
-  };
-
   const handleCostChange = (event: ChangeEvent<HTMLInputElement>) => {
     const cost = Number(event.target.value);
     const updatedExpense: ExpenseType = {
@@ -71,12 +62,6 @@ const Expense: FC<ExpenseProps> = ({
     handleExpenseChange(updatedExpense);
   };
 
-  const requiresCostCode = () => {
-    return categories.some(
-      (item) => item.category === expense.costCategory && item.costCode === ""
-    );
-  };
-
   const showCostInput = () => {
     return (
       expense.costCategory &&
@@ -84,25 +69,6 @@ const Expense: FC<ExpenseProps> = ({
       expense.costCategory !== "Per Diem"
     );
   };
-  const renderCostCodeInput = () => (
-    <>
-      {requiresCostCode() && (
-        <div className="flex flex-col space-y-2 items-start">
-          <label className="text-gray-600 text-nowrap" htmlFor="costCode">
-            Cost Code
-          </label>
-          <input
-            className="p-2 border-grey-300 border-b-2"
-            type="text"
-            id="costCode"
-            value={expense.costCode}
-            onChange={handleCostCodeChange}
-            placeholder="Enter cost code"
-          />
-        </div>
-      )}
-    </>
-  );
 
   const renderCostInput = () => (
     <>
@@ -148,9 +114,6 @@ const Expense: FC<ExpenseProps> = ({
             </select>
           </div>
 
-          {/* Conditional Rendering for Cost Code */}
-          {expense.costCategory && renderCostCodeInput()}
-
           {/* Date Picker */}
           <div className="flex flex-col items-start space-y-2">
             <label className="text-gray-600" htmlFor="date">
@@ -186,6 +149,24 @@ const Expense: FC<ExpenseProps> = ({
           )}
           {expense.costCategory === "Mileage" && (
             <Mileage
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
+          {expense.costCategory === "Wellness" && (
+            <Description
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
+          {expense.costCategory === "Company Events" && (
+            <Description
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
+          {expense.costCategory === "Relocation" && (
+            <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />

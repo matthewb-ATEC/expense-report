@@ -137,29 +137,27 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
     // Input Validation (Name)
     let alertText = "";
     if (!name) {
-      //setIsNameInvalid(true);
       console.log("Invalid name field");
       alertText += "Invalid name field.\n";
     }
-    //setIsNameInvalid(false);
 
     // Input Validation (Expenses)
     projects.forEach((project, index) => {
       // Expenses present
       if (project.expenses.length === 0) {
-        alertText += `Required expenses in project ${index + 1}.` + "\n";
+        alertText += `Required expenses in project: ${index + 1}.` + "\n";
       }
 
       // Name
       if (project.name == "") {
-        alertText += `Required name in project ${index + 1}.` + "\n";
+        alertText += `Required name in project: ${index + 1}.` + "\n";
       }
 
-      // Description
+      // Project Description
       else if (project.name == "Other") {
         if (project.description == undefined || project.description == "") {
           alertText +=
-            `Required description in project ${project.name}.` + "\n";
+            `Required description in project: ${project.name}.` + "\n";
         }
       }
 
@@ -167,15 +165,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         // Category
         if (!expense?.costCategory.trim()) {
           alertText +=
-            `Required cost category for expense ${sub_index + 1} in project ${
-              project.name
-            }.` + "\n";
-        }
-
-        // Code
-        if (!expense?.costCode.trim()) {
-          alertText +=
-            `Required cost code for expense ${sub_index + 1} in project ${
+            `Required cost category for expense ${sub_index + 1} in project: ${
               project.name
             }.` + "\n";
         }
@@ -183,7 +173,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
         // Date
         if (!expense?.date.trim()) {
           alertText +=
-            `Required date for expense ${sub_index + 1} in project ${
+            `Required date for expense ${sub_index + 1} in project: ${
               project.name
             }.` + "\n";
         }
@@ -200,43 +190,40 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
             !/^\d+(\.\d{1,2})?$/.test(cost.toString())
           ) {
             alertText +=
-              `Invalid cost for expense ${sub_index + 1} in project ${
+              `Invalid cost for expense ${sub_index + 1} in project: ${
                 project.name
               }.` + "\n";
-            // Highlight invalid input field here, similar to the name field
           }
         }
 
-        // Description
+        // Expense Description
         if (
           expense.costCategory == "Client Entertainment" ||
-          expense.costCategory == "Other"
+          expense.costCategory == "Other" ||
+          expense.costCategory == "Wellness" ||
+          expense.costCategory == "Company Events" ||
+          expense.costCategory == "Relocation" ||
+          expense.costCategory == "Job Site Material"
         ) {
           if (!expense?.description?.trim()) {
             alertText +=
-              `Required description for expense ${sub_index + 1} in project ${
+              `Required description for expense ${sub_index + 1} in project: ${
                 project.name
               }.` + "\n";
           }
         }
 
-        // Purpose + From + To
+        // From + To
         if (expense.costCategory == "Mileage") {
-          if (!expense?.purpose?.trim()) {
-            alertText +=
-              `Required purpose for expense ${sub_index + 1} in project ${
-                project.name
-              }.` + "\n";
-          }
           if (!expense?.fromLocation?.trim()) {
             alertText +=
-              `Required origin for expense ${sub_index + 1} in project ${
+              `Required origin for expense ${sub_index + 1} in project: ${
                 project.name
               }.` + "\n";
           }
           if (!expense?.toLocation?.trim()) {
             alertText +=
-              `Required destination for expense ${sub_index + 1} in project ${
+              `Required destination for expense ${sub_index + 1} in project: ${
                 project.name
               }.` + "\n";
           }
@@ -253,7 +240,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
             alertText +=
               `Required at least 1 meal for expense ${
                 sub_index + 1
-              } in project ${project.name}.` + "\n";
+              } in project: ${project.name}.` + "\n";
           }
         }
       });
@@ -529,6 +516,7 @@ const PDF: React.FC<PDFProps> = ({ projects, name /*setIsNameInvalid*/ }) => {
               : ""
           }`
         );
+        console.log("subParts: ", subParts);
         subParts.push(`${expense.description || ""}`);
         let subDescription = "";
         for (let i = 0; i < subParts.length; i++) {
