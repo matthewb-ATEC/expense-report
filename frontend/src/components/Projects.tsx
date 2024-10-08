@@ -24,7 +24,7 @@ import Project from "./Project";
 interface ProjectsProps {
   report: ReportType;
   selectedProject: ProjectType | null;
-  filteredProjects: string[];
+  filteredProjects: { name: string; number: number }[];
   handleProjectsChange: (updatedProjects: ProjectType[]) => void;
   updateSelectedProject: (project: ProjectType | null) => void;
   updateFilteredProjects: (updatedProjects: ProjectType[]) => void;

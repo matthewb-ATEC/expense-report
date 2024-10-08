@@ -20,7 +20,7 @@ import { ProjectDropdownType, ProjectType } from "../data/types";
 interface ProjectProps {
   project: ProjectType;
   selectedProject: ProjectType | null;
-  filteredProjects: string[];
+  filteredProjects: { name: string; number: number }[];
   handleProjectChange: (updatedProject: ProjectType) => void;
   handleDeleteProject: (id: string) => void;
   updateSelectedProject: (project: ProjectType) => void;
@@ -88,11 +88,13 @@ const Project: React.FC<ProjectProps> = ({
             >
               <option value="">Select a project</option>
               {project.name && project.name !== "Other" && (
-                <option value={project.name}>{project.name}</option>
+                <option value={project.name}>
+                  {`${project.number} - ${project.name}`}
+                </option>
               )}
               {filteredProjects.map((project) => (
-                <option key={project} value={project}>
-                  {project}
+                <option key={project.name} value={project.name}>
+                  {`${project.number} - ${project.name}`}
                 </option>
               ))}
               <option value="Other">Other</option>
