@@ -26,7 +26,7 @@ import {
   PDFFont,
   RGB,
 } from "pdf-lib";
-import { total, breakdown } from "../data/results";
+import { sessionAttachments, total, breakdown } from "../data/results";
 import settingsService from "../services/settingsService";
 
 interface PDFProps {
@@ -677,13 +677,25 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       }
     });
     console.log(total.value);
+
     // Gather all attachment files from all expenses
     const allAttachments = report.projects.flatMap((project) =>
       project.expenses.flatMap((expense) => expense.attachments || [])
     );
+    const filteredAttachments = sessionAttachments.filter((sessionAttachment) =>
+      allAttachments.some(
+        (dbAttachment) => dbAttachment.text === sessionAttachment.text
+      )
+    );
+    console.log("db returned attachments", allAttachments);
+    console.log("used session attachments", sessionAttachments);
+    console.log("filtered session attachments", sessionAttachments);
+
+    //TEST filtered attachments, to make sure deleting projects and expenses still holds
+    //ADD a description in newAttachments object in the id field for data about expenses which you could pass the handle function
 
     // Process each attachment
-    for (const attachment of allAttachments) {
+    for (const attachment of filteredAttachments) {
       if (attachment.file) {
         try {
           const fileBytes = await attachment.file.arrayBuffer();

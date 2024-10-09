@@ -15,6 +15,7 @@
 import React, { ChangeEvent } from "react";
 import { AttachmentType, ExpenseType } from "../data/types";
 import Attachment from "./Attachment";
+import { sessionAttachments } from "../data/results";
 
 interface AttachmentsProps {
   expense: ExpenseType & { attachments?: AttachmentType[] };
@@ -34,10 +35,13 @@ const Attachments: React.FC<AttachmentsProps> = ({
     }
 
     const newAttachments: AttachmentType[] = Array.from(files).map((file) => ({
-      id: "",
+      id: "text",
       file,
-      text: "",
+      text: Math.random().toString(36).substr(2, 9),
     }));
+
+    sessionAttachments.push(...newAttachments);
+    console.log("sessionAttachments after addition:", sessionAttachments);
 
     const updatedExpense: ExpenseType = {
       ...expense,
@@ -50,6 +54,15 @@ const Attachments: React.FC<AttachmentsProps> = ({
 
   const handleDeleteAttachment = (id: string | undefined) => {
     if (!id) return;
+
+    const updatedAttachments = sessionAttachments.filter(
+      (attachment) => attachment.id !== id
+    );
+
+    sessionAttachments.length = 0; // Clear the array
+    sessionAttachments.push(...updatedAttachments); // Add updated attachments
+
+    console.log("sessionAttachments after deletion:", sessionAttachments);
 
     const updatedExpense: ExpenseType = {
       ...expense,
