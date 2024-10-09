@@ -15,6 +15,7 @@
  * @dependencies None
  * @relatedFiles ../components/PDF.tsx
  */
+import { AttachmentType } from "./types";
 
 export const total = { value: 0 };
 export const breakdown = [
@@ -34,4 +35,6 @@ export const breakdown = [
   { category: "Wellness", costCode: "64-6161-OVH", sum: 0 },
   { category: "Other", costCode: "", sum: 0 },
 ];
+
+export let sessionAttachments: AttachmentType[] = [];
 export const summaries = [];
