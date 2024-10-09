@@ -12,7 +12,7 @@
 
 const Loading = () => {
   return (
-    <div className="h-full flex flex-col flex-grow justify-center items-center">
+    <div className="h-full bg-gray-50 flex flex-col flex-grow justify-center items-center">
       <div className="p-8 text-3xl font-bold text-black">Loading</div>
       <div className="p-4 text-black">Waiting for response from server...</div>
       <div className="p-4 italic text-gray-400">Not Found</div>
