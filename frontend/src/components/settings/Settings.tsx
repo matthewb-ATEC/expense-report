@@ -18,11 +18,16 @@
  */
 
 import { useEffect, useState } from "react";
-import Configurable from "./Configurable";
 import settingsService from "../../services/settingsService";
-import { ProjectDropdownType, SettingsType } from "../../data/types";
+import {
+  CostCodeDropdownType,
+  ProjectDropdownType,
+  SettingsType,
+} from "../../data/types";
 import Loading from "../Loading";
+import Configurable from "./Configurable";
 import ConfigurableProject from "./ConfigurableProject";
+import ConfigurableCostCode from "./ConfigurableCostCode";
 
 const Settings = () => {
   const [settings, setSettings] = useState<SettingsType>();
@@ -32,6 +37,11 @@ const Settings = () => {
   const [newProject, setNewProject] = useState<ProjectDropdownType>({
     number: 0,
     name: "",
+  });
+  const [addingCostCode, setAddingCostCode] = useState<boolean>(false);
+  const [newCostCode, setNewCostCode] = useState<CostCodeDropdownType>({
+    costCode: "",
+    category: "",
   });
 
   useEffect(() => {
@@ -82,6 +92,7 @@ const Settings = () => {
     setSettings(updatedSettings);
   };
 
+  // Projects List
   const handleProjectChange = (updatedProject: ProjectDropdownType) => {
     if (!settings) return;
 
@@ -90,12 +101,7 @@ const Settings = () => {
         project.name === updatedProject.name ? updatedProject : project
     );
 
-    const updatedSettings = {
-      ...settings,
-      projects: updatedProjects,
-    };
-
-    setSettings(updatedSettings);
+    handleProjectsChange(updatedProjects);
   };
 
   const handleProjectsChange = (updatedProjects: ProjectDropdownType[]) => {
@@ -116,7 +122,7 @@ const Settings = () => {
       !window.confirm(
         `Are you sure you want to delete ${projectToDelete.number.toString()} - ${
           projectToDelete.name
-        }? This action cannot be undone.`
+        }?`
       )
     )
       return;
@@ -159,6 +165,79 @@ const Settings = () => {
     setSettings(updatedSettings);
   };
 
+  // Cost Codes list
+  const handleCostCodeChange = (updatedCostCode: CostCodeDropdownType) => {
+    if (!settings) return;
+
+    const updatedCostCodes: CostCodeDropdownType[] = settings.costCodes.map(
+      (costCode) =>
+        costCode.category === updatedCostCode.category
+          ? updatedCostCode
+          : costCode
+    );
+
+    handleCostCodesChange(updatedCostCodes);
+  };
+
+  const handleCostCodesChange = (updatedCostCodes: CostCodeDropdownType[]) => {
+    if (!settings) return;
+
+    const updatedSettings = {
+      ...settings,
+      costCodes: updatedCostCodes,
+    };
+
+    setSettings(updatedSettings);
+  };
+
+  const handleDeleteCostCode = (costCodeToDelete: CostCodeDropdownType) => {
+    if (!settings) return;
+
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${costCodeToDelete.costCode} ${costCodeToDelete.category}?`
+      )
+    )
+      return;
+
+    const updatedCostCodes = settings.costCodes.filter(
+      (costCode) => costCode !== costCodeToDelete
+    );
+
+    handleCostCodesChange(updatedCostCodes);
+  };
+
+  const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedCostCode: CostCodeDropdownType = {
+      ...newCostCode,
+      costCode: event.target.value,
+    };
+    setNewCostCode(updatedCostCode);
+  };
+
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedCostCode: CostCodeDropdownType = {
+      ...newCostCode,
+      category: event.target.value,
+    };
+    setNewCostCode(updatedCostCode);
+  };
+
+  const handleAddCostCode = () => {
+    if (!settings) return;
+
+    const updatedSettings = {
+      ...settings,
+      costCodes: settings.costCodes.concat(newCostCode),
+    };
+
+    setNewCostCode({
+      costCode: "",
+      category: "",
+    });
+    setSettings(updatedSettings);
+  };
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === import.meta.env.VITE_ATEC_ADMIN_PASSWORD)
       setIsAdmin(true);
@@ -189,54 +268,41 @@ const Settings = () => {
             </div>
           </div>
         )}
-        <div className="w-full flex flex-col space-y-8 lg:grid lg:grid-cols-2 lg:gap-x-4 lg:space-y-0">
-          {/*Projects*/}
-          <div className="flex flex-col space-y-4">
-            <div className="text-xl font-bold">Projects</div>
-            <div className="w-full flex flex-col max-h-72 space-y-8 overflow-y-auto items-start bg-white shadow-md p-8 rounded-md">
-              {settings.projects.map((project) => (
-                <ConfigurableProject
-                  key={project.name}
-                  project={project}
-                  isAdmin={isAdmin}
-                  onChange={handleProjectChange}
-                  handleDeleteProject={handleDeleteProject}
-                />
-              ))}
-            </div>
 
-            {isAdmin &&
-              (addingProject ? (
+        <div className="w-full flex flex-col space-y-8 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:space-y-0">
+          <div className="flex flex-col space-y-8">
+            {/*Projects*/}
+            <div className="flex flex-col space-y-4">
+              <div className="text-xl font-bold">Projects</div>
+              <div className="w-full flex flex-col max-h-72 space-y-8 overflow-y-auto items-start bg-white shadow-md p-8 rounded-md">
+                {settings.projects.map((project) => (
+                  <ConfigurableProject
+                    key={project.name}
+                    project={project}
+                    isAdmin={isAdmin}
+                    onChange={handleProjectChange}
+                    handleDeleteProject={handleDeleteProject}
+                  />
+                ))}
+              </div>
+
+              {isAdmin && (
                 <div className="flex flex-col space-y-2 bg-white shadow-md p-4 rounded-md">
                   <div className="w-full flex space-x-4 items-start">
-                    <div className="flex flex-col space-y-2">
-                      <label
-                        className="text-gray-600 text-nowrap"
-                        htmlFor="number"
-                      >
-                        Number
-                      </label>
-                      <input
-                        className="w-16 p-2 border-grey-300 border-b-2"
-                        type="text"
-                        value={newProject.number}
-                        onChange={handleNumberChange}
-                      />
-                    </div>
-                    <div className="w-full flex flex-col space-y-2">
-                      <label
-                        className="text-gray-600 text-nowrap"
-                        htmlFor="name"
-                      >
-                        Name
-                      </label>
-                      <input
-                        className="p-2 w-full border-grey-300 border-b-2"
-                        type="text"
-                        value={newProject.name}
-                        onChange={handleNameChange}
-                      />
-                    </div>
+                    <input
+                      className="p-2 border-grey-300 border-b-2"
+                      type="text"
+                      placeholder="Project number"
+                      value={newProject.number}
+                      onChange={handleNumberChange}
+                    />
+                    <input
+                      className="p-2 w-full border-grey-300 border-b-2"
+                      type="text"
+                      placeholder="Project Name"
+                      value={newProject.name}
+                      onChange={handleNameChange}
+                    />
                     <button
                       className="text-ATECblue self-center transform transition-transform duration-300 ease-in-out hover:scale-105"
                       onClick={() => {
@@ -248,20 +314,9 @@ const Settings = () => {
                     </button>
                   </div>
                 </div>
-              ) : (
-                <button
-                  className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
-                  type="button"
-                  onClick={() => {
-                    setAddingProject(!addingProject);
-                  }}
-                >
-                  Add Project
-                </button>
-              ))}
-          </div>
+              )}
+            </div>
 
-          <div className="flex flex-col space-y-8">
             {/*Per Diem*/}
             <div className="w-full flex flex-col space-y-4">
               <div className="text-xl font-bold">Per Diem</div>
@@ -292,6 +347,53 @@ const Settings = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="flex flex-col space-y-8">
+            {/*Cost Codes*/}
+            <div className="flex flex-col space-y-4">
+              <div className="text-xl font-bold">Cost Codes</div>
+              <div className="w-full flex flex-col max-h-72 space-y-8 overflow-y-auto items-start bg-white shadow-md p-8 rounded-md">
+                {settings.costCodes.map((costCode) => (
+                  <ConfigurableCostCode
+                    key={costCode.category}
+                    costCode={costCode}
+                    isAdmin={isAdmin}
+                    onChange={handleCostCodeChange}
+                    handleDeleteCostCode={handleDeleteCostCode}
+                  />
+                ))}
+              </div>
+              {isAdmin && (
+                <div className="flex flex-col space-y-2 bg-white shadow-md p-4 rounded-md">
+                  <div className="w-full flex space-x-4 items-start">
+                    <input
+                      className="p-2 border-grey-300 border-b-2"
+                      type="text"
+                      placeholder="Cost Code"
+                      value={newCostCode.costCode}
+                      onChange={handleCodeChange}
+                    />
+                    <input
+                      className="p-2 flex-grow border-grey-300 border-b-2"
+                      type="text"
+                      placeholder="Category"
+                      value={newCostCode.category}
+                      onChange={handleCategoryChange}
+                    />
+                    <button
+                      className="text-ATECblue self-center transform transition-transform duration-300 ease-in-out hover:scale-105"
+                      onClick={() => {
+                        handleAddCostCode();
+                        setAddingCostCode(!addingCostCode);
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/*Mileage*/}
             <div className="w-full flex flex-col space-y-4">
@@ -309,7 +411,6 @@ const Settings = () => {
             </div>
           </div>
         </div>
-
         {isAdmin && (
           <div className="self-center">
             <button
