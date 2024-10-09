@@ -486,11 +486,9 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         subParts.push(expense.purpose || "");
         subParts.push(
           expense.costCategory === "Per Diem"
-            ? (expense.breakfast
-                ? `Breakfast: ${settings.perDiem.breakfast}`
-                : "") +
-                (expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : "") +
-                (expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : "")
+            ? (expense.breakfast ? `Breakfast` : "") +
+                (expense.lunch ? ` Lunch` : "") +
+                (expense.dinner ? ` Dinner` : "")
             : ""
         );
         subParts.push(
