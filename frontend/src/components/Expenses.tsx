@@ -13,17 +13,19 @@
 
 import React from "react";
 import Expense from "./Expense";
-import { ExpenseType, ProjectType } from "../data/types";
+import { CostCodeDropdownType, ExpenseType, ProjectType } from "../data/types";
 
 interface ExpensesProps {
   project: ProjectType;
   expenses: ExpenseType[];
+  costCodes: CostCodeDropdownType[];
   handleExpensesChange: (updatedExpenses: ExpenseType[]) => void;
 }
 
 const Expenses: React.FC<ExpensesProps> = ({
   project,
   expenses,
+  costCodes,
   handleExpensesChange,
 }) => {
   const handleExpenseChange = (updatedExpense: ExpenseType) => {
@@ -62,6 +64,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         <Expense
           key={index}
           expense={expense}
+          costCodes={costCodes}
           handleExpenseChange={handleExpenseChange}
           handleDeleteExpense={handleDeleteExpense}
         />

@@ -17,6 +17,7 @@ import {
   ProjectDropdownType,
   ProjectType,
   ReportType,
+  SettingsType,
 } from "../data/types";
 import reportsService from "../services/reportsService";
 import Name from "./Name";
@@ -33,7 +34,7 @@ const ExpenseReport: React.FC = () => {
   );
   const [filteredProjects, setFilteredProjects] =
     useState<ProjectDropdownType[]>();
-  const [allProjects, setAllProjects] = useState<ProjectDropdownType[]>();
+  const [settings, setSettings] = useState<SettingsType>();
 
   useEffect(() => {
     console.log("Initial useEffect");
@@ -59,8 +60,8 @@ const ExpenseReport: React.FC = () => {
     settingsService
       .get()
       .then((settings) => {
-        setAllProjects(settings.projects);
         setFilteredProjects(settings.projects);
+        setSettings(settings);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -132,9 +133,9 @@ const ExpenseReport: React.FC = () => {
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
-    if (!allProjects) return;
+    if (!settings?.projects) return;
 
-    const filteredProjects: ProjectDropdownType[] = allProjects
+    const filteredProjects: ProjectDropdownType[] = settings.projects
       .filter(
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
@@ -145,7 +146,7 @@ const ExpenseReport: React.FC = () => {
     setFilteredProjects(filteredProjects);
   };
 
-  if (!report || !allProjects || !filteredProjects) return <Loading />;
+  if (!report || !filteredProjects || !settings) return <Loading />;
 
   return (
     <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
@@ -161,12 +162,13 @@ const ExpenseReport: React.FC = () => {
             updateFilteredProjects={updateFilteredProjects}
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
-            allProjects={allProjects}
+            allProjects={settings.projects}
           />
           {selectedProject && selectedProject.name !== "" && (
             <Expenses
               project={selectedProject}
               expenses={selectedProject.expenses}
+              costCodes={settings.costCodes}
               handleExpensesChange={handleExpensesChange}
             />
           )}

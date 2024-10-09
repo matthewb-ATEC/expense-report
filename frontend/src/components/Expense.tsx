@@ -12,21 +12,22 @@
  */
 
 import { ChangeEvent, FC } from "react";
-import { categories } from "../data/categories";
 import Description from "./expenses/Description";
 import PerDiem from "./expenses/PerDiem";
 import Mileage from "./expenses/Mileage";
-import { ExpenseType } from "../data/types";
+import { CostCodeDropdownType, ExpenseType } from "../data/types";
 import Attachments from "./Attachments";
 
 interface ExpenseProps {
   expense: ExpenseType;
+  costCodes: CostCodeDropdownType[];
   handleExpenseChange: (updatedExpense: ExpenseType) => void;
   handleDeleteExpense: (id: string) => void;
 }
 
 const Expense: FC<ExpenseProps> = ({
   expense,
+  costCodes,
   handleExpenseChange,
   handleDeleteExpense,
 }) => {
@@ -42,8 +43,8 @@ const Expense: FC<ExpenseProps> = ({
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCostCategory = event.target.value;
     const newCostCode =
-      categories.find((item) => item.category === newCostCategory)?.costCode ??
-      "";
+      costCodes.find((costCode) => costCode.category === newCostCategory)
+        ?.costCode ?? "";
 
     const updatedExpense: ExpenseType = {
       ...expense,
@@ -110,9 +111,9 @@ const Expense: FC<ExpenseProps> = ({
               <option value="" disabled>
                 Select a category
               </option>
-              {categories.map((costCategory, index) => (
-                <option key={index} value={costCategory.category}>
-                  {costCategory.category}
+              {costCodes.map((costCode, index) => (
+                <option key={index} value={costCode.category}>
+                  {costCode.category}
                 </option>
               ))}
             </select>
