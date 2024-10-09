@@ -23,7 +23,7 @@ interface ProjectProps {
   filteredProjects: { name: string; number: number }[];
   handleProjectChange: (updatedProject: ProjectType) => void;
   handleDeleteProject: (id: string) => void;
-  updateSelectedProject: (project: ProjectType) => void;
+  handleSelectedProjectChange: (newSelectedProject: ProjectType) => void;
   allProjects: ProjectDropdownType[];
 }
 
@@ -33,7 +33,7 @@ const Project: React.FC<ProjectProps> = ({
   filteredProjects,
   handleProjectChange,
   handleDeleteProject,
-  updateSelectedProject,
+  handleSelectedProjectChange,
   allProjects,
 }) => {
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -133,7 +133,7 @@ const Project: React.FC<ProjectProps> = ({
             {project.name !== "" && (
               <button
                 onClick={() => {
-                  updateSelectedProject(project);
+                  handleSelectedProjectChange(project);
                 }}
                 className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
               >
@@ -152,7 +152,7 @@ const Project: React.FC<ProjectProps> = ({
         <div className="text-gray-600">{getMinimizedProjectText()}</div>
         <button
           onClick={() => {
-            updateSelectedProject(project);
+            handleSelectedProjectChange(project);
           }}
           className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
         >

@@ -1,0 +1,14 @@
+PUT http://localhost:3001/api/reports/6706896fafb4e33ea5a19bfd/projects/67068971afb4e33ea5a19c01/expenses/67068985afb4e33ea5a19c2a
+Content-Type: application/json
+
+{
+    "date": "",
+    "costCategory": "",
+    "costCode": "",
+    "breakfast": false,
+    "lunch": false,
+    "dinner": false,
+    "attachments": [ ],
+    "_id": "67068985afb4e33ea5a19c2a",
+    "id": "67068985afb4e33ea5a19c2a"
+}

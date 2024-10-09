@@ -127,9 +127,11 @@ const ExpenseReport: React.FC = () => {
     setSelectedProject(updatedProject);
   };
 
-  const updateSelectedProject = (project: ProjectType | null) => {
-    setSelectedProject(project);
-    console.log("Selected project changed to", project);
+  const handleSelectedProjectChange = (
+    newSelectedProject: ProjectType | null
+  ) => {
+    setSelectedProject(newSelectedProject);
+    console.log("Selected project changed to", newSelectedProject);
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
@@ -158,7 +160,7 @@ const ExpenseReport: React.FC = () => {
             report={report}
             selectedProject={selectedProject}
             handleProjectsChange={handleProjectsChange}
-            updateSelectedProject={updateSelectedProject}
+            handleSelectedProjectChange={handleSelectedProjectChange}
             updateFilteredProjects={updateFilteredProjects}
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
@@ -166,6 +168,7 @@ const ExpenseReport: React.FC = () => {
           />
           {selectedProject && selectedProject.name !== "" && (
             <Expenses
+              report={report}
               project={selectedProject}
               expenses={selectedProject.expenses}
               costCodes={settings.costCodes}

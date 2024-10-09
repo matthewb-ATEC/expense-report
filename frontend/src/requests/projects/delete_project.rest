@@ -1,0 +1,3 @@
+# Delete project from the /api/reports endpoint.
+DELETE http://localhost:3001/api/reports/67068774589ba9178d6eaae0/projects/67068779589ba9178d6eaae4
+Content-Type: application/json

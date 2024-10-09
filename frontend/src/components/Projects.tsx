@@ -26,7 +26,7 @@ interface ProjectsProps {
   selectedProject: ProjectType | null;
   filteredProjects: { name: string; number: number }[];
   handleProjectsChange: (updatedProjects: ProjectType[]) => void;
-  updateSelectedProject: (project: ProjectType | null) => void;
+  handleSelectedProjectChange: (newSelectedProject: ProjectType | null) => void;
   updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
   handleProjectChange: (updatedProject: ProjectType) => void;
   allProjects: ProjectDropdownType[];
@@ -37,7 +37,7 @@ const Projects: React.FC<ProjectsProps> = ({
   selectedProject,
   filteredProjects,
   handleProjectsChange,
-  updateSelectedProject,
+  handleSelectedProjectChange,
   updateFilteredProjects,
   handleProjectChange,
   allProjects,
@@ -69,7 +69,7 @@ const Projects: React.FC<ProjectsProps> = ({
         const updatedProjects = report.projects.concat(createdProject);
 
         handleProjectsChange(updatedProjects);
-        updateSelectedProject(createdProject);
+        handleSelectedProjectChange(createdProject);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -93,7 +93,8 @@ const Projects: React.FC<ProjectsProps> = ({
         );
         handleProjectsChange(updatedProjects);
 
-        if (projectToDelete === selectedProject) updateSelectedProject(null);
+        if (projectToDelete === selectedProject)
+          handleSelectedProjectChange(null);
 
         updateFilteredProjects(updatedProjects);
       })
@@ -117,7 +118,7 @@ const Projects: React.FC<ProjectsProps> = ({
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
             handleDeleteProject={handleDeleteProject}
-            updateSelectedProject={updateSelectedProject}
+            handleSelectedProjectChange={handleSelectedProjectChange}
             allProjects={allProjects}
           />
         ))}

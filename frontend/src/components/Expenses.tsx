@@ -13,9 +13,16 @@
 
 import React from "react";
 import Expense from "./Expense";
-import { CostCodeDropdownType, ExpenseType, ProjectType } from "../data/types";
+import {
+  CostCodeDropdownType,
+  ExpenseType,
+  ProjectType,
+  ReportType,
+} from "../data/types";
+import expensesService from "../services/expensesService";
 
 interface ExpensesProps {
+  report: ReportType;
   project: ProjectType;
   expenses: ExpenseType[];
   costCodes: CostCodeDropdownType[];
@@ -23,6 +30,7 @@ interface ExpensesProps {
 }
 
 const Expenses: React.FC<ExpensesProps> = ({
+  report,
   project,
   expenses,
   costCodes,
@@ -36,6 +44,8 @@ const Expenses: React.FC<ExpensesProps> = ({
   };
 
   const handleAddExpense = () => {
+    if (!report.id) return;
+
     const newExpense: ExpenseType = {
       id: "",
       date: "",
@@ -43,8 +53,15 @@ const Expenses: React.FC<ExpensesProps> = ({
       costCode: "",
     };
 
-    const updatedExpenses = expenses.concat(newExpense);
-    handleExpensesChange(updatedExpenses);
+    expensesService
+      .create(report.id, project.id, newExpense)
+      .then((createdExpense: ExpenseType) => {
+        const updatedExpenses = expenses.concat(createdExpense);
+        handleExpensesChange(updatedExpenses);
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   };
 
   const handleDeleteExpense = (id: string) => {
@@ -60,9 +77,9 @@ const Expenses: React.FC<ExpensesProps> = ({
         <div className="text-xl font-bold">Expenses</div>
         <div className="text-gray-500">{project.name}</div>
       </div>
-      {expenses.map((expense, index) => (
+      {expenses.map((expense) => (
         <Expense
-          key={index}
+          key={expense.id}
           expense={expense}
           costCodes={costCodes}
           handleExpenseChange={handleExpenseChange}

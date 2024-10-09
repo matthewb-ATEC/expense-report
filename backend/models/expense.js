@@ -5,16 +5,16 @@ const expenseSchema = new mongoose.Schema({
   date: String,
   costCategory: String,
   costCode: String,
-  cost: { type: Number, default: undefined },
+  cost: Number,
   description: String,
   mileage: Number,
   purpose: String,
   fromLocation: String,
   toLocation: String,
   roundTrip: Boolean,
-  breakfast: { type: Boolean, default: false },
-  lunch: { type: Boolean, default: false },
-  dinner: { type: Boolean, default: false },
+  breakfast: Boolean,
+  lunch: Boolean,
+  dinner: Boolean,
   attachments: [attachmentSchema], // Use attachmentSchema for attachments
 });
 
