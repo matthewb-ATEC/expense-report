@@ -152,7 +152,10 @@ const ExpenseReport: React.FC = () => {
 
   return (
     <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
-      <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
+      <div
+        className={`flex w-11/12 lg:w-fit flex-col
+          ${report.projects.length > 0 ? "space-y-8" : "space-y-2"}`}
+      >
         <Name report={report} handleReportChange={handleReportChange} />
 
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
