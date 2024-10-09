@@ -50,7 +50,9 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         setSettings(response);
         console.log("Settings fetched", response);
       })
-      .catch((error) => console.log(error));
+      .catch((error: unknown) => {
+        console.log(error);
+      });
   }, []);
 
   // CONSIDER Deleting?
@@ -81,7 +83,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       const page = pdfDoc.addPage([width, height]);
       page.drawImage(image, { x: 0, y: 0, width, height });
 
-      return pdfDoc.save();
+      return await pdfDoc.save();
     } catch (error) {
       console.error("Error creating PDF from image:", error);
       // Return an empty PDF or placeholder if an error occurs
@@ -100,7 +102,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     try {
       if (fileType.startsWith("image/")) {
         // If the file is an image, convert it to a PDF
-        return createPdfFromImage(fileBytes, fileType);
+        return await createPdfFromImage(fileBytes, fileType);
       } else {
         // For other file types, create a placeholder PDF
         const pdfDoc = await PDFDocument.create();
@@ -110,7 +112,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         page.drawText("The file cannot be displayed here.", { x: 50, y: 300 });
         page.drawText("Please refer to the attached file.", { x: 50, y: 250 });
 
-        return pdfDoc.save();
+        return await pdfDoc.save();
       }
     } catch (error) {
       console.error("Error converting file to PDF:", error);
@@ -132,6 +134,16 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
   };
 
   const handleDownloadPDF = async () => {
+    settingsService
+      .get()
+      .then((response) => {
+        setSettings(response);
+        console.log("Settings fetched", response);
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+
     // Input Validation (Name)
     let alertText = "";
     if (!report.user.name) {
@@ -144,12 +156,14 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     report.projects.forEach((project, index) => {
       // Expenses present
       if (project.expenses.length === 0) {
-        alertText += `Required expenses in project: ${index + 1}.` + "\n";
+        alertText +=
+          `Required expenses in project: ${(index + 1).toString()}.` + "\n";
       }
 
       // Name
       if (project.name == "") {
-        alertText += `Required name in project: ${index + 1}.` + "\n";
+        alertText +=
+          `Required name in project: ${(index + 1).toString()}.` + "\n";
       }
 
       // Project Description
@@ -164,17 +178,17 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         // Category
         if (!expense.costCategory.trim()) {
           alertText +=
-            `Required cost category for expense ${sub_index + 1} in project: ${
-              project.name
-            }.` + "\n";
+            `Required cost category for expense ${(
+              sub_index + 1
+            ).toString()} in project: ${project.name}.` + "\n";
         }
 
         // Date
         if (!expense.date.trim()) {
           alertText +=
-            `Required date for expense ${sub_index + 1} in project: ${
-              project.name
-            }.` + "\n";
+            `Required date for expense ${(
+              sub_index + 1
+            ).toString()} in project: ${project.name}.` + "\n";
         }
 
         // Cost
@@ -189,9 +203,9 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             !/^\d+(\.\d{1,2})?$/.test(cost.toString())
           ) {
             alertText +=
-              `Invalid cost for expense ${sub_index + 1} in project: ${
-                project.name
-              }.` + "\n";
+              `Invalid cost for expense ${(
+                sub_index + 1
+              ).toString()} in project: ${project.name}.` + "\n";
           }
         }
 
@@ -206,25 +220,25 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         ) {
           if (!expense.description?.trim()) {
             alertText +=
-              `Required description for expense ${sub_index + 1} in project: ${
-                project.name
-              }.` + "\n";
+              `Required description for expense ${(
+                sub_index + 1
+              ).toString()} in project: ${project.name}.` + "\n";
           }
         }
 
         // From + To
         if (expense.costCategory == "Mileage") {
-          if (!expense?.fromLocation?.trim()) {
+          if (!expense.fromLocation?.trim()) {
             alertText +=
-              `Required origin for expense ${sub_index + 1} in project: ${
-                project.name
-              }.` + "\n";
+              `Required origin for expense ${(
+                sub_index + 1
+              ).toString()} in project: ${project.name}.` + "\n";
           }
           if (!expense.toLocation?.trim()) {
             alertText +=
-              `Required destination for expense ${sub_index + 1} in project: ${
-                project.name
-              }.` + "\n";
+              `Required destination for expense ${(
+                sub_index + 1
+              ).toString()} in project: ${project.name}.` + "\n";
           }
         }
 
@@ -236,9 +250,9 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             (expense.dinner === false || expense.dinner === undefined)
           ) {
             alertText +=
-              `Required at least 1 meal for expense ${
+              `Required at least 1 meal for expense ${(
                 sub_index + 1
-              } in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + "\n";
           }
         }
       });
@@ -396,8 +410,8 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       project.expenses.forEach((expense, index) => {
         // Mileage Calculation
         if (expense.costCategory === "Mileage") {
-          const roundedMileage: number = Number(expense.mileage?.toFixed(1));
-          if (expense.mileage !== null) {
+          const roundedMileage = Number(expense.mileage?.toFixed(1));
+          if (expense.mileage) {
             if (expense.roundTrip) {
               total.value += 2 * roundedMileage * settings.mileageRate;
             } else {
@@ -458,7 +472,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         // Standard Cost Category Calculations
         else {
           if (
-            expense.cost !== null &&
+            expense.cost &&
             typeof expense.cost === "number" &&
             expense.cost >= 0
           ) {
@@ -483,14 +497,12 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         //Constuct expense sub description
         const subParts: string[] = [];
         subParts.push(expense.date || "");
-        subParts.push(expense.purpose || "");
+        subParts.push(expense.purpose ?? "");
         subParts.push(
           expense.costCategory === "Per Diem"
-            ? (expense.breakfast
-                ? `Breakfast: ${settings.perDiem.breakfast}`
-                : "") +
-                (expense.lunch ? ` Lunch: ${settings.perDiem.lunch}` : "") +
-                (expense.dinner ? ` Dinner: ${settings.perDiem.dinner}` : "")
+            ? (expense.breakfast ? `Breakfast` : "") +
+                (expense.lunch ? ` Lunch` : "") +
+                (expense.dinner ? ` Dinner` : "")
             : ""
         );
         subParts.push(
@@ -507,7 +519,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             : ""
         );
         console.log("subParts: ", subParts);
-        subParts.push(`${expense.description || ""}`);
+        subParts.push(expense.description ?? "");
         let subDescription = "";
         for (let i = 0; i < subParts.length; i++) {
           if (subParts[i] != "") {
@@ -681,7 +693,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     console.log(total.value);
     // Gather all attachment files from all expenses
     const allAttachments = report.projects.flatMap((project) =>
-      project.expenses.flatMap((expense) => expense.attachments || [])
+      project.expenses.flatMap((expense) => expense.attachments ?? [])
     );
 
     // Process each attachment
