@@ -250,7 +250,7 @@ const Settings = () => {
       <div className="w-full flex flex-col space-y-8 w-11/12 lg:w-fit">
         {!isAdmin && (
           <div className="self-center flex flex-col w-full space-y-2">
-            <label className="text-xl font-bold" htmlFor="isAdmin">
+            <label className="text-xl font-semibold" htmlFor="isAdmin">
               Admin Password
             </label>
             <div className="w-full flex flex-col items-start space-y-2 bg-white shadow-md p-4 rounded-md">
@@ -273,7 +273,7 @@ const Settings = () => {
           <div className="flex flex-col space-y-8">
             {/*Projects*/}
             <div className="flex flex-col space-y-4">
-              <div className="text-xl font-bold">Projects</div>
+              <div className="text-xl font-semibold">Projects</div>
               <div className="w-full flex flex-col max-h-72 space-y-8 overflow-y-auto items-start bg-white shadow-md p-8 rounded-md">
                 {settings.projects.map((project) => (
                   <ConfigurableProject
@@ -319,7 +319,7 @@ const Settings = () => {
 
             {/*Per Diem*/}
             <div className="w-full flex flex-col space-y-4">
-              <div className="text-xl font-bold">Per Diem</div>
+              <div className="text-xl font-semibold">Per Diem</div>
               <div className="w-full flex flex-col space-y-4 items-start bg-white shadow-md p-8 rounded-md">
                 <Configurable
                   name="Breakfast"
@@ -352,7 +352,7 @@ const Settings = () => {
           <div className="flex flex-col space-y-8">
             {/*Cost Codes*/}
             <div className="flex flex-col space-y-4">
-              <div className="text-xl font-bold">Cost Codes</div>
+              <div className="text-xl font-semibold">Cost Codes</div>
               <div className="w-full flex flex-col max-h-72 space-y-8 overflow-y-auto items-start bg-white shadow-md p-8 rounded-md">
                 {settings.costCodes.map((costCode) => (
                   <ConfigurableCostCode
@@ -397,7 +397,7 @@ const Settings = () => {
 
             {/*Mileage*/}
             <div className="w-full flex flex-col space-y-4">
-              <div className="text-xl font-bold">Mileage</div>
+              <div className="text-xl font-semibold">Mileage</div>
               <div className="w-full flex flex-col items-start bg-white shadow-md p-8 rounded-md">
                 <Configurable
                   name="Mileage Rate"
@@ -414,7 +414,7 @@ const Settings = () => {
         {isAdmin && (
           <div className="self-center">
             <button
-              className="text-white font-bold bg-ATECblue p-2 rounded-md shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105"
+              className="text-white font-semibold bg-ATECblue p-2 rounded-md shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105"
               onClick={handleSave}
             >
               Save changes

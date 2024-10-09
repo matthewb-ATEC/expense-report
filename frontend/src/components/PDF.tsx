@@ -786,7 +786,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     <div className="flex space-x-8 justify-center">
       {/* Download PDF button */}
       <button
-        className="p-4 bg-ATECblue shadow-md text-white font-bold rounded-md"
+        className="p-4 bg-ATECblue shadow-md text-white font-semibold rounded-md"
         type="button"
         onClick={(event) => {
           handleSubmit(event); // Call handleSubmit to handle form submission
