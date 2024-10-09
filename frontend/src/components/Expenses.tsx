@@ -74,7 +74,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   return (
     <div className="flex w-full flex-col space-y-4">
       <div className="flex flex-col space-y-2">
-        <div className="text-xl font-bold">Expenses</div>
+        <div className="text-xl font-semibold">Expenses</div>
         <div className="text-gray-500">{project.name}</div>
       </div>
       {expenses.map((expense) => (
@@ -87,7 +87,7 @@ const Expenses: React.FC<ExpensesProps> = ({
         />
       ))}
       <button
-        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
+        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
         type="button"
         onClick={handleAddExpense}
       >

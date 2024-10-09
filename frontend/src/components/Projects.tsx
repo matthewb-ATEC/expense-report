@@ -106,7 +106,7 @@ const Projects: React.FC<ProjectsProps> = ({
   return (
     <div className="w-full flex flex-col space-y-4">
       {report.projects.length > 0 && (
-        <div className="text-xl font-bold">Projects</div>
+        <div className="text-xl font-semibold">Projects</div>
       )}
 
       <div className="flex flex-col space-y-4 max-h-64 overflow-y-auto md:max-h-full">
@@ -124,7 +124,7 @@ const Projects: React.FC<ProjectsProps> = ({
         ))}
       </div>
       <button
-        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
+        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
         type="button"
         onClick={() => {
           handleAddProject();
