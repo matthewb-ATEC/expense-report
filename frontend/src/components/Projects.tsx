@@ -81,10 +81,6 @@ const Projects: React.FC<ProjectsProps> = ({
 
     console.log(`Deleting project ID: ${id}`);
 
-    const projectToDelete = report.projects.find(
-      (project) => project.id === id
-    );
-
     projectsService
       .deleteProject(report.id, id)
       .then(() => {
@@ -93,8 +89,13 @@ const Projects: React.FC<ProjectsProps> = ({
         );
         handleProjectsChange(updatedProjects);
 
-        if (projectToDelete === selectedProject)
-          handleSelectedProjectChange(null);
+        // Check if selectedProject exists in updatedProjects
+        const selectedProjectExists = updatedProjects.some(
+          (project) => project.id === selectedProject?.id
+        );
+
+        // If selectedProject is not in updatedProjects, set it to null
+        if (!selectedProjectExists) handleSelectedProjectChange(null);
 
         updateFilteredProjects(updatedProjects);
       })

@@ -169,7 +169,7 @@ const ExpenseReport: React.FC = () => {
             handleProjectChange={handleProjectChange}
             allProjects={settings.projects}
           />
-          {selectedProject && selectedProject.name !== "" && (
+          {selectedProject !== null && selectedProject.name !== "" && (
             <Expenses
               report={report}
               project={selectedProject}
