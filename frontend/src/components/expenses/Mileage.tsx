@@ -12,7 +12,7 @@
  * @relatedFiles Parent components like `ExpenseForm.tsx`, and types file `types.ts` for `ExpenseType`.
  */
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { ExpenseType } from "../../data/types";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Libraries } from "@react-google-maps/api/dist/utils/make-load-script-url";
@@ -34,6 +34,16 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Update here
     libraries,
   });
+
+  useEffect(() => {
+    const updatedExpense: ExpenseType = {
+      ...expense,
+      purpose: "Business",
+    };
+
+    handleExpenseChange(updatedExpense);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const calculateMileage = (expense: ExpenseType) => {
     if (!expense.fromLocation || !expense.toLocation) {
