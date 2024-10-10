@@ -35,7 +35,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
     }
 
     const newAttachments: AttachmentType[] = Array.from(files).map((file) => ({
-      id: "text",
+      id: expense.date || "no date",
       file,
       text: Math.random().toString(36).substr(2, 9),
     }));
@@ -52,11 +52,11 @@ const Attachments: React.FC<AttachmentsProps> = ({
     handleExpenseChange(updatedExpense);
   };
 
-  const handleDeleteAttachment = (id: string | undefined) => {
-    if (!id) return;
+  const handleDeleteAttachment = (text: string | undefined) => {
+    if (!text) return;
 
     const updatedAttachments = sessionAttachments.filter(
-      (attachment) => attachment.id !== id
+      (attachment) => attachment.text !== text
     );
 
     sessionAttachments.length = 0; // Clear the array
@@ -67,7 +67,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
     const updatedExpense: ExpenseType = {
       ...expense,
       attachments: expense.attachments?.filter(
-        (attachment) => attachment.id !== id
+        (attachment) => attachment.text !== text
       ),
     };
     handleExpenseChange(updatedExpense);
@@ -96,7 +96,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               onClick={() => {
-                handleDeleteAttachment(attachment.id);
+                handleDeleteAttachment(attachment.text);
               }}
             >
               Delete
