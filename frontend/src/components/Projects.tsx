@@ -17,7 +17,7 @@
  */
 
 /* eslint-disable react/prop-types */
-import { ProjectType, ReportType } from "../data/types";
+import { ProjectDropdownType, ProjectType, ReportType } from "../data/types";
 import projectsService from "../services/projectsService";
 import Project from "./Project";
 
@@ -26,9 +26,10 @@ interface ProjectsProps {
   selectedProject: ProjectType | null;
   filteredProjects: { name: string; number: number }[];
   handleProjectsChange: (updatedProjects: ProjectType[]) => void;
-  updateSelectedProject: (project: ProjectType | null) => void;
+  handleSelectedProjectChange: (newSelectedProject: ProjectType | null) => void;
   updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
   handleProjectChange: (updatedProject: ProjectType) => void;
+  allProjects: ProjectDropdownType[];
 }
 
 const Projects: React.FC<ProjectsProps> = ({
@@ -36,9 +37,10 @@ const Projects: React.FC<ProjectsProps> = ({
   selectedProject,
   filteredProjects,
   handleProjectsChange,
-  updateSelectedProject,
+  handleSelectedProjectChange,
   updateFilteredProjects,
   handleProjectChange,
+  allProjects,
 }) => {
   const handleAddProject = () => {
     if (!report.id) return;
@@ -67,7 +69,7 @@ const Projects: React.FC<ProjectsProps> = ({
         const updatedProjects = report.projects.concat(createdProject);
 
         handleProjectsChange(updatedProjects);
-        updateSelectedProject(createdProject);
+        handleSelectedProjectChange(createdProject);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -79,10 +81,6 @@ const Projects: React.FC<ProjectsProps> = ({
 
     console.log(`Deleting project ID: ${id}`);
 
-    const projectToDelete = report.projects.find(
-      (project) => project.id === id
-    );
-
     projectsService
       .deleteProject(report.id, id)
       .then(() => {
@@ -91,7 +89,13 @@ const Projects: React.FC<ProjectsProps> = ({
         );
         handleProjectsChange(updatedProjects);
 
-        if (projectToDelete === selectedProject) updateSelectedProject(null);
+        // Check if selectedProject exists in updatedProjects
+        const selectedProjectExists = updatedProjects.some(
+          (project) => project.id === selectedProject?.id
+        );
+
+        // If selectedProject is not in updatedProjects, set it to null
+        if (!selectedProjectExists) handleSelectedProjectChange(null);
 
         updateFilteredProjects(updatedProjects);
       })
@@ -103,7 +107,7 @@ const Projects: React.FC<ProjectsProps> = ({
   return (
     <div className="w-full flex flex-col space-y-4">
       {report.projects.length > 0 && (
-        <div className="text-xl font-bold">Projects</div>
+        <div className="text-xl font-semibold">Projects</div>
       )}
 
       <div className="flex flex-col space-y-4 max-h-64 overflow-y-auto md:max-h-full">
@@ -115,12 +119,13 @@ const Projects: React.FC<ProjectsProps> = ({
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
             handleDeleteProject={handleDeleteProject}
-            updateSelectedProject={updateSelectedProject}
+            handleSelectedProjectChange={handleSelectedProjectChange}
+            allProjects={allProjects}
           />
         ))}
       </div>
       <button
-        className="w-full self-center p-2 bg-white shadow-sm rounded-md text-ATECblue font-bold transform transition-transform duration-300 ease-in-out hover:scale-105"
+        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
         type="button"
         onClick={() => {
           handleAddProject();

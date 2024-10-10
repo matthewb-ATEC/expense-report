@@ -1,0 +1,3 @@
+# Delete expense from the /api/reports endpoint.
+DELETE http://localhost:3001/api/reports/6706896fafb4e33ea5a19bfd/projects/67068971afb4e33ea5a19c01/expenses/67068971afb4e33ea5a19c02
+Content-Type: application/json

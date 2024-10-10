@@ -12,25 +12,29 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { ExpenseType, ProjectType, ReportType } from "../data/types";
+import {
+  ExpenseType,
+  ProjectDropdownType,
+  ProjectType,
+  ReportType,
+  SettingsType,
+} from "../data/types";
 import reportsService from "../services/reportsService";
 import Name from "./Name";
 import Projects from "./Projects";
 import Expenses from "./Expenses";
-import { allProjects } from "../data/projects";
 import PDF from "./PDF";
 import Loading from "./Loading";
+import settingsService from "../services/settingsService";
 
 const ExpenseReport: React.FC = () => {
   const [report, setReport] = useState<ReportType>();
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
   );
-  //const [filteredProjects, setFilteredProjects] = useState<string[]>(
-  //  allProjects.map((project) => project.name)
-  //);
   const [filteredProjects, setFilteredProjects] =
-    useState<{ name: string; number: number }[]>(allProjects);
+    useState<ProjectDropdownType[]>();
+  const [settings, setSettings] = useState<SettingsType>();
 
   useEffect(() => {
     console.log("Initial useEffect");
@@ -48,6 +52,16 @@ const ExpenseReport: React.FC = () => {
         console.log("Promise fulfilled");
         console.log("Report set to", reponse);
         setReport(reponse);
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+
+    settingsService
+      .get()
+      .then((settings) => {
+        setFilteredProjects(settings.projects);
+        setSettings(settings);
       })
       .catch((error: unknown) => {
         console.log(error);
@@ -113,13 +127,17 @@ const ExpenseReport: React.FC = () => {
     setSelectedProject(updatedProject);
   };
 
-  const updateSelectedProject = (project: ProjectType | null) => {
-    setSelectedProject(project);
-    console.log("Selected project changed to", project);
+  const handleSelectedProjectChange = (
+    newSelectedProject: ProjectType | null
+  ) => {
+    setSelectedProject(newSelectedProject);
+    console.log("Selected project changed to", newSelectedProject);
   };
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
-    const filteredProjects = allProjects
+    if (!settings?.projects) return;
+
+    const filteredProjects: ProjectDropdownType[] = settings.projects
       .filter(
         (project) => !updatedProjects.some((p) => p.name === project.name)
       )
@@ -130,11 +148,14 @@ const ExpenseReport: React.FC = () => {
     setFilteredProjects(filteredProjects);
   };
 
-  if (!report) return <Loading />;
+  if (!report || !filteredProjects || !settings) return <Loading />;
 
   return (
     <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
-      <div className="flex w-11/12 lg:w-fit flex-col space-y-8">
+      <div
+        className={`flex w-11/12 lg:w-fit flex-col
+          ${report.projects.length > 0 ? "space-y-8" : "space-y-2"}`}
+      >
         <Name report={report} handleReportChange={handleReportChange} />
 
         <div className="flex flex-col space-y-8 lg:space-y-0 lg:flex-row lg:space-x-8">
@@ -142,15 +163,18 @@ const ExpenseReport: React.FC = () => {
             report={report}
             selectedProject={selectedProject}
             handleProjectsChange={handleProjectsChange}
-            updateSelectedProject={updateSelectedProject}
+            handleSelectedProjectChange={handleSelectedProjectChange}
             updateFilteredProjects={updateFilteredProjects}
             filteredProjects={filteredProjects}
             handleProjectChange={handleProjectChange}
+            allProjects={settings.projects}
           />
-          {selectedProject && selectedProject.name !== "" && (
+          {selectedProject !== null && selectedProject.name !== "" && (
             <Expenses
+              report={report}
               project={selectedProject}
               expenses={selectedProject.expenses}
+              costCodes={settings.costCodes}
               handleExpensesChange={handleExpensesChange}
             />
           )}

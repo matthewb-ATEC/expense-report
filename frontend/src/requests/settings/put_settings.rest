@@ -1,3 +1,7 @@
+# Set the settings value. Use with caution
+PUT http://localhost:3001/api/settings
+Content-Type: application/json
+
 {
   "mileageRate": 0.66,
   "perDiem": {

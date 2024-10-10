@@ -27,12 +27,6 @@ projectsRouter.get(
           (project) => project.id === projectId
         );
 
-        if (!project) {
-          return response.status(404).json({
-            error: report.projects[0].id,
-          });
-        }
-
         // If the project doesn't exist, return a 404 error
         if (!project) {
           return response.status(404).json({ error: "Project not found" });
@@ -58,7 +52,12 @@ projectsRouter.delete(
           (project) => project.id !== projectId
         );
 
-        response.status(204).end();
+        report
+          .save()
+          .then(() => {
+            response.status(204).end();
+          })
+          .catch((error) => next(error));
       })
       .catch((error) => next(error));
   }
@@ -95,12 +94,16 @@ projectsRouter.post("/:reportId/projects", (request, response, next) => {
 projectsRouter.put(
   "/:reportId/projects/:projectId",
   (request, response, next) => {
-    const updatedProject = request.body;
     const reportId = request.params.reportId;
     const projectId = request.params.projectId;
 
     Report.findById(reportId)
       .then((report) => {
+        if (!report) {
+          return response.status(404).json({ error: "Report not found" });
+        }
+
+        const updatedProject = request.body;
         // Find the project to update
         report.projects = report.projects.map((project) =>
           project.id === projectId ? updatedProject : project
