@@ -52,6 +52,12 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
       return;
     }
 
+    if (!fromAutocomplete || !toAutocomplete) {
+      console.log("Locations must be autocompleted from the google maps API.");
+      console.log("From", expense.fromLocation, "To", expense.toLocation);
+      return;
+    }
+
     const fromLocation = expense.fromLocation;
     const toLocation = expense.toLocation;
 
@@ -99,6 +105,12 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
       };
       handleExpenseChange(updatedExpense);
       calculateMileage(updatedExpense);
+    } else {
+      const updatedExpense: ExpenseType = {
+        ...expense,
+        mileage: undefined,
+      };
+      handleExpenseChange(updatedExpense);
     }
   };
 
@@ -107,16 +119,12 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
       const place = toAutocomplete.getPlace();
       const updatedExpense: ExpenseType = {
         ...expense,
-        toLocation: place.formatted_address ?? "",
+        toLocation: place.formatted_address,
       };
       handleExpenseChange(updatedExpense);
       calculateMileage(updatedExpense);
     }
   };
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
 
   const handlePurposeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const updatedExpense: ExpenseType = {
@@ -133,6 +141,10 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     };
     handleExpenseChange(updatedExpense);
   };
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -166,8 +178,11 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             type="text"
             id="from"
             value={expense.fromLocation ?? ""}
-            onChange={(e) => {
-              handleExpenseChange({ ...expense, fromLocation: e.target.value });
+            onChange={(event) => {
+              handleExpenseChange({
+                ...expense,
+                fromLocation: event.target.value,
+              });
             }}
           />
         </Autocomplete>
@@ -186,9 +201,13 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="to"
-            value={expense.toLocation ?? ""}
-            onChange={(e) => {
-              handleExpenseChange({ ...expense, toLocation: e.target.value });
+            value={expense.toLocation}
+            onChange={(event) => {
+              handleExpenseChange({
+                ...expense,
+                toLocation: event.target.value,
+                mileage: undefined,
+              });
             }}
           />
         </Autocomplete>
