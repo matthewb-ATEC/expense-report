@@ -228,6 +228,12 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
 
         // From + To
         if (expense.costCategory == "Mileage") {
+          if (!expense.mileage) {
+            alertText +=
+              `Required valid location addresses for expense ${(
+                sub_index + 1
+              ).toString()} in project: ${project.name}.` + "\n";
+          }
           if (!expense.fromLocation?.trim()) {
             alertText +=
               `Required origin for expense ${(
