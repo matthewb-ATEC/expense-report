@@ -50,6 +50,11 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
     debouncedUpdate(event.target.value); // Update parent state after debounce
   };
 
+  const handleNameInput = (event: React.FormEvent<HTMLInputElement>) => {
+    setName(event.currentTarget.value); // This ensures the state is updated on input events
+    debouncedUpdate(event.currentTarget.value); // Update parent state after debounce
+  };
+
   return (
     <div className="w-full flex flex-col space-y-4">
       <div className="text-xl font-semibold">User Information</div>
@@ -63,6 +68,7 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
             name="name"
             value={name}
             onChange={handleNameChange}
+            onInput={handleNameInput}
           />
         </div>
       </div>
