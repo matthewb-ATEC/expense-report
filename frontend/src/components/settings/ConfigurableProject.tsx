@@ -19,21 +19,21 @@ const ConfigurableProject: React.FC<ProjectDropdownProps> = ({
   const [newProject, setNewProject] = useState<ProjectDropdownType>(project);
 
   const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newProject: ProjectDropdownType = {
-      ...project,
+    const updatedProject: ProjectDropdownType = {
+      ...newProject,
       number: Number(event.target.value),
     };
-    setNewProject(newProject);
-    onChange(newProject);
+    setNewProject(updatedProject);
+    onChange(updatedProject);
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newProject: ProjectDropdownType = {
-      ...project,
+    const updatedProject: ProjectDropdownType = {
+      ...newProject,
       name: event.target.value,
     };
-    setNewProject(newProject);
-    onChange(newProject);
+    setNewProject(updatedProject);
+    onChange(updatedProject);
   };
 
   if (isEditing)
