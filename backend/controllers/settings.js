@@ -1,38 +1,23 @@
 const settingsRouter = require("express").Router();
-const fs = require("fs"); // used for config file management
+const Settings = require("../models/settings");
 
-settingsRouter.get("/", (request, response) => {
-  console.log("Fetching settings");
-  fs.readFile("./settings.json", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading settings file:", err);
-      return response
-        .status(500)
-        .json({ error: "Could not read settings file" });
-    }
-
-    // Parse the JSON content and return it
-    try {
-      const settings = JSON.parse(data);
-      response.json(settings);
-    } catch (parseError) {
-      console.error("Error parsing settings file:", parseError);
-      response.status(500).json({ error: "Could not parse settings file" });
-    }
-  });
+settingsRouter.get("/", (request, response, next) => {
+  Settings.findOne()
+    .then((settings) => {
+      response.status(200).json(settings);
+    })
+    .catch((error) => next(error));
 });
 
-settingsRouter.post("/", (request, response) => {
-  const settingsData = JSON.stringify(request.body, null, 2);
-  fs.writeFile("./settings.json", settingsData, (err) => {
-    if (err) {
-      console.error("Error writing to settings file:", err);
-      return response.status(500).json({ error: "Failed to save settings" });
-    }
+settingsRouter.put("/", (request, response, next) => {
+  const newSettings = request.body;
 
-    // Send the response only after the file write is successful
-    response.status(200).send("Settings saved successfully!");
-  });
+  // Find the existing settings document and update it with the new settings
+  Settings.findOneAndUpdate({}, newSettings, { new: true, upsert: true })
+    .then((updatedSettings) => {
+      response.status(200).json(updatedSettings); // Send the updated settings as the response
+    })
+    .catch((error) => next(error));
 });
 
 module.exports = settingsRouter;

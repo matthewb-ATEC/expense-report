@@ -28,7 +28,7 @@ const get = async () => {
 
 const set = async (newSettings: SettingsType) => {
   console.log("Updating Settings", newSettings);
-  const request = axios.post<SettingsType>(baseURL, newSettings);
+  const request = axios.put<SettingsType>(baseURL, newSettings);
   const response = await request;
   return response.data;
 };
