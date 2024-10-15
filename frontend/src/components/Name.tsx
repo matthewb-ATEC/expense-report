@@ -25,9 +25,7 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
   const [name, setName] = useState(report.user.name);
 
   // Use lodash debounce to delay the state update function
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const debouncedUpdate = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     debounce((updatedName: string) => {
       const updatedUser: UserType = {
         ...report.user,
@@ -46,7 +44,6 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value); // Update local state immediately
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     debouncedUpdate(event.target.value); // Update parent state after debounce
   };
 

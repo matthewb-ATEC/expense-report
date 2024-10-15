@@ -14,7 +14,8 @@
  *  - projects.ts: ../data/projects // Contains all project data
  */
 
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { debounce } from "lodash";
 import { ProjectDropdownType, ProjectType } from "../data/types";
 
 interface ProjectProps {
@@ -36,6 +37,8 @@ const Project: React.FC<ProjectProps> = ({
   handleSelectedProjectChange,
   allProjects,
 }) => {
+  const [description, setDescription] = useState<string>("");
+
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newName: string = event.target.value;
     const newNumber: number | undefined = allProjects.find(
@@ -51,19 +54,28 @@ const Project: React.FC<ProjectProps> = ({
     handleProjectChange(updatedProject);
   };
 
+  // Use lodash debounce to delay the state update function
+  const debouncedUpdate = useCallback(
+    debounce((updatedDescription: string) => {
+      const updatedProject: ProjectType = {
+        ...project,
+        description: updatedDescription,
+      };
+
+      handleProjectChange(updatedProject);
+    }, 300),
+    [project, handleProjectChange]
+  );
+
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedProject: ProjectType = {
-      ...project,
-      description: event.target.value,
-    };
-
-    handleProjectChange(updatedProject);
+    setDescription(event.target.value); // Update local state immediately
+    debouncedUpdate(event.target.value); // Update parent state after debounce
   };
 
   const getMinimizedProjectText = () => {
-    return project.name === "Other"
+    return project.name === "Sales/Proposals"
       ? !project.description || project.description === ""
         ? "No description"
         : project.description
@@ -87,7 +99,7 @@ const Project: React.FC<ProjectProps> = ({
               onChange={handleNameChange}
             >
               <option value="">Select a project</option>
-              {project.name && project.name !== "Other" && (
+              {project.name && (
                 <option value={project.name}>
                   {/* eslint-disable-next-line @typescript-eslint/restrict-template-expressions*/}
                   {`${project.number} - ${project.name}`}
@@ -99,11 +111,10 @@ const Project: React.FC<ProjectProps> = ({
                   {`${project.number} - ${project.name}`}
                 </option>
               ))}
-              <option value="Other">Other</option>
             </select>
           </div>
           <div className="flex flex-col items-start space-y-2">
-            {project.name === "Other" && (
+            {project.name === "Sales/Proposals" && (
               <>
                 <label
                   className="text-gray-600 text-nowrap"
@@ -114,7 +125,7 @@ const Project: React.FC<ProjectProps> = ({
                 <input
                   className="p-2 w-full border-grey-300 border-b-2"
                   id="description"
-                  value={project.description}
+                  value={description}
                   onChange={handleDescriptionChange}
                 />
               </>

@@ -167,7 +167,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       }
 
       // Project Description
-      else if (project.name == "Other") {
+      else if (project.name == "Sales/Proposals") {
         if (project.description == undefined || project.description == "") {
           alertText +=
             `Required description in project: ${project.name}.` + "\n";
@@ -374,10 +374,10 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       drawTextWithAlignment(
         page,
         `Billable: ${
-          project.name === "Other"
-            ? "N/A"
-            : `${project.name} | ${project.number}`
-        }`,
+          project.name === "Sales/Proposals"
+            ? `${project.description}`
+            : project.name
+        } | ${project.number}`,
         ``,
         pageMargin,
         currentY,
