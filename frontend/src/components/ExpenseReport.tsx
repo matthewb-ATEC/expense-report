@@ -60,6 +60,7 @@ const ExpenseReport: React.FC = () => {
     settingsService
       .get()
       .then((settings) => {
+        console.log("settings.projects", settings.projects);
         setFilteredProjects(settings.projects);
         setSettings(settings);
       })
@@ -148,6 +149,9 @@ const ExpenseReport: React.FC = () => {
     setFilteredProjects(filteredProjects);
   };
 
+  console.log("report", report);
+  console.log("fitlered", filteredProjects);
+  console.log("settings", settings);
   if (!report || !filteredProjects || !settings) return <Loading />;
 
   return (
