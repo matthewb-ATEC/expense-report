@@ -798,18 +798,22 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
   };
 
   return (
-    <div className="flex space-x-8 justify-center">
-      {/* Download PDF button */}
-      <button
-        className="self-center p-4 text-white shadow-md rounded-md bg-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
-        type="button"
-        onClick={(event) => {
-          handleSubmit(event); // Call handleSubmit to handle form submission
-          handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
-        }}
-      >
-        Generate Report
-      </button>
+    <div className="flex flex-col space-y-4">
+          <div className="text-xl font-semibold">Finished?</div>
+      
+          <div className="text-gray-500 text-wrap">Save and email the generated report to your manager for approval.</div>
+        
+        {/* Download PDF button */}
+        <button
+          className="w-full self-center p-2 hover:text-ATECblue text-white shadow-md rounded-md hover:shadow-md border-white hover:bg-white bg-ATECblue border-2 hover:border-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
+          type="button"
+          onClick={(event) => {
+            handleSubmit(event); // Call handleSubmit to handle form submission
+            handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
+          }}
+        >
+          Generate Report
+        </button>
     </div>
   );
 };
