@@ -176,6 +176,24 @@ const Expense: FC<ExpenseProps> = ({
               handleExpenseChange={handleExpenseChange}
             />
           )}
+          {expense.costCategory === "Training" && (
+            <Description
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
+          {expense.costCategory === "Office Expense" && (
+            <Description
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
+          {expense.costCategory === "Technology" && (
+            <Description
+              expense={expense}
+              handleExpenseChange={handleExpenseChange}
+            />
+          )}
           {expense.costCategory === "Other" && (
             <Description
               expense={expense}
