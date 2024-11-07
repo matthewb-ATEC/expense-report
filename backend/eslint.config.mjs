@@ -20,6 +20,7 @@ export default [
     },
     plugins: {
       react: eslintPluginReact,
+      prettier: 'prettier',
     },
     rules: {
       indent: ['error', 2],
