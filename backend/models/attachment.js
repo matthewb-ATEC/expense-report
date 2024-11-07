@@ -1,16 +1,16 @@
-const mongoose = require("mongoose");
+import { Schema } from 'mongoose'
 
-const attachmentSchema = new mongoose.Schema({
-  file: { type: mongoose.Schema.Types.Mixed, default: null }, // Use Mixed type for files
+const attachmentSchema = new Schema({
+  file: { type: Schema.Types.Mixed, default: null }, // Use Mixed type for files
   text: String,
-});
+})
 
-attachmentSchema.set("toJSON", {
+attachmentSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
+    returnedObject.id = returnedObject._id.toString()
     //delete returnedObject._id;
-    delete returnedObject.__v;
+    delete returnedObject.__v
   },
-});
+})
 
-module.exports = attachmentSchema;
+export default attachmentSchema

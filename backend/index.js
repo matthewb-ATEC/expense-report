@@ -1,7 +1,7 @@
-const app = require("./app"); // the actual Express application
-const config = require("./utils/config");
-const logger = require("./utils/logger");
+import { listen } from './app' // the actual Express application
+import { PORT } from './utils/config'
+import { info } from './utils/logger'
 
-app.listen(config.PORT, () => {
-  logger.info(`Server running on port ${config.PORT}`);
-});
+listen(PORT, () => {
+  info(`Server running on port ${PORT}`)
+})

@@ -1,60 +1,65 @@
-const reportsRouter = require("express").Router();
-const Report = require("../models/report");
+const reportsRouter = require('express').Router()
+import Report, {
+  find,
+  findById,
+  findByIdAndUpdate,
+  deleteMany,
+} from '../models/report'
 
-reportsRouter.get("/", (request, response, next) => {
-  Report.find({})
+reportsRouter.get('/', (request, response, next) => {
+  find({})
     .then((reports) => {
-      response.json(reports);
+      response.json(reports)
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-reportsRouter.get("/:id", (request, response, next) => {
-  const id = request.params.id;
+reportsRouter.get('/:id', (request, response, next) => {
+  const id = request.params.id
 
-  Report.findById(id)
+  findById(id)
     .then((report) => {
-      response.json(report);
+      response.json(report)
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-reportsRouter.post("/", (request, response, next) => {
-  const report = new Report(request.body);
+reportsRouter.post('/', (request, response, next) => {
+  const report = new Report(request.body)
 
   report
     .save()
     .then((result) => {
-      response.status(201).json(result);
+      response.status(201).json(result)
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-reportsRouter.put("/:id", (request, response, next) => {
-  const id = request.params.id;
+reportsRouter.put('/:id', (request, response, next) => {
+  const id = request.params.id
 
-  Report.findByIdAndUpdate(id, request.body, {
+  findByIdAndUpdate(id, request.body, {
     new: true,
     runValidators: true,
   })
     .then((updatedReport) => {
       if (!updatedReport) {
-        return response.status(404).send("Report not found");
+        return response.status(404).send('Report not found')
       }
-      response.status(200).json(updatedReport);
+      response.status(200).json(updatedReport)
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-reportsRouter.delete("/", (request, response, next) => {
-  Report.deleteMany({})
+reportsRouter.delete('/', (request, response, next) => {
+  deleteMany({})
     .then((result) => {
       response.status(200).json({
-        message: "All reports deleted",
+        message: 'All reports deleted',
         deletedCount: result.deletedCount,
-      });
+      })
     })
-    .catch((error) => next(error));
-});
+    .catch((error) => next(error))
+})
 
-module.exports = reportsRouter;
+export default reportsRouter
