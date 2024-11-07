@@ -4,7 +4,7 @@ const projectsRouter = express.Router()
 
 projectsRouter.get('/:reportId/projects', async (request, response, next) => {
   const reportId = request.params.reportId
-  findById(reportId)
+  Report.findById(reportId)
     .then((report) => {
       response.json(report.projects)
     })
@@ -17,7 +17,7 @@ projectsRouter.get(
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         // If the report doesn't exist, return a 404 error
         if (!report) {
@@ -46,7 +46,7 @@ projectsRouter.delete(
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         // Filter out the project to delete
         report.projects = report.projects.filter(
@@ -67,7 +67,7 @@ projectsRouter.delete(
 projectsRouter.post('/:reportId/projects', (request, response, next) => {
   const reportId = request.params.reportId
 
-  findById(reportId)
+  Report.findById(reportId)
     .then((report) => {
       if (!report) {
         return response.status(404).json({ error: 'Report not found' })
@@ -98,7 +98,7 @@ projectsRouter.put(
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         if (!report) {
           return response.status(404).json({ error: 'Report not found' })
