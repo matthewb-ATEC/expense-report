@@ -7,7 +7,7 @@ expensesRouter.get(
   async (request, response, next) => {
     const reportId = request.params.reportId
     const projectId = request.params.projectId
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         if (!report) {
           return response.status(404).json({ error: 'Report not found' })
@@ -35,7 +35,7 @@ expensesRouter.get(
     const projectId = request.params.projectId
     const expenseId = request.params.expenseId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         // If the report doesn't exist, return a 404 error
         if (!report) {
@@ -69,7 +69,7 @@ expensesRouter.delete(
     const projectId = request.params.projectId
     const expenseId = request.params.expenseId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         // If the report doesn't exist, return a 404 error
         if (!report) {
@@ -114,7 +114,7 @@ expensesRouter.post(
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         if (!report) {
           return response.status(404).json({ error: 'Report not found' })
@@ -167,7 +167,7 @@ expensesRouter.put(
     const projectId = request.params.projectId
     const expenseId = request.params.expenseId
 
-    findById(reportId)
+    Report.findById(reportId)
       .then((report) => {
         if (!report) {
           return response.status(404).json({ error: 'Report not found' })

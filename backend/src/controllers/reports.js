@@ -3,7 +3,7 @@ const reportsRouter = express.Router()
 import Report from '../models/report.js'
 
 reportsRouter.get('/', (request, response, next) => {
-  find({})
+  Report.find({})
     .then((reports) => {
       response.json(reports)
     })
@@ -13,7 +13,7 @@ reportsRouter.get('/', (request, response, next) => {
 reportsRouter.get('/:id', (request, response, next) => {
   const id = request.params.id
 
-  findById(id)
+  Report.findById(id)
     .then((report) => {
       response.json(report)
     })
@@ -34,7 +34,7 @@ reportsRouter.post('/', (request, response, next) => {
 reportsRouter.put('/:id', (request, response, next) => {
   const id = request.params.id
 
-  findByIdAndUpdate(id, request.body, {
+  Report.findByIdAndUpdate(id, request.body, {
     new: true,
     runValidators: true,
   })
@@ -48,7 +48,7 @@ reportsRouter.put('/:id', (request, response, next) => {
 })
 
 reportsRouter.delete('/', (request, response, next) => {
-  deleteMany({})
+  Report.deleteMany({})
     .then((result) => {
       response.status(200).json({
         message: 'All reports deleted',
