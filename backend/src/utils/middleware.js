@@ -1,7 +1,7 @@
-const path = require('path')
-const logger = require('./logger').default
+import { resolve } from 'path'
+import logger from './logger.js'
 
-const requestLogger = (request, response, next) => {
+export const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
   logger.info('Path:  ', request.path)
   logger.info('Body:  ', request.body)
@@ -9,11 +9,11 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-const unknownEndpoint = (request, response) => {
-  response.sendFile(path.resolve(`${__dirname}/../`, 'dist', 'index.html'))
+export const unknownEndpoint = (request, response) => {
+  response.sendFile(resolve(`${__dirname}/../`, 'dist', 'index.html'))
 }
 
-const errorHandler = (error, request, response, next) => {
+export const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
 
   if (error.name === 'CastError') {
@@ -23,10 +23,4 @@ const errorHandler = (error, request, response, next) => {
   }
 
   next(error)
-}
-
-module.exports = {
-  requestLogger,
-  unknownEndpoint,
-  errorHandler,
 }

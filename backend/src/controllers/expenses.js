@@ -1,5 +1,6 @@
-import { findById } from '../models/report'
-const expensesRouter = require('express').Router()
+import Report from '../models/report.js'
+import express from 'express'
+const expensesRouter = express.Router()
 
 expensesRouter.get(
   '/:reportId/projects/:projectId/expenses',

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const projectSchema = require('../models/project').default
-const userSchema = require('../models/user').default
+import { Schema, model } from 'mongoose'
+import projectSchema from './project.js'
+import userSchema from './user.js'
 
-const reportSchema = new mongoose.Schema({
+const reportSchema = new Schema({
   user: userSchema,
   projects: [projectSchema], // Use projectSchema for projects
 })
@@ -15,5 +15,5 @@ reportSchema.set('toJSON', {
   },
 })
 
-const Report = mongoose.model('Report', reportSchema)
-module.exports = Report
+const Report = model('Report', reportSchema)
+export default Report

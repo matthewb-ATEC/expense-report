@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose'
-import expenseSchema from '../models/expense'
+import expenseSchema from './expense.js'
 
 const projectSchema = new Schema({
   number: { type: Number, default: undefined },

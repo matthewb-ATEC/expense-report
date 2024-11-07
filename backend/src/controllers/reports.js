@@ -1,10 +1,6 @@
-const reportsRouter = require('express').Router()
-import Report, {
-  find,
-  findById,
-  findByIdAndUpdate,
-  deleteMany,
-} from '../models/report'
+import express from 'express'
+const reportsRouter = express.Router()
+import Report from '../models/report.js'
 
 reportsRouter.get('/', (request, response, next) => {
   find({})
