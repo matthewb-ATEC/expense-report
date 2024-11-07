@@ -1,12 +1,14 @@
 const info = (...params) => {
-  console.log(...params);
-};
+  // eslint-disable-next-line no-console
+  console.log(...params)
+}
 
 const error = (...params) => {
-  console.error(...params);
-};
+  // eslint-disable-next-line no-console
+  console.error(...params)
+}
 
-module.exports = {
+export default {
   info,
   error,
-};
+}

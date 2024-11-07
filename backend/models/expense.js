@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const attachmentSchema = require("../models/attachment");
+import { Schema } from 'mongoose'
+import attachmentSchema from '../models/attachment'
 
-const expenseSchema = new mongoose.Schema({
+const expenseSchema = new Schema({
   date: String,
   costCategory: String,
   costCode: String,
@@ -16,14 +16,14 @@ const expenseSchema = new mongoose.Schema({
   lunch: Boolean,
   dinner: Boolean,
   attachments: [attachmentSchema], // Use attachmentSchema for attachments
-});
+})
 
-expenseSchema.set("toJSON", {
+expenseSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
+    returnedObject.id = returnedObject._id.toString()
     //delete returnedObject._id;
-    delete returnedObject.__v;
+    delete returnedObject.__v
   },
-});
+})
 
-module.exports = expenseSchema;
+export default expenseSchema

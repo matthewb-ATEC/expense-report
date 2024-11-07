@@ -1,43 +1,46 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const reportsRouter = require("./controllers/reports");
-const projectsRouter = require("./controllers/projects");
-const expensesRouter = require("./controllers/expenses");
-const settingsRouter = require("./controllers/settings");
-const config = require("./utils/config");
-const middleware = require("./utils/middleware");
-const logger = require("./utils/logger");
-const mongoose = require("mongoose");
+import express from 'express'
+const app = express()
+import cors from 'cors'
+import reportsRouter from './controllers/reports'
+import projectsRouter from './controllers/projects'
+import expensesRouter from './controllers/expenses'
+import settingsRouter from './controllers/settings'
+import { MONGODB_URI } from './utils/config'
+import {
+  requestLogger,
+  unknownEndpoint,
+  errorHandler,
+} from './utils/middleware'
+import { info, error as _error } from './utils/logger'
+import { set, connect } from 'mongoose'
 
-mongoose.set("strictQuery", false);
+set('strictQuery', false)
 
 //logger.info("connecting to", config.MONGODB_URI);
 
-mongoose
-  .connect(config.MONGODB_URI)
+connect(MONGODB_URI)
   .then(() => {
-    logger.info("connected to MongoDB");
+    info('connected to MongoDB')
   })
   .catch((error) => {
-    logger.error("error connecting to MongoDB.", error.message);
-  });
+    _error('error connecting to MongoDB.', error.message)
+  })
 
-app.use(cors());
-app.use(express.static("dist"));
-app.use(express.json());
-app.use(middleware.requestLogger);
+app.use(cors())
+app.use(express.static('dist'))
+app.use(express.json())
+app.use(requestLogger)
 
-app.get("/health", (req, res) => {
-  res.send("ok");
-});
+app.get('/health', (req, res) => {
+  res.send('ok')
+})
 
-app.use("/api/reports", reportsRouter);
-app.use("/api/reports", projectsRouter);
-app.use("/api/reports", expensesRouter);
-app.use("/api/settings", settingsRouter);
+app.use('/api/reports', reportsRouter)
+app.use('/api/reports', projectsRouter)
+app.use('/api/reports', expensesRouter)
+app.use('/api/settings', settingsRouter)
 
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
-module.exports = app;
+export default app

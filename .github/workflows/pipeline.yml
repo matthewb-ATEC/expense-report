@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js for Backend
         uses: actions/setup-node@v4
         with:
-          node-version: "16.20.2"
+          node-version: "23.1.0"
 
       - name: Install Backend dependencies
         run: |
@@ -59,7 +59,7 @@ jobs:
       - name: Set up Node.js for Frontend
         uses: actions/setup-node@v4
         with:
-          node-version: "16.20.2"
+          node-version: "23.1.0"
 
       - name: Install Frontend dependencies
         run: |
