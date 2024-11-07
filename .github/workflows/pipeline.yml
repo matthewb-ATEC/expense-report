@@ -1,0 +1,107 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+env:
+  SHOULD_DEPLOY_AND_TAG: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.20.2"
+
+      - name: Install Backend dependencies
+        run: |
+          cd ./backend
+          npm ci
+
+      - name: Lint Backend code
+        run: |
+          cd ./backend
+          npm run eslint
+
+      - name: Run unit tests for Backend
+        run: |
+          cd ./backend
+          npm run test
+
+      - name: Install Playwright browsers
+        run: |
+          cd ./backend
+          npx playwright install --with-deps
+
+      - name: Run Playwright End-to-End Tests
+        run: |
+          cd ./backend
+          npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./backend/playwright-report/
+          retention-days: 30
+
+      - name: Set up Node.js for Frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16.20.2"
+
+      - name: Install Frontend dependencies
+        run: |
+          cd ./frontend
+          npm ci
+
+      - name: Build Frontend UI
+        run: |
+          cd ./frontend
+          npm run build
+
+      - name: Copy Frontend build to Backend
+        run: |
+          rm -rf ./backend/dist && cp -r ./frontend/dist ./backend
+
+      - name: Set up Flyctl
+        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
+        run: |
+          cd ./backend
+          flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  tag_release:
+    needs: [deployment_pipeline]
+    if: ${{ github.ref == 'refs/heads/main'}}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: "0"
+
+      - name: Bump version and push tag
+        if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: false
