@@ -1,17 +1,17 @@
 import express from 'express'
 const app = express()
 import cors from 'cors'
-import reportsRouter from './controllers/reports'
-import projectsRouter from './controllers/projects'
-import expensesRouter from './controllers/expenses'
-import settingsRouter from './controllers/settings'
-import { MONGODB_URI } from './utils/config'
+import reportsRouter from './controllers/reports.js'
+import projectsRouter from './controllers/projects.js'
+import expensesRouter from './controllers/expenses.js'
+import settingsRouter from './controllers/settings.js'
+import { MONGODB_URI } from './utils/config.js'
 import {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-} from './utils/middleware'
-import { info, error as _error } from './utils/logger'
+} from './utils/middleware.js'
+import { info, error as _error } from './utils/logger.js'
 import { set, connect } from 'mongoose'
 
 set('strictQuery', false)

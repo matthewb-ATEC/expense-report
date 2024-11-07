@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose'
-import attachmentSchema from '../models/attachment'
+import attachmentSchema from './attachment.js'
 
 const expenseSchema = new Schema({
   date: String,

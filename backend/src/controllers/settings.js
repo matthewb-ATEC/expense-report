@@ -1,5 +1,6 @@
-const settingsRouter = require('express').Router()
-const Settings = require('../models/settings').default
+import express from 'express'
+const settingsRouter = express.Router()
+import Settings from '../models/settings.js'
 
 settingsRouter.get('/', (request, response, next) => {
   Settings.findOne()
@@ -20,4 +21,4 @@ settingsRouter.put('/', (request, response, next) => {
     .catch((error) => next(error))
 })
 
-module.exports = settingsRouter
+export default settingsRouter
