@@ -12,45 +12,46 @@
  * @relatedFiles Related components may include other input components or forms that gather user information, such as `Email.tsx` or `Address.tsx`.
  */
 
-import React, { ChangeEvent, useCallback, useState } from "react";
-import { debounce } from "lodash";
-import { ReportType, UserType } from "../data/types";
+import React, { ChangeEvent, useCallback, useState } from 'react'
+import { debounce } from 'lodash'
+import { ReportType, UserType } from '../data/types'
 
 interface NameProps {
-  report: ReportType;
-  handleReportChange: (updatedReport: ReportType) => void;
+  report: ReportType
+  handleReportChange: (updatedReport: ReportType) => void
 }
 
 const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
-  const [name, setName] = useState(report.user.name);
+  const [name, setName] = useState(report.user.name)
 
   // Use lodash debounce to delay the state update function
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = useCallback(
     debounce((updatedName: string) => {
       const updatedUser: UserType = {
         ...report.user,
         name: updatedName,
-      };
+      }
 
       const updatedReport: ReportType = {
         ...report,
         user: updatedUser,
-      };
+      }
 
-      handleReportChange(updatedReport);
+      handleReportChange(updatedReport)
     }, 300),
     [report, handleReportChange]
-  );
+  )
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value); // Update local state immediately
-    debouncedUpdate(event.target.value); // Update parent state after debounce
-  };
+    setName(event.target.value) // Update local state immediately
+    debouncedUpdate(event.target.value) // Update parent state after debounce
+  }
 
   const handleNameInput = (event: React.FormEvent<HTMLInputElement>) => {
-    setName(event.currentTarget.value); // This ensures the state is updated on input events
-    debouncedUpdate(event.currentTarget.value); // Update parent state after debounce
-  };
+    setName(event.currentTarget.value) // This ensures the state is updated on input events
+    debouncedUpdate(event.currentTarget.value) // Update parent state after debounce
+  }
 
   return (
     <div className="w-full flex flex-col space-y-4">
@@ -70,7 +71,7 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Name;
+export default Name

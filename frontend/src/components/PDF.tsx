@@ -15,8 +15,8 @@
  *  - settingsService.ts: ../services/settingsService // Service for fetching settings
  */
 
-import React, { useEffect, useState } from "react";
-import { ReportType } from "../data/types";
+import React, { useEffect, useState } from 'react'
+import { ReportType } from '../data/types'
 import {
   PDFDocument,
   rgb,
@@ -25,12 +25,13 @@ import {
   PDFPage,
   PDFFont,
   RGB,
-} from "pdf-lib";
-import { sessionAttachments, total, breakdown } from "../data/results";
-import settingsService from "../services/settingsService";
+  PDFImage,
+} from 'pdf-lib'
+import { sessionAttachments, total, breakdown } from '../data/results'
+import settingsService from '../services/settingsService'
 
 interface PDFProps {
-  report: ReportType;
+  report: ReportType
 }
 
 const PDF: React.FC<PDFProps> = ({ report }) => {
@@ -41,26 +42,19 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       lunch: 0,
       dinner: 0,
     },
-  });
+  })
 
   useEffect(() => {
     settingsService
       .get()
       .then((response) => {
-        setSettings(response);
-        console.log("Settings fetched", response);
+        setSettings(response)
+        console.log('Settings fetched', response)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
-  }, []);
-
-  // CONSIDER Deleting?
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log(JSON.stringify(report.projects));
-    console.log(report.projects);
-  };
+        console.log(error)
+      })
+  }, [])
 
   // Utility function to create a PDF from an image file
   const createPdfFromImage = async (
@@ -68,88 +62,88 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     fileType: string
   ): Promise<Uint8Array> => {
     try {
-      const pdfDoc = await PDFDocument.create();
-      let image;
+      const pdfDoc = await PDFDocument.create()
+      let image
 
-      if (fileType === "image/jpeg") {
-        image = await pdfDoc.embedJpg(imageBytes);
-      } else if (fileType === "image/png") {
-        image = await pdfDoc.embedPng(imageBytes);
+      if (fileType === 'image/jpeg') {
+        image = await pdfDoc.embedJpg(imageBytes)
+      } else if (fileType === 'image/png') {
+        image = await pdfDoc.embedPng(imageBytes)
       } else {
-        throw new Error("Unsupported image format");
+        throw new Error('Unsupported image format')
       }
 
-      const { width, height } = image;
-      const page = pdfDoc.addPage([width, height]);
-      page.drawImage(image, { x: 0, y: 0, width, height });
+      const { width, height } = image
+      const page = pdfDoc.addPage([width, height])
+      page.drawImage(image, { x: 0, y: 0, width, height })
 
-      return await pdfDoc.save();
+      return await pdfDoc.save()
     } catch (error) {
-      console.error("Error creating PDF from image:", error);
+      console.error('Error creating PDF from image:', error)
       // Return an empty PDF or placeholder if an error occurs
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 400]); // Arbitrary page size
-      page.drawText("Unable to convert this file to PDF.", { x: 50, y: 350 });
-      return pdfDoc.save();
+      const pdfDoc = await PDFDocument.create()
+      const page = pdfDoc.addPage([600, 400]) // Arbitrary page size
+      page.drawText('Unable to convert this file to PDF.', { x: 50, y: 350 })
+      return pdfDoc.save()
     }
-  };
+  }
 
   // Function to convert non-PDF files to PDF format
   const convertFileToPdf = async (file: File): Promise<Uint8Array> => {
-    const fileBytes = await file.arrayBuffer();
-    const fileType = file.type;
+    const fileBytes = await file.arrayBuffer()
+    const fileType = file.type
 
     try {
-      if (fileType.startsWith("image/")) {
+      if (fileType.startsWith('image/')) {
         // If the file is an image, convert it to a PDF
-        return await createPdfFromImage(fileBytes, fileType);
+        return await createPdfFromImage(fileBytes, fileType)
       } else {
         // For other file types, create a placeholder PDF
-        const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([600, 400]); // Arbitrary page size
+        const pdfDoc = await PDFDocument.create()
+        const page = pdfDoc.addPage([600, 400]) // Arbitrary page size
 
-        page.drawText(`File: ${file.name}`, { x: 50, y: 350 });
-        page.drawText("The file cannot be displayed here.", { x: 50, y: 300 });
-        page.drawText("Please refer to the attached file.", { x: 50, y: 250 });
+        page.drawText(`File: ${file.name}`, { x: 50, y: 350 })
+        page.drawText('The file cannot be displayed here.', { x: 50, y: 300 })
+        page.drawText('Please refer to the attached file.', { x: 50, y: 250 })
 
-        return await pdfDoc.save();
+        return await pdfDoc.save()
       }
     } catch (error) {
-      console.error("Error converting file to PDF:", error);
+      console.error('Error converting file to PDF:', error)
       // Return an empty PDF or placeholder if an error occurs
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 400]); // Arbitrary page size
-      page.drawText("Error processing this file.", { x: 50, y: 350 });
-      return pdfDoc.save();
+      const pdfDoc = await PDFDocument.create()
+      const page = pdfDoc.addPage([600, 400]) // Arbitrary page size
+      page.drawText('Error processing this file.', { x: 50, y: 350 })
+      return pdfDoc.save()
     }
-  };
+  }
 
   const getCurrentDate = (): string => {
-    const today = new Date();
+    const today = new Date()
 
-    const year = String(today.getFullYear());
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+    const year = String(today.getFullYear())
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
 
   const handleDownloadPDF = async () => {
     settingsService
       .get()
       .then((response) => {
-        setSettings(response);
-        console.log("Settings fetched", response);
+        setSettings(response)
+        console.log('Settings fetched', response)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
 
     // Input Validation (Name)
-    let alertText = "";
+    let alertText = ''
     if (!report.user.name) {
       //setIsNameInvalid(true);
-      console.log("Invalid name field");
-      alertText += "Invalid name field.\n";
+      console.log('Invalid name field')
+      alertText += 'Invalid name field.\n'
     }
 
     // Input Validation (Expenses)
@@ -157,20 +151,20 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       // Expenses present
       if (project.expenses.length === 0) {
         alertText +=
-          `Required expenses in project: ${(index + 1).toString()}.` + "\n";
+          `Required expenses in project: ${(index + 1).toString()}.` + '\n'
       }
 
       // Name
-      if (project.name == "") {
+      if (project.name == '') {
         alertText +=
-          `Required name in project: ${(index + 1).toString()}.` + "\n";
+          `Required name in project: ${(index + 1).toString()}.` + '\n'
       }
 
       // Project Description
-      else if (project.name == "Sales/Proposals") {
-        if (project.description == undefined || project.description == "") {
+      else if (project.name == 'Sales/Proposals') {
+        if (project.description == undefined || project.description == '') {
           alertText +=
-            `Required description in project: ${project.name}.` + "\n";
+            `Required description in project: ${project.name}.` + '\n'
         }
       }
 
@@ -180,7 +174,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
           alertText +=
             `Required cost category for expense ${(
               sub_index + 1
-            ).toString()} in project: ${project.name}.` + "\n";
+            ).toString()} in project: ${project.name}.` + '\n'
         }
 
         // Date
@@ -188,15 +182,15 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
           alertText +=
             `Required date for expense ${(
               sub_index + 1
-            ).toString()} in project: ${project.name}.` + "\n";
+            ).toString()} in project: ${project.name}.` + '\n'
         }
 
         // Cost
         if (
-          expense.costCategory != "Mileage" &&
-          expense.costCategory != "Per Diem"
+          expense.costCategory != 'Mileage' &&
+          expense.costCategory != 'Per Diem'
         ) {
-          const cost = expense.cost;
+          const cost = expense.cost
           if (
             !cost ||
             cost <= 0 ||
@@ -205,51 +199,51 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             alertText +=
               `Invalid cost for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
         }
 
         // Expense Description
         if (
-          expense.costCategory == "Client Entertainment" ||
-          expense.costCategory == "Other" ||
-          expense.costCategory == "Wellness" ||
-          expense.costCategory == "Company Events" ||
-          expense.costCategory == "Relocation" ||
-          expense.costCategory == "Job Site Material"
+          expense.costCategory == 'Client Entertainment' ||
+          expense.costCategory == 'Other' ||
+          expense.costCategory == 'Wellness' ||
+          expense.costCategory == 'Company Events' ||
+          expense.costCategory == 'Relocation' ||
+          expense.costCategory == 'Job Site Material'
         ) {
           if (!expense.description?.trim()) {
             alertText +=
               `Required description for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
         }
 
         // From + To
-        if (expense.costCategory == "Mileage") {
+        if (expense.costCategory == 'Mileage') {
           if (!expense.mileage) {
             alertText +=
               `Required valid location addresses for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
           if (!expense.fromLocation?.trim()) {
             alertText +=
               `Required origin for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
           if (!expense.toLocation?.trim()) {
             alertText +=
               `Required destination for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
         }
 
         // Per Diem
-        if (expense.costCategory == "Per Diem") {
+        if (expense.costCategory == 'Per Diem') {
           if (
             (expense.breakfast === false || expense.breakfast === undefined) &&
             (expense.lunch === false || expense.lunch === undefined) &&
@@ -258,62 +252,62 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             alertText +=
               `Required at least 1 meal for expense ${(
                 sub_index + 1
-              ).toString()} in project: ${project.name}.` + "\n";
+              ).toString()} in project: ${project.name}.` + '\n'
           }
         }
-      });
-    });
+      })
+    })
 
     // Alert bad input
-    console.log("alertText", alertText);
-    if (alertText != "") {
-      alert(alertText);
-      alertText = "";
-      return;
+    console.log('alertText', alertText)
+    if (alertText != '') {
+      alert(alertText)
+      alertText = ''
+      return
     }
 
-    const pdfDoc = await PDFDocument.create();
+    const pdfDoc = await PDFDocument.create()
 
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-    const fontSize = 12;
-    const lineHeight = fontSize + 4;
-    const pageMargin = 50;
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+    const fontSize = 12
+    const lineHeight = fontSize + 4
+    const pageMargin = 50
 
-    let page = pdfDoc.addPage();
-    let currentY = page.getSize().height - pageMargin;
+    let page = pdfDoc.addPage()
+    let currentY = page.getSize().height - pageMargin
 
-    const logoImageBytes = await fetch("/images/ATEClogo.png").then((res) =>
+    const logoImageBytes = await fetch('/images/ATEClogo.png').then((res) =>
       res.arrayBuffer()
-    );
-    const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes);
+    )
+    const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes)
 
-    total.value = 0;
+    total.value = 0
     breakdown.forEach((item) => {
-      item.sum = 0;
-    });
+      item.sum = 0
+    })
 
     // Draw ATEC logo
     const drawTitleWithLogo = (
       page: PDFPage,
-      logoImage: any,
+      logoImage: PDFImage,
       rightMargin: number
     ) => {
-      const pageWidth = page.getSize().width;
+      const pageWidth = page.getSize().width
 
       // Image dimensions: 1883×785
-      const logoWidth = 125.5;
-      const logoHeight = 52.3;
+      const logoWidth = 125.5
+      const logoHeight = 52.3
 
       page.drawImage(logoImage, {
         x: pageWidth - rightMargin - logoWidth,
         y: currentY - logoHeight / 2,
         width: logoWidth,
         height: logoHeight,
-      });
+      })
 
-      currentY -= logoHeight / 2;
-    };
+      currentY -= logoHeight / 2
+    }
 
     // Print text with left and right indentation
     const drawTextWithAlignment = (
@@ -328,25 +322,25 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       rightMargin: number
     ) => {
       // Draw the left-aligned text
-      page.drawText(leftText, { x, y, size: fontSize, font, color });
+      page.drawText(leftText, { x, y, size: fontSize, font, color })
 
       // Calculate the position for the right-aligned text
-      const textWidth = font.widthOfTextAtSize(rightText, fontSize);
-      const pageWidth = page.getSize().width;
-      const rightX = pageWidth - rightMargin - textWidth;
+      const textWidth = font.widthOfTextAtSize(rightText, fontSize)
+      const pageWidth = page.getSize().width
+      const rightX = pageWidth - rightMargin - textWidth
 
       // Draw the right-aligned text
-      page.drawText(rightText, { x: rightX, y, size: fontSize, font, color });
-    };
+      page.drawText(rightText, { x: rightX, y, size: fontSize, font, color })
+    }
 
     // Project loop
     report.projects.forEach((project, index) => {
       if (currentY < lineHeight + pageMargin) {
-        page = pdfDoc.addPage();
-        currentY = page.getSize().height - pageMargin;
+        page = pdfDoc.addPage()
+        currentY = page.getSize().height - pageMargin
       }
-      drawTitleWithLogo(page, embeddedLogoImage, pageMargin);
-      currentY -= lineHeight;
+      drawTitleWithLogo(page, embeddedLogoImage, pageMargin)
+      currentY -= lineHeight
 
       drawTextWithAlignment(
         page,
@@ -358,7 +352,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         boldFont,
         rgb(0, 0, 0),
         pageMargin
-      );
+      )
       drawTextWithAlignment(
         page,
         ``,
@@ -369,12 +363,12 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         font,
         rgb(0, 0, 0),
         pageMargin
-      );
-      currentY -= lineHeight;
+      )
+      currentY -= lineHeight
       drawTextWithAlignment(
         page,
         `Billable: ${
-          project.name === "Sales/Proposals"
+          project.name === 'Sales/Proposals'
             ? `${project.description}`
             : project.name
         } | ${project.number}`,
@@ -385,7 +379,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         boldFont,
         rgb(0, 0, 0),
         pageMargin
-      );
+      )
       drawTextWithAlignment(
         page,
         ``,
@@ -396,8 +390,8 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         font,
         rgb(0, 0, 0),
         pageMargin
-      );
-      currentY -= lineHeight * 3;
+      )
+      currentY -= lineHeight * 3
 
       // Expense loop
       drawTextWithAlignment(
@@ -410,130 +404,130 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         boldFont,
         rgb(0, 0, 0),
         pageMargin
-      );
-      currentY -= lineHeight * 2;
+      )
+      currentY -= lineHeight * 2
 
       project.expenses.forEach((expense, index) => {
         // Mileage Calculation
-        if (expense.costCategory === "Mileage") {
-          const roundedMileage = Number(expense.mileage?.toFixed(1));
+        if (expense.costCategory === 'Mileage') {
+          const roundedMileage = Number(expense.mileage?.toFixed(1))
           if (expense.mileage) {
             if (expense.roundTrip) {
-              total.value += 2 * roundedMileage * settings.mileageRate;
+              total.value += 2 * roundedMileage * settings.mileageRate
             } else {
-              total.value += roundedMileage * settings.mileageRate;
+              total.value += roundedMileage * settings.mileageRate
             }
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
-            );
+            )
             if (exp) {
               if (expense.roundTrip) {
-                exp.sum += 2 * (roundedMileage * settings.mileageRate);
+                exp.sum += 2 * (roundedMileage * settings.mileageRate)
               } else {
-                exp.sum += roundedMileage * settings.mileageRate;
+                exp.sum += roundedMileage * settings.mileageRate
               }
             }
           }
           if (expense.roundTrip) {
-            expense.cost = 2 * (roundedMileage * settings.mileageRate);
+            expense.cost = 2 * (roundedMileage * settings.mileageRate)
           } else {
-            expense.cost = roundedMileage * settings.mileageRate;
+            expense.cost = roundedMileage * settings.mileageRate
           }
         }
         // Per Diem Calculation
-        else if (expense.costCategory === "Per Diem") {
-          expense.cost = 0;
+        else if (expense.costCategory === 'Per Diem') {
+          expense.cost = 0
           if (expense.breakfast) {
-            total.value += settings.perDiem.breakfast;
+            total.value += settings.perDiem.breakfast
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
-            );
+            )
             if (exp) {
-              exp.sum += settings.perDiem.breakfast;
+              exp.sum += settings.perDiem.breakfast
             }
-            expense.cost += settings.perDiem.breakfast;
+            expense.cost += settings.perDiem.breakfast
           }
           if (expense.lunch) {
-            total.value += settings.perDiem.lunch;
+            total.value += settings.perDiem.lunch
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
-            );
+            )
             if (exp) {
-              exp.sum += settings.perDiem.lunch;
+              exp.sum += settings.perDiem.lunch
             }
-            expense.cost += settings.perDiem.lunch;
+            expense.cost += settings.perDiem.lunch
           }
           if (expense.dinner) {
-            total.value += settings.perDiem.dinner;
+            total.value += settings.perDiem.dinner
 
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
-            );
+            )
             if (exp) {
-              exp.sum += settings.perDiem.dinner;
+              exp.sum += settings.perDiem.dinner
             }
-            expense.cost += settings.perDiem.dinner;
+            expense.cost += settings.perDiem.dinner
           }
         }
         // Standard Cost Category Calculations
         else {
           if (
             expense.cost &&
-            typeof expense.cost === "number" &&
+            typeof expense.cost === 'number' &&
             expense.cost >= 0
           ) {
-            total.value += expense.cost;
+            total.value += expense.cost
             const exp = breakdown.find(
               (b) => b.category === expense.costCategory
-            );
+            )
             if (exp) {
-              exp.sum += Number(expense.cost);
+              exp.sum += Number(expense.cost)
             }
           } else {
-            console.log("Invalid cost input");
+            console.log('Invalid cost input')
           }
         }
 
         const description =
-          (expense.costCategory || "N/A") + " | " + (expense.costCode || "N/A");
-        const amount = `$${(expense.cost?.toFixed(2) ?? "0.00").replace(
+          (expense.costCategory || 'N/A') + ' | ' + (expense.costCode || 'N/A')
+        const amount = `$${(expense.cost?.toFixed(2) ?? '0.00').replace(
           /\B(?=(\d{3})+(?!\d))/g,
-          ","
-        )}`;
+          ','
+        )}`
         //Constuct expense sub description
-        const subParts: string[] = [];
-        subParts.push(expense.date || "");
-        subParts.push(expense.purpose ?? "");
+        const subParts: string[] = []
+        subParts.push(expense.date || '')
+        subParts.push(expense.purpose ?? '')
         subParts.push(
-          expense.costCategory === "Per Diem"
-            ? (expense.breakfast ? `Breakfast` : "") +
-                (expense.lunch ? ` Lunch` : "") +
-                (expense.dinner ? ` Dinner` : "")
-            : ""
-        );
+          expense.costCategory === 'Per Diem'
+            ? (expense.breakfast ? `Breakfast` : '') +
+                (expense.lunch ? ` Lunch` : '') +
+                (expense.dinner ? ` Dinner` : '')
+            : ''
+        )
         subParts.push(
-          expense.costCategory === "Mileage"
-            ? "From " +
-                (expense.fromLocation ?? "N/A") +
-                " to " +
-                (expense.toLocation ?? "N/A")
-            : ""
-        );
+          expense.costCategory === 'Mileage'
+            ? 'From ' +
+                (expense.fromLocation ?? 'N/A') +
+                ' to ' +
+                (expense.toLocation ?? 'N/A')
+            : ''
+        )
         subParts.push(
-          expense.costCategory === "Mileage"
-            ? (Number(expense.mileage).toFixed(1) || "N/A") + " Miles"
-            : ""
-        );
-        console.log("subParts: ", subParts);
-        subParts.push(expense.description ?? "");
-        let subDescription = "";
+          expense.costCategory === 'Mileage'
+            ? (Number(expense.mileage).toFixed(1) || 'N/A') + ' Miles'
+            : ''
+        )
+        console.log('subParts: ', subParts)
+        subParts.push(expense.description ?? '')
+        let subDescription = ''
         for (let i = 0; i < subParts.length; i++) {
-          if (subParts[i] != "") {
-            subDescription += subParts[i];
+          if (subParts[i] != '') {
+            subDescription += subParts[i]
             for (let j = i; j < subParts.length; j++) {
-              if (i != j && subParts[j] != "") {
-                subDescription += " | ";
-                break;
+              if (i != j && subParts[j] != '') {
+                subDescription += ' | '
+                break
               }
             }
           }
@@ -541,8 +535,8 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
 
         // Draw the description and amount on the same line
         if (currentY < lineHeight + pageMargin) {
-          page = pdfDoc.addPage();
-          currentY = page.getSize().height - pageMargin;
+          page = pdfDoc.addPage()
+          currentY = page.getSize().height - pageMargin
         }
         drawTextWithAlignment(
           page,
@@ -554,24 +548,24 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
           font,
           rgb(0, 0, 0),
           pageMargin
-        );
-        currentY -= lineHeight;
+        )
+        currentY -= lineHeight
 
         //Sub description
         if (currentY < lineHeight + pageMargin) {
-          page = pdfDoc.addPage();
-          currentY = page.getSize().height - pageMargin;
+          page = pdfDoc.addPage()
+          currentY = page.getSize().height - pageMargin
         }
-        let subDescriptionLines = "";
+        let subDescriptionLines = ''
         for (let i = 0; i < subDescription.length; i++) {
-          subDescriptionLines += subDescription[i];
+          subDescriptionLines += subDescription[i]
           if (i % 100 == 0 && i != 0) {
             if (currentY < lineHeight + pageMargin) {
-              page = pdfDoc.addPage();
-              currentY = page.getSize().height - pageMargin;
+              page = pdfDoc.addPage()
+              currentY = page.getSize().height - pageMargin
             }
-            if (i != subDescription.length && subDescription[i] != " ") {
-              subDescriptionLines += "-";
+            if (i != subDescription.length && subDescription[i] != ' ') {
+              subDescriptionLines += '-'
             }
             page.drawText(subDescriptionLines, {
               x: pageMargin,
@@ -579,15 +573,15 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
               size: fontSize * 0.8,
               font,
               color: rgb(0.5, 0.5, 0.5), // Grey
-            });
-            currentY -= lineHeight;
-            subDescriptionLines = "";
+            })
+            currentY -= lineHeight
+            subDescriptionLines = ''
           }
         }
         if (subDescriptionLines.length != 0) {
           if (currentY < lineHeight + pageMargin) {
-            page = pdfDoc.addPage();
-            currentY = page.getSize().height - pageMargin;
+            page = pdfDoc.addPage()
+            currentY = page.getSize().height - pageMargin
           }
           page.drawText(subDescriptionLines, {
             x: pageMargin,
@@ -595,33 +589,33 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             size: fontSize * 0.8,
             font,
             color: rgb(0.5, 0.5, 0.5), // Grey
-          });
-          currentY -= lineHeight;
+          })
+          currentY -= lineHeight
         }
 
         // Expense divider line
         if (index !== project.expenses.length - 1) {
           if (currentY < lineHeight + pageMargin) {
-            page = pdfDoc.addPage();
-            currentY = page.getSize().height - pageMargin;
+            page = pdfDoc.addPage()
+            currentY = page.getSize().height - pageMargin
           }
-          const pageWidth = page.getSize().width;
+          const pageWidth = page.getSize().width
           page.drawLine({
             start: { x: pageMargin, y: currentY },
             end: { x: pageWidth - pageMargin, y: currentY },
             thickness: 1,
             color: rgb(0, 0, 0.7), // Blue
-          });
-          currentY -= lineHeight;
-          currentY -= 0.5 * lineHeight;
+          })
+          currentY -= lineHeight
+          currentY -= 0.5 * lineHeight
         }
-      });
+      })
 
       //Print Total
-      currentY -= lineHeight;
+      currentY -= lineHeight
       if (currentY < lineHeight + pageMargin) {
-        page = pdfDoc.addPage();
-        currentY = page.getSize().height - pageMargin;
+        page = pdfDoc.addPage()
+        currentY = page.getSize().height - pageMargin
       }
       drawTextWithAlignment(
         page,
@@ -629,25 +623,25 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         `$${project.expenses
           .reduce((sum, exp) => sum + (exp.cost ?? 0), 0)
           .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}`,
+          .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`,
         pageMargin,
         currentY,
         fontSize,
         boldFont,
         rgb(0, 0, 0),
         pageMargin
-      );
-      currentY -= lineHeight;
+      )
+      currentY -= lineHeight
 
       // Breakdown
       if (currentY < lineHeight + pageMargin) {
-        page = pdfDoc.addPage();
-        currentY = page.getSize().height - pageMargin;
+        page = pdfDoc.addPage()
+        currentY = page.getSize().height - pageMargin
       }
-      currentY -= lineHeight;
+      currentY -= lineHeight
       drawTextWithAlignment(
         page,
-        "Breakdown",
+        'Breakdown',
         ``,
         pageMargin,
         currentY,
@@ -655,26 +649,26 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         font,
         rgb(0, 0, 0),
         pageMargin
-      );
-      currentY -= lineHeight;
+      )
+      currentY -= lineHeight
 
       if (currentY < lineHeight + pageMargin) {
-        page = pdfDoc.addPage();
-        currentY = page.getSize().height - pageMargin;
+        page = pdfDoc.addPage()
+        currentY = page.getSize().height - pageMargin
       }
-      const nonZeroItems = breakdown.filter((item) => item.sum !== 0);
+      const nonZeroItems = breakdown.filter((item) => item.sum !== 0)
       nonZeroItems.forEach((item) => {
         if (currentY < lineHeight + pageMargin) {
-          page = pdfDoc.addPage();
-          currentY = page.getSize().height - pageMargin;
+          page = pdfDoc.addPage()
+          currentY = page.getSize().height - pageMargin
         }
         // Breakdown total category
         drawTextWithAlignment(
           page,
-          item.category + (item.costCode ? " | " + item.costCode : ""),
-          `$${(item.sum.toFixed(2) || "0.00").replace(
+          item.category + (item.costCode ? ' | ' + item.costCode : ''),
+          `$${(item.sum.toFixed(2) || '0.00').replace(
             /\d(?=(\d{3})+\.)/g,
-            "$&,"
+            '$&,'
           )}`,
           pageMargin,
           currentY,
@@ -682,83 +676,83 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
           font,
           rgb(0.5, 0.5, 0.5),
           pageMargin
-        );
-        currentY -= lineHeight;
-      });
+        )
+        currentY -= lineHeight
+      })
 
       breakdown.forEach((item) => {
-        item.sum = 0;
-      });
+        item.sum = 0
+      })
 
       // New page
       if (index !== report.projects.length - 1) {
-        page = pdfDoc.addPage();
-        currentY = page.getSize().height - pageMargin;
+        page = pdfDoc.addPage()
+        currentY = page.getSize().height - pageMargin
       }
-    });
-    console.log(total.value);
+    })
+    console.log(total.value)
 
     // Gather all attachment files from all expenses
     const allAttachments = report.projects.flatMap((project) =>
       project.expenses.flatMap((expense) => expense.attachments ?? [])
-    );
+    )
     const filteredAttachments = sessionAttachments.filter((sessionAttachment) =>
       allAttachments.some(
         (dbAttachment) => dbAttachment.text === sessionAttachment.text
       )
-    );
-    console.log("db returned attachments", allAttachments);
-    console.log("used session attachments", sessionAttachments);
-    console.log("filtered session attachments", sessionAttachments);
+    )
+    console.log('db returned attachments', allAttachments)
+    console.log('used session attachments', sessionAttachments)
+    console.log('filtered session attachments', sessionAttachments)
 
     // Process each attachment
     for (const attachment of filteredAttachments) {
       if (attachment.file) {
         try {
-          const fileBytes = await attachment.file.arrayBuffer();
-          const fileType = attachment.file.type;
+          const fileBytes = await attachment.file.arrayBuffer()
+          const fileType = attachment.file.type
 
-          let uploadedPdfDoc;
+          let uploadedPdfDoc
 
-          if (fileType === "application/pdf") {
+          if (fileType === 'application/pdf') {
             // If the file is a PDF, load it directly
             uploadedPdfDoc = await PDFDocument.load(fileBytes, {
               ignoreEncryption: true,
-            });
+            })
           } else {
             // Convert non-PDF files to PDF format
-            const pdfBytes = await convertFileToPdf(attachment.file);
+            const pdfBytes = await convertFileToPdf(attachment.file)
             uploadedPdfDoc = await PDFDocument.load(pdfBytes, {
               ignoreEncryption: true,
-            });
+            })
           }
 
           // Copy pages from the attachment PDF to the main PDF document
           const copiedPages = await pdfDoc.copyPages(
             uploadedPdfDoc,
             uploadedPdfDoc.getPageIndices()
-          );
+          )
 
-          const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+          const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
           copiedPages.forEach((page) => {
-            pdfDoc.addPage(page);
+            pdfDoc.addPage(page)
 
             // Add a "post-it note" annotation to the page
-            console.log("text", attachment.id);
-            const noteText = attachment.id || "N/A";
-            const { width, height } = page.getSize();
-            const textSize = 12;
-            const padding = 5;
+            console.log('text', attachment.id)
+            const noteText = attachment.id || 'N/A'
+            const { width, height } = page.getSize()
+            const textSize = 12
+            const padding = 5
 
-            console.log(width); // used for keeping width variable
+            console.log(width) // used for keeping width variable
 
             // Measure the width of the text
-            const textWidth = font.widthOfTextAtSize(noteText, textSize);
-            const textHeight = textSize;
+            const textWidth = font.widthOfTextAtSize(noteText, textSize)
+            const textHeight = textSize
 
-            const boxX = 25;
-            const boxY = height - 25;
+            const boxX = 25
+            const boxY = height - 25
 
             // Draw semi-transparent background rectangle
             page.drawRectangle({
@@ -768,7 +762,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
               height: textHeight + padding * 2,
               color: rgb(0, 0, 0),
               opacity: 0.5, // 50% opacity for the background
-            });
+            })
 
             page.drawText(noteText, {
               x: 25,
@@ -776,46 +770,50 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
               size: textSize,
               color: rgb(1, 1, 1), // White color for visibility
               rotate: degrees(0), // Rotation
-            });
-          });
+            })
+          })
         } catch (error) {
-          console.error("Error processing attachment:", error);
+          console.error('Error processing attachment:', error)
         }
       }
     }
 
     // Save the combined PDF
-    const mergedPdfBytes = await pdfDoc.save();
-    const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
+    const mergedPdfBytes = await pdfDoc.save()
+    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
 
     // Create a link element and trigger a download
-    const link = document.createElement("a");
-    link.href = url;
+    const link = document.createElement('a')
+    link.href = url
     link.download =
-      "Expense Report - " + report.user.name + " - " + String(getCurrentDate()); // Add name reference
-    link.click();
-  };
+      'Expense Report - ' + report.user.name + ' - ' + String(getCurrentDate()) // Add name reference
+    link.click()
+  }
 
   return (
     <div className="flex flex-col space-y-4">
-          <div className="text-xl font-semibold">Finished?</div>
-      
-          <div className="text-gray-500 text-wrap">Save and email the generated report to your manager for approval.</div>
-        
-        {/* Download PDF button */}
-        <button
-          className="w-full self-center p-2 hover:text-ATECblue text-white shadow-md rounded-md hover:shadow-md border-white hover:bg-white bg-ATECblue border-2 hover:border-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
-          type="button"
-          onClick={(event) => {
-            handleSubmit(event); // Call handleSubmit to handle form submission
-            handleDownloadPDF(); // Then call handleDownloadPDF to generate the PDF
-          }}
-        >
-          Generate Report
-        </button>
-    </div>
-  );
-};
+      <div className="text-xl font-semibold">Finished?</div>
 
-export default PDF;
+      <div className="text-gray-500 text-wrap">
+        Save and email the generated report to your manager for approval.
+      </div>
+
+      {/* Download PDF button */}
+      <button
+        className="w-full self-center p-2 hover:text-ATECblue text-white shadow-md rounded-md hover:shadow-md border-white hover:bg-white bg-ATECblue border-2 hover:border-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
+        type="button"
+        onClick={() => {
+          handleDownloadPDF().catch((error: unknown) => {
+            console.error('Error while downloading PDF:', error)
+          })
+        }}
+      >
+        Generate Report
+      </button>
+    </div>
+  )
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export default PDF
