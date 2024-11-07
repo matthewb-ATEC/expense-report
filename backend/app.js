@@ -28,6 +28,10 @@ app.use(express.static("dist"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
+app.get("/health", (req, res) => {
+  res.send("ok");
+});
+
 app.use("/api/reports", reportsRouter);
 app.use("/api/reports", projectsRouter);
 app.use("/api/reports", expensesRouter);
