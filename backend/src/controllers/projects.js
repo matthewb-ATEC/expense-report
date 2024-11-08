@@ -2,122 +2,103 @@ import Report from '../models/report.js'
 import express from 'express'
 const projectsRouter = express.Router()
 
-projectsRouter.get('/:reportId/projects', async (request, response, next) => {
+projectsRouter.get('/:reportId/projects', async (request, response) => {
   const reportId = request.params.reportId
-  Report.findById(reportId)
-    .then((report) => {
-      response.json(report.projects)
-    })
-    .catch((error) => next(error))
+  const report = await Report.findById(reportId)
+  if (!report) {
+    return response.status(404).json({ error: 'Report not found' })
+  }
+  response.json(report.projects).status(200)
 })
 
 projectsRouter.get(
   '/:reportId/projects/:projectId',
-  async (request, response, next) => {
+  async (request, response) => {
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    Report.findById(reportId)
-      .then((report) => {
-        // If the report doesn't exist, return a 404 error
-        if (!report) {
-          return response.status(404).json({ error: 'Report not found' })
-        }
+    const report = await Report.findById(reportId)
 
-        const project = report.projects.find(
-          (project) => project.id === projectId
-        )
+    if (!report) {
+      return response.status(404).json({ error: 'Report not found' })
+    }
 
-        // If the project doesn't exist, return a 404 error
-        if (!project) {
-          return response.status(404).json({ error: 'Project not found' })
-        }
+    const project = report.projects.find((project) => project.id === projectId)
 
-        // Return the project details
-        response.json(project)
-      })
-      .catch((error) => next(error))
-  }
+    if (!project) {
+      return response.status(404).json({ error: 'Project not found' })
+    }
+
+    response.json(project)
+  },
 )
 
 projectsRouter.delete(
   '/:reportId/projects/:projectId',
-  (request, response, next) => {
+  async (request, response) => {
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    Report.findById(reportId)
-      .then((report) => {
-        // Filter out the project to delete
-        report.projects = report.projects.filter(
-          (project) => project.id !== projectId
-        )
+    const report = await Report.findById(reportId)
+    if (!report) {
+      return response.status(404).json({ error: 'Report not found' })
+    }
 
-        report
-          .save()
-          .then(() => {
-            response.status(204).end()
-          })
-          .catch((error) => next(error))
-      })
-      .catch((error) => next(error))
-  }
+    report.projects = report.projects.filter(
+      (project) => project.id !== projectId,
+    )
+
+    await report.save()
+    response.status(204).end()
+  },
 )
 
-projectsRouter.post('/:reportId/projects', (request, response, next) => {
+projectsRouter.post('/:reportId/projects', async (request, response) => {
   const reportId = request.params.reportId
 
-  Report.findById(reportId)
-    .then((report) => {
-      if (!report) {
-        return response.status(404).json({ error: 'Report not found' })
-      }
+  const report = await Report.findById(reportId)
 
-      const newProject = request.body // Capture the project data from the request body
+  if (!report) {
+    return response.status(404).json({ error: 'Report not found' })
+  }
 
-      // Push the new project into the report's projects array
-      report.projects.push(newProject)
+  const newProject = request.body
 
-      // Save the report with the new project
-      report
-        .save()
-        .then((updatedReport) => {
-          // Respond with the newly added project
-          const addedProject =
-            updatedReport.projects[updatedReport.projects.length - 1]
-          response.status(201).json(addedProject)
-        })
-        .catch((error) => next(error))
-    })
-    .catch((error) => next(error))
+  report.projects.push(newProject)
+
+  const updatedReport = await report.save()
+  const addedProject = updatedReport.projects[updatedReport.projects.length - 1]
+  response.status(201).json(addedProject)
 })
 
 projectsRouter.put(
   '/:reportId/projects/:projectId',
-  (request, response, next) => {
+  async (request, response) => {
     const reportId = request.params.reportId
     const projectId = request.params.projectId
 
-    Report.findById(reportId)
-      .then((report) => {
-        if (!report) {
-          return response.status(404).json({ error: 'Report not found' })
-        }
+    const report = await Report.findById(reportId)
 
-        const updatedProject = request.body
-        // Find the project to update
-        report.projects = report.projects.map((project) =>
-          project.id === projectId ? updatedProject : project
-        )
+    if (!report) {
+      return response.status(404).json({ error: 'Report not found' })
+    }
 
-        const result = report.projects.find(
-          (project) => project.id === projectId
-        )
+    const updatedProject = request.body
 
-        response.status(200).json(result)
-      })
-      .catch((error) => next(error))
-  }
+    /*
+    if (!report.projects.find((project) => project.id === projectId)) {
+      return response.status(404).json({ error: 'Project not found' })
+    }
+    */
+
+    report.projects = report.projects.map((project) =>
+      project.id === projectId ? updatedProject : project,
+    )
+
+    const result = report.projects.find((project) => project.id === projectId)
+
+    response.status(200).json(result)
+  },
 )
 
 export default projectsRouter

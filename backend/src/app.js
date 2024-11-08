@@ -1,6 +1,7 @@
 import express from 'express'
 const app = express()
 import cors from 'cors'
+import 'express-async-errors'
 import reportsRouter from './controllers/reports.js'
 import projectsRouter from './controllers/projects.js'
 import expensesRouter from './controllers/expenses.js'
