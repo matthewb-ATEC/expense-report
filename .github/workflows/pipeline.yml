@@ -60,7 +60,6 @@ jobs:
       # End to end tests
       - name: Start Backend for E2E tests
         run: |
-          run: |
           cd ./backend 
           npm run start:test &
           sleep 10
@@ -74,11 +73,12 @@ jobs:
       - name: Install Playwright browsers
         run: |
           cd ./end-to-end-tests
+          npm ci
           npx playwright install --with-deps
 
       - name: Run Playwright End-to-End Tests
         run: |
-          cd ../end-to-end-tests
+          cd ./end-to-end-tests
           npx playwright test
 
       - name: Upload Playwright report
