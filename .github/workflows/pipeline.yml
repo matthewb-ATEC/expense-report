@@ -29,13 +29,13 @@ jobs:
           npm ci
 
       - name: Lint Backend code
-        env:
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
         run: |
           cd ./backend
           npm run lint
 
       - name: Run unit tests for Backend
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
         run: |
           cd ./backend
           npm run test
