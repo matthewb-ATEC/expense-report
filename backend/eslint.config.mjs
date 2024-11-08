@@ -1,5 +1,3 @@
-import eslintPluginReact from 'eslint-plugin-react'
-
 export default [
   { ignores: ['dist'] },
   {
@@ -17,10 +15,6 @@ export default [
           jsx: true,
         },
       },
-    },
-    plugins: {
-      react: eslintPluginReact,
-      prettier: 'prettier',
     },
     rules: {
       indent: ['error', 2],
