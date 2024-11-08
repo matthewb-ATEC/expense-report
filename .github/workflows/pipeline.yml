@@ -58,7 +58,7 @@ jobs:
           npm run test
 
       # End to end tests
-      - name: Start Frontend for E2E tests
+      - name: Start Backend for E2E tests
         run: |
           run: |
           cd ./backend 
@@ -67,7 +67,7 @@ jobs:
 
       - name: Start Frontend for E2E tests
         run: |
-          cd ../frontend
+          cd ./frontend
           npm run dev &
           sleep 10
 
