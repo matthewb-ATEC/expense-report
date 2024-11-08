@@ -57,14 +57,28 @@ jobs:
           cd ./frontend
           npm run test
 
+      # End to end tests
+      - name: Start Frontend for E2E tests
+        run: |
+          run: |
+          cd ./backend 
+          npm run start:test &
+          sleep 10
+
+      - name: Start Frontend for E2E tests
+        run: |
+          cd ../frontend
+          npm run dev &
+          sleep 10
+
       - name: Install Playwright browsers
         run: |
-          cd ./frontend
+          cd ./end-to-end-tests
           npx playwright install --with-deps
 
       - name: Run Playwright End-to-End Tests
         run: |
-          cd ./frontend
+          cd ../end-to-end-tests
           npx playwright test
 
       - name: Upload Playwright report
@@ -72,7 +86,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
-          path: ./frontend/playwright-report/
+          path: ./end-to-end-tests/playwright-report/
           retention-days: 30
 
       # Deployment
