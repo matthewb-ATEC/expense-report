@@ -10,29 +10,29 @@
  * @relatedFiles ./components/Layout.tsx, ./components/ErrorPage.tsx, ./components/ExpenseReport.tsx, ./components/Settings.tsx
  */
 
-import Layout from "./components/Layout";
-import ErrorPage from "./components/ErrorPage";
-import ExpenseReport from "./components/ExpenseReport";
-import Settings from "./components/settings/Settings";
+import Layout from './components/Layout'
+import ErrorPage from './components/ErrorPage'
+import ExpenseReport from './components/ExpenseReport'
+import Settings from './components/settings/Settings'
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Layout />, // Use Layout to wrap components
+    path: '/',
+    element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/", element: <ExpenseReport /> },
-      { path: "/report", element: <ExpenseReport /> },
-      { path: "/settings", element: <Settings /> },
+      { path: '/', element: <ExpenseReport /> },
+      { path: '/report', element: <ExpenseReport /> },
+      { path: '/settings', element: <Settings /> },
     ],
   },
-]);
+])
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App

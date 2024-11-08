@@ -14,18 +14,18 @@
  *  - projects.ts: ../data/projects // Contains all project data
  */
 
-import React, { useCallback, useState } from "react";
-import { debounce } from "lodash";
-import { ProjectDropdownType, ProjectType } from "../data/types";
+import React, { useCallback, useState } from 'react'
+import { debounce } from 'lodash'
+import { ProjectDropdownType, ProjectType } from '../data/types'
 
 interface ProjectProps {
-  project: ProjectType;
-  selectedProject: ProjectType | null;
-  filteredProjects: { name: string; number: number }[];
-  handleProjectChange: (updatedProject: ProjectType) => void;
-  handleDeleteProject: (id: string) => void;
-  handleSelectedProjectChange: (newSelectedProject: ProjectType) => void;
-  allProjects: ProjectDropdownType[];
+  project: ProjectType
+  selectedProject: ProjectType | null
+  filteredProjects: { name: string; number: number }[]
+  handleProjectChange: (updatedProject: ProjectType) => void
+  handleDeleteProject: (id: string) => void
+  handleSelectedProjectChange: (newSelectedProject: ProjectType) => void
+  allProjects: ProjectDropdownType[]
 }
 
 const Project: React.FC<ProjectProps> = ({
@@ -37,22 +37,22 @@ const Project: React.FC<ProjectProps> = ({
   handleSelectedProjectChange,
   allProjects,
 }) => {
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>('')
 
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newName: string = event.target.value;
+    const newName: string = event.target.value
     const newNumber: number | undefined = allProjects.find(
       (project) => project.name === newName
-    )?.number;
+    )?.number
 
     const updatedProject: ProjectType = {
       ...project,
       number: newNumber,
       name: newName,
-    };
+    }
 
-    handleProjectChange(updatedProject);
-  };
+    handleProjectChange(updatedProject)
+  }
 
   // Use lodash debounce to delay the state update function
   const debouncedUpdate = useCallback(
@@ -60,29 +60,29 @@ const Project: React.FC<ProjectProps> = ({
       const updatedProject: ProjectType = {
         ...project,
         description: updatedDescription,
-      };
+      }
 
-      handleProjectChange(updatedProject);
+      handleProjectChange(updatedProject)
     }, 300),
     [project, handleProjectChange]
-  );
+  )
 
   const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setDescription(event.target.value); // Update local state immediately
-    debouncedUpdate(event.target.value); // Update parent state after debounce
-  };
+    setDescription(event.target.value) // Update local state immediately
+    debouncedUpdate(event.target.value) // Update parent state after debounce
+  }
 
   const getMinimizedProjectText = () => {
-    return project.name === "Sales/Proposals"
-      ? !project.description || project.description === ""
-        ? "No description"
+    return project.name === 'Sales/Proposals'
+      ? !project.description || project.description === ''
+        ? 'No description'
         : project.description
-      : project.name === ""
-      ? "Project unassigned"
-      : project.name;
-  };
+      : project.name === ''
+      ? 'Project unassigned'
+      : project.name
+  }
 
   if (selectedProject && project.id === selectedProject.id) {
     return (
@@ -101,20 +101,18 @@ const Project: React.FC<ProjectProps> = ({
               <option value="">Select a project</option>
               {project.name && (
                 <option value={project.name}>
-                  {/* eslint-disable-next-line @typescript-eslint/restrict-template-expressions*/}
                   {`${project.number} - ${project.name}`}
                 </option>
               )}
               {filteredProjects.map((project) => (
                 <option key={project.name} value={project.name}>
-                  {/* eslint-disable-next-line @typescript-eslint/restrict-template-expressions*/}
                   {`${project.number} - ${project.name}`}
                 </option>
               ))}
             </select>
           </div>
           <div className="flex flex-col items-start space-y-2">
-            {project.name === "Sales/Proposals" && (
+            {project.name === 'Sales/Proposals' && (
               <>
                 <label
                   className="text-gray-600 text-nowrap"
@@ -136,15 +134,15 @@ const Project: React.FC<ProjectProps> = ({
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
               onClick={() => {
-                handleDeleteProject(project.id);
+                handleDeleteProject(project.id)
               }}
             >
               Delete
             </button>
-            {project.name !== "" && (
+            {project.name !== '' && (
               <button
                 onClick={() => {
-                  handleSelectedProjectChange(project);
+                  handleSelectedProjectChange(project)
                 }}
                 className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
               >
@@ -154,7 +152,7 @@ const Project: React.FC<ProjectProps> = ({
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -163,7 +161,7 @@ const Project: React.FC<ProjectProps> = ({
         <div className="text-gray-600">{getMinimizedProjectText()}</div>
         <button
           onClick={() => {
-            handleSelectedProjectChange(project);
+            handleSelectedProjectChange(project)
           }}
           className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
         >
@@ -171,7 +169,7 @@ const Project: React.FC<ProjectProps> = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Project;
+export default Project
