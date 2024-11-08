@@ -55,7 +55,6 @@ const Project: React.FC<ProjectProps> = ({
   }
 
   // Use lodash debounce to delay the state update function
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = useCallback(
     debounce((updatedDescription: string) => {
       const updatedProject: ProjectType = {
