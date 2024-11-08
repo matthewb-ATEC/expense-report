@@ -59,6 +59,8 @@ jobs:
 
       # End to end tests
       - name: Start Backend for E2E tests
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
         run: |
           cd ./backend 
           npm run start:test &
