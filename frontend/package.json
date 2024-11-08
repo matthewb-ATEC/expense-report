@@ -9,23 +9,28 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "server": "json-server -p3001 --watch ./src/data/db.json"
+    "server": "json-server -p3001 --watch ./src/data/db.json",
+    "test": "vitest run"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.8",
     "@react-google-maps/api": "^2.19.3",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
     "axios": "^1.7.7",
-    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react": "^7.37.2",
     "lodash": "^4.17.21",
     "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-router-dom": "6.14.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.9",
     "@eslint/js": "^9.14.0",
     "@stylistic/eslint-plugin": "^2.10.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "^4.17.10",
     "@types/node": "^22.7.4",
@@ -36,13 +41,15 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.14.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.9.0",
+    "jsdom": "^25.0.1",
     "json-server": "^1.0.0-beta.3",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.13.0",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vitest": "^2.1.4"
   }
 }

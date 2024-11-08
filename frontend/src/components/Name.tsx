@@ -25,7 +25,6 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
   const [name, setName] = useState(report.user.name)
 
   // Use lodash debounce to delay the state update function
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = useCallback(
     debounce((updatedName: string) => {
       const updatedUser: UserType = {
