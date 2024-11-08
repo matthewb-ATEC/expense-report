@@ -6,6 +6,7 @@ import reportsRouter from './controllers/reports.js'
 import projectsRouter from './controllers/projects.js'
 import expensesRouter from './controllers/expenses.js'
 import settingsRouter from './controllers/settings.js'
+import testingRouter from './controllers/testing.js'
 import { MONGODB_URI } from './utils/config.js'
 import {
   requestLogger,
@@ -35,6 +36,10 @@ app.use(requestLogger)
 app.get('/health', (req, res) => {
   res.send('ok')
 })
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', testingRouter)
+}
 
 app.use('/api/reports', reportsRouter)
 app.use('/api/reports', projectsRouter)
