@@ -22,30 +22,30 @@ jobs:
       - name: Set up Node.js for Backend
         uses: actions/setup-node@v4
         with:
-          node-version: '23.1.0'
+          node-version: '16.20.2'
 
       - name: Install Backend dependencies
+        working-directory: backend
         run: |
-          cd ./backend
           npm ci
 
       - name: Lint Backend code
+        working-directory: backend
         run: |
-          cd ./backend
           npm run lint
 
       - name: Run unit tests for Backend
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+        working-directory: backend
         run: |
-          cd ./backend
           npm run test
 
       # Frontend
       - name: Set up Node.js for Frontend
         uses: actions/setup-node@v4
         with:
-          node-version: '23.1.0'
+          node-version: '16.20.2'
 
       - name: Install Frontend dependencies
         run: |
