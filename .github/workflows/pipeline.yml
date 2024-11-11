@@ -48,17 +48,24 @@ jobs:
           node-version: '18.20.4'
 
       - name: Install Frontend dependencies
+        working-directory: frontend
         run: |
-          cd ./frontend
           npm ci
 
       - name: Run unit tests for Frontend
+        working-directory: frontend
         run: |
-          cd ./frontend
           npm run test
 
       # End to end tests
-      - name: Start Servers and run E2E tests
+      - name: (Minimal) Run end to end tests
+        working-directory: end-to-end-tests
+        run: |
+          npm ci
+          npx playwright install --with-deps
+          npm run test
+
+      - name: Run end to end tests
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           PORT: 3001
@@ -77,8 +84,8 @@ jobs:
 
       # Deployment
       - name: Build Frontend UI
+        working-directory: frontend
         run: |
-          cd ./frontend
           npm run build
 
       - name: Copy Frontend build to Backend
@@ -91,8 +98,8 @@ jobs:
 
       - name: Deploy to Fly.io
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
+        working-directory: backend
         run: |
-          cd ./backend
           flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
