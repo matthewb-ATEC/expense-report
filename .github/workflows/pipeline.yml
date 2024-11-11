@@ -58,12 +58,19 @@ jobs:
           npm run test
 
       # End to end tests
-      - name: Start Backend and Frontend for E2E tests
+      - name: Start Backend for E2E tests
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          PORT: 3001
+        working-directory: ./backend
         run: |
-          cd ./backend && nohup npm run start:test
-          cd ./frontend && nohup npm run dev
+          nohup npm run start:test
+          sleep 2
+
+      - name: Start Frontend for E2E tests
+        working-directory: ./frontend
+        run: |
+          nohup npm run dev
           sleep 2
 
       - name: Run Playwright End-to-End Tests
