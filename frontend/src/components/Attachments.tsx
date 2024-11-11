@@ -12,14 +12,14 @@
  * @relatedFiles This component is often used in conjunction with `ExpenseForm.tsx` or other components that manage expenses and their details.
  */
 
-import React, { ChangeEvent } from "react";
-import { AttachmentType, ExpenseType } from "../data/types";
-import Attachment from "./Attachment";
-import { sessionAttachments } from "../data/results";
+import React, { ChangeEvent } from 'react'
+import { AttachmentType, ExpenseType } from '../data/types'
+import Attachment from './Attachment'
+import { sessionAttachments } from '../data/results'
 
 interface AttachmentsProps {
-  expense: ExpenseType & { attachments?: AttachmentType[] };
-  handleExpenseChange: (updatedExpense: ExpenseType) => void;
+  expense: ExpenseType & { attachments?: AttachmentType[] }
+  handleExpenseChange: (updatedExpense: ExpenseType) => void
 }
 
 const Attachments: React.FC<AttachmentsProps> = ({
@@ -27,51 +27,51 @@ const Attachments: React.FC<AttachmentsProps> = ({
   handleExpenseChange,
 }) => {
   const handleAddAttachment = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+    const files = event.target.files
 
     if (!files) {
-      console.log("No files");
-      return;
+      console.log('No files')
+      return
     }
 
     const newAttachments: AttachmentType[] = Array.from(files).map((file) => ({
-      id: expense.date || "no date",
+      id: expense.date || 'no date',
       file,
-      text: Math.random().toString(36).substr(2, 9),
-    }));
+      text: Math.random().toString(36).slice(2, 11),
+    }))
 
-    sessionAttachments.push(...newAttachments);
-    console.log("sessionAttachments after addition:", sessionAttachments);
+    sessionAttachments.push(...newAttachments)
+    console.log('sessionAttachments after addition:', sessionAttachments)
 
     const updatedExpense: ExpenseType = {
       ...expense,
       attachments: expense.attachments
         ? [...expense.attachments, ...newAttachments]
         : newAttachments,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   const handleDeleteAttachment = (text: string | undefined) => {
-    if (!text) return;
+    if (!text) return
 
     const updatedAttachments = sessionAttachments.filter(
       (attachment) => attachment.text !== text
-    );
+    )
 
-    sessionAttachments.length = 0; // Clear the array
-    sessionAttachments.push(...updatedAttachments); // Add updated attachments
+    sessionAttachments.length = 0 // Clear the array
+    sessionAttachments.push(...updatedAttachments) // Add updated attachments
 
-    console.log("sessionAttachments after deletion:", sessionAttachments);
+    console.log('sessionAttachments after deletion:', sessionAttachments)
 
     const updatedExpense: ExpenseType = {
       ...expense,
       attachments: expense.attachments?.filter(
         (attachment) => attachment.text !== text
       ),
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   return (
     <>
@@ -96,7 +96,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               onClick={() => {
-                handleDeleteAttachment(attachment.text);
+                handleDeleteAttachment(attachment.text)
               }}
             >
               Delete
@@ -105,7 +105,7 @@ const Attachments: React.FC<AttachmentsProps> = ({
         ))}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Attachments;
+export default Attachments

@@ -12,56 +12,55 @@
  * @relatedFiles Parent components like `ExpenseForm.tsx`, and types file `types.ts` for `ExpenseType`.
  */
 
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { ExpenseType } from "../../data/types";
-import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import { Libraries } from "@react-google-maps/api/dist/utils/make-load-script-url";
+import React, { ChangeEvent, useEffect, useState } from 'react'
+import { ExpenseType } from '../../data/types'
+import { useJsApiLoader, Autocomplete } from '@react-google-maps/api'
+import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url'
 
 interface MileageProps {
-  expense: ExpenseType;
-  handleExpenseChange: (updatedExpense: ExpenseType) => void;
+  expense: ExpenseType
+  handleExpenseChange: (updatedExpense: ExpenseType) => void
 }
 
-const libraries: Libraries = ["places"];
+const libraries: Libraries = ['places']
 
 const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
   const [fromAutocomplete, setFromAutocomplete] =
-    useState<google.maps.places.Autocomplete | null>(null);
+    useState<google.maps.places.Autocomplete | null>(null)
   const [toAutocomplete, setToAutocomplete] =
-    useState<google.maps.places.Autocomplete | null>(null);
+    useState<google.maps.places.Autocomplete | null>(null)
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, // Update here
     libraries,
-  });
+  })
 
   useEffect(() => {
     const updatedExpense: ExpenseType = {
       ...expense,
-      purpose: "Business",
-    };
+      purpose: 'Business',
+    }
 
-    handleExpenseChange(updatedExpense);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    handleExpenseChange(updatedExpense)
+  }, [])
 
   const calculateMileage = (expense: ExpenseType) => {
     if (!expense.fromLocation || !expense.toLocation) {
-      console.log("Cannot calculate mileage without both locations.");
-      console.log("From", expense.fromLocation, "To", expense.toLocation);
-      return;
+      console.log('Cannot calculate mileage without both locations.')
+      console.log('From', expense.fromLocation, 'To', expense.toLocation)
+      return
     }
 
     if (!fromAutocomplete || !toAutocomplete) {
-      console.log("Locations must be autocompleted from the google maps API.");
-      console.log("From", expense.fromLocation, "To", expense.toLocation);
-      return;
+      console.log('Locations must be autocompleted from the google maps API.')
+      console.log('From', expense.fromLocation, 'To', expense.toLocation)
+      return
     }
 
-    const fromLocation = expense.fromLocation;
-    const toLocation = expense.toLocation;
+    const fromLocation = expense.fromLocation
+    const toLocation = expense.toLocation
 
-    const service = new google.maps.DistanceMatrixService();
+    const service = new google.maps.DistanceMatrixService()
 
     service
       .getDistanceMatrix({
@@ -70,80 +69,80 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         travelMode: google.maps.TravelMode.DRIVING,
       })
       .then((response) => {
-        const distanceElement = response.rows[0]?.elements[0];
+        const distanceElement = response.rows[0]?.elements[0]
 
-        const distanceInMeters = distanceElement.distance.value;
+        const distanceInMeters = distanceElement.distance.value
         if (distanceInMeters) {
-          const distanceInMiles = distanceInMeters / 1609.34; // Convert meters to miles
+          const distanceInMiles = distanceInMeters / 1609.34 // Convert meters to miles
 
           const updatedExpense: ExpenseType = {
             ...expense,
             mileage: distanceInMiles,
-          };
-          handleExpenseChange(updatedExpense);
+          }
+          handleExpenseChange(updatedExpense)
 
           console.log(
             `Mileage from ${fromLocation} to ${toLocation}: ${String(
               distanceInMiles
             )}`
-          );
+          )
         } else {
-          console.error("Distance value is not available.");
+          console.error('Distance value is not available.')
         }
       })
       .catch((error: unknown) => {
-        console.error("An error occurred while calculating mileage:", error);
-      });
-  };
+        console.error('An error occurred while calculating mileage:', error)
+      })
+  }
 
   const onFromPlaceChanged = () => {
     if (fromAutocomplete) {
-      const place = fromAutocomplete.getPlace();
+      const place = fromAutocomplete.getPlace()
       const updatedExpense: ExpenseType = {
         ...expense,
-        fromLocation: place.formatted_address ?? "",
-      };
-      handleExpenseChange(updatedExpense);
-      calculateMileage(updatedExpense);
+        fromLocation: place.formatted_address ?? '',
+      }
+      handleExpenseChange(updatedExpense)
+      calculateMileage(updatedExpense)
     } else {
       const updatedExpense: ExpenseType = {
         ...expense,
         mileage: undefined,
-      };
-      handleExpenseChange(updatedExpense);
+      }
+      handleExpenseChange(updatedExpense)
     }
-  };
+  }
 
   const onToPlaceChanged = () => {
     if (toAutocomplete) {
-      const place = toAutocomplete.getPlace();
+      const place = toAutocomplete.getPlace()
       const updatedExpense: ExpenseType = {
         ...expense,
         toLocation: place.formatted_address,
-      };
-      handleExpenseChange(updatedExpense);
-      calculateMileage(updatedExpense);
+      }
+      handleExpenseChange(updatedExpense)
+      calculateMileage(updatedExpense)
     }
-  };
+  }
 
   const handlePurposeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
       purpose: event.target.value,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   const handleRoundTripChange = (event: ChangeEvent<HTMLInputElement>) => {
     const updatedExpense: ExpenseType = {
       ...expense,
       roundTrip: event.target.checked,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
@@ -169,7 +168,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <Autocomplete
           className="w-full"
           onLoad={(autocomplete) => {
-            setFromAutocomplete(autocomplete);
+            setFromAutocomplete(autocomplete)
           }}
           onPlaceChanged={onFromPlaceChanged}
         >
@@ -177,12 +176,12 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
             id="from"
-            value={expense.fromLocation ?? ""}
+            value={expense.fromLocation ?? ''}
             onChange={(event) => {
               handleExpenseChange({
                 ...expense,
                 fromLocation: event.target.value,
-              });
+              })
             }}
           />
         </Autocomplete>
@@ -193,7 +192,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         <Autocomplete
           className="w-full"
           onLoad={(autocomplete) => {
-            setToAutocomplete(autocomplete);
+            setToAutocomplete(autocomplete)
           }}
           onPlaceChanged={onToPlaceChanged}
         >
@@ -207,7 +206,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
                 ...expense,
                 toLocation: event.target.value,
                 mileage: undefined,
-              });
+              })
             }}
           />
         </Autocomplete>
@@ -223,7 +222,7 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
         />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Mileage;
+export default Mileage

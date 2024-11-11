@@ -1,50 +1,89 @@
-# React + TypeScript + Vite
+# Project Name
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
 
-Currently, two official plugins are available:
+This project is a TypeScript-based application that includes ESLint for linting and code quality, with configurations tailored for TypeScript, React, and Vitest for testing. The configuration ensures strict type checking, consistent coding styles, and proper handling of TypeScript files across the application, including test files.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Setup
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Make sure you have the following installed:
 
-- Configure the top-level `parserOptions` property like this:
+Node.js (preferably the latest LTS version)
+npm or Yarn
+TypeScript
+ESLint
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Install the dependencies:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd <project-directory>
+npm install
 ```
+
+or if you're using Yarn:
+
+```bash
+yarn install
+```
+
+### TypeScript Configuration
+
+tsconfig.json: Base TypeScript configuration for the project.
+tsconfig.app.json: Configuration for the application code.
+tsconfig.node.json: Configuration for Node.js related files.
+
+### ESLint Configuration
+
+ESLint is configured to lint TypeScript and React files. The configuration includes rules for consistent coding style, best practices, and type safety:
+
+Strict Type Checking: Ensures no unused variables or parameters.
+React Rules: Enforces best practices in React components.
+Stylistic Rules: Enforces consistent style like semicolons and strict assignment checks.
+The ESLint configuration includes support for TypeScript (typescript-eslint), React hooks (eslint-plugin-react-hooks), and React Refresh (eslint-plugin-react-refresh).
+
+### Linting
+
+To run ESLint on your project files:
+
+```bash
+npm run lint
+```
+
+This command will check for any linting issues based on the rules defined in .eslintrc.js.
+
+### Testing
+
+The project uses Vitest for testing. Test files are located in the tests/ directory and are automatically included in the configuration.
+
+To run the tests:
+
+```bash
+npm run test
+```
+
+### Scripts
+
+npm run lint: Run ESLint to check for code quality issues.
+npm run test: Run the tests with Vitest.
+
+## Contributing
+
+Fork the repository.
+Create a new branch for your feature or bugfix.
+Make your changes.
+Commit your changes and push your branch.
+Create a pull request to the main repository.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
