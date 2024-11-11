@@ -23,19 +23,15 @@ jobs:
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
         run: |
-          cd ./backend && nohup npm run start:test > backend.log 2>&1 &
-          cd ./frontend && nohup npm run dev > frontend.log 2>&1 &
+          cd ./backend && nohup npm run start:test
+          cd ./frontend && nohup npm run dev
           sleep 2
 
-      - name: Install Playwright browsers
+      - name: Run Playwright End-to-End Tests
+        working-directory: ./end-to-end-tests
         run: |
-          cd ./end-to-end-tests
           npm ci
           npx playwright install --with-deps
-
-      - name: Run Playwright End-to-End Tests
-        run: |
-          cd ./end-to-end-tests
           npm run test
 
       - name: Upload Playwright report
