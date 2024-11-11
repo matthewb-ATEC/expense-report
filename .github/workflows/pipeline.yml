@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js for Backend
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '18.20.4'
 
       - name: Install Backend dependencies
         working-directory: backend
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Node.js for Frontend
         uses: actions/setup-node@v4
         with:
-          node-version: '16.20.2'
+          node-version: '18.20.4'
 
       - name: Install Frontend dependencies
         run: |
