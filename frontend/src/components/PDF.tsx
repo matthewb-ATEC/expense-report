@@ -29,6 +29,7 @@ import {
 } from 'pdf-lib'
 import { sessionAttachments, total, breakdown } from '../data/results'
 import settingsService from '../services/settingsService'
+import ATECLogo from '/images/ATEC-pdf-logo.png'
 
 interface PDFProps {
   report: ReportType
@@ -277,7 +278,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     let page = pdfDoc.addPage()
     let currentY = page.getSize().height - pageMargin
 
-    const logoImageBytes = await fetch('/images/ATEClogo.png').then((res) =>
+    const logoImageBytes = await fetch(ATECLogo).then((res) =>
       res.arrayBuffer()
     )
     const embeddedLogoImage = await pdfDoc.embedPng(logoImageBytes)
