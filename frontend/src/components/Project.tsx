@@ -38,6 +38,7 @@ const Project: React.FC<ProjectProps> = ({
   allProjects,
 }) => {
   const [description, setDescription] = useState<string>('')
+  const projectsThatRequireDescription = ['Sales/Proposals', 'Warranty']
 
   const handleNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newName: string = event.target.value
@@ -112,7 +113,7 @@ const Project: React.FC<ProjectProps> = ({
             </select>
           </div>
           <div className="flex flex-col items-start space-y-2">
-            {project.name === 'Sales/Proposals' && (
+            {projectsThatRequireDescription.includes(project.name) && (
               <>
                 <label
                   className="text-gray-600 text-nowrap"
