@@ -35,6 +35,8 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     libraries,
   })
 
+  console.log('GOOGLE MAPS KEY', import.meta.env.VITE_GOOGLE_MAPS_API_KEY)
+
   useEffect(() => {
     const updatedExpense: ExpenseType = {
       ...expense,
