@@ -232,7 +232,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
                 sub_index + 1
               ).toString()} in project: ${project.name}.` + '\n'
           }
-          if (!expense.fromLocation?.trim()) {
+          /*if (!expense.fromLocation?.trim()) {
             alertText +=
               `Required origin for expense ${(
                 sub_index + 1
@@ -243,7 +243,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
               `Required destination for expense ${(
                 sub_index + 1
               ).toString()} in project: ${project.name}.` + '\n'
-          }
+          }*/
         }
 
         // Per Diem
