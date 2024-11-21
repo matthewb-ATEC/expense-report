@@ -46,14 +46,14 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
 
   const calculateMileage = (expense: ExpenseType) => {
     if (!expense.fromLocation || !expense.toLocation) {
-      console.log('Cannot calculate mileage without both locations.')
-      console.log('From', expense.fromLocation, 'To', expense.toLocation)
+      //console.log('Cannot calculate mileage without both locations.')
+      //console.log('From', expense.fromLocation, 'To', expense.toLocation)
       return
     }
 
     if (!fromAutocomplete || !toAutocomplete) {
-      console.log('Locations must be autocompleted from the google maps API.')
-      console.log('From', expense.fromLocation, 'To', expense.toLocation)
+      //console.log('Locations must be autocompleted from the google maps API.')
+      //console.log('From', expense.fromLocation, 'To', expense.toLocation)
       return
     }
 
@@ -81,11 +81,11 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
           }
           handleExpenseChange(updatedExpense)
 
-          console.log(
+          /*console.log(
             `Mileage from ${fromLocation} to ${toLocation}: ${String(
               distanceInMiles
             )}`
-          )
+          )*/
         } else {
           console.error('Distance value is not available.')
         }
@@ -141,6 +141,8 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     handleExpenseChange(updatedExpense)
   }
 
+  const [mileageEntry, setMileageEntry] = useState<string>('Calculated')
+
   if (!isLoaded) {
     return <div>Loading...</div>
   }
@@ -164,53 +166,109 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
       </div>
 
       <div className="flex flex-col w-full items-start space-y-2">
-        <label>From</label>
-        <Autocomplete
-          className="w-full"
-          onLoad={(autocomplete) => {
-            setFromAutocomplete(autocomplete)
+        <label>Mileage Entry</label>
+        <select
+          className="p-2 w-full border-grey-300 border-b-2"
+          id="mileageEntry"
+          value={mileageEntry}
+          onChange={(event) => {
+            setMileageEntry(event.target.value)
           }}
-          onPlaceChanged={onFromPlaceChanged}
         >
-          <input
-            className="p-2 w-full border-grey-300 border-b-2"
-            type="text"
-            id="from"
-            value={expense.fromLocation ?? ''}
-            onChange={(event) => {
-              handleExpenseChange({
-                ...expense,
-                fromLocation: event.target.value,
-              })
-            }}
-          />
-        </Autocomplete>
+          <option value="" disabled>
+            Select a category
+          </option>
+          <option value="Calculated">Calculated</option>
+          <option value="Manual">Manual</option>
+        </select>
       </div>
 
-      <div className="flex flex-col w-full items-start space-y-2">
-        <label>To</label>
-        <Autocomplete
-          className="w-full"
-          onLoad={(autocomplete) => {
-            setToAutocomplete(autocomplete)
-          }}
-          onPlaceChanged={onToPlaceChanged}
-        >
+      {mileageEntry === 'Calculated' ? (
+        <>
+          <div className="flex flex-col w-full items-start space-y-2">
+            <label>From</label>
+            <Autocomplete
+              className="w-full"
+              onLoad={(autocomplete) => {
+                setFromAutocomplete(autocomplete)
+              }}
+              onPlaceChanged={onFromPlaceChanged}
+            >
+              <input
+                className="p-2 w-full border-grey-300 border-b-2"
+                type="text"
+                id="from"
+                value={expense.fromLocation ?? ''}
+                onChange={(event) => {
+                  handleExpenseChange({
+                    ...expense,
+                    fromLocation: event.target.value,
+                  })
+                }}
+              />
+            </Autocomplete>
+          </div>
+
+          <div className="flex flex-col w-full items-start space-y-2">
+            <label>To</label>
+            <Autocomplete
+              className="w-full"
+              onLoad={(autocomplete) => {
+                setToAutocomplete(autocomplete)
+              }}
+              onPlaceChanged={onToPlaceChanged}
+            >
+              <input
+                className="p-2 w-full border-grey-300 border-b-2"
+                type="text"
+                id="to"
+                value={expense.toLocation}
+                onChange={(event) => {
+                  handleExpenseChange({
+                    ...expense,
+                    toLocation: event.target.value,
+                    mileage: undefined,
+                  })
+                }}
+              />
+            </Autocomplete>
+          </div>
+
+          <div className="flex flex-col w-full items-start space-y-2">
+            <label>Mileage</label>
+            <input
+              className="p-2 w-full border-grey-300 border-b-2"
+              type="text"
+              id="mileage"
+              disabled
+              value={expense.mileage ?? ''}
+              onChange={(event) => {
+                handleExpenseChange({
+                  ...expense,
+                  mileage: Number(event.target.value),
+                })
+              }}
+            />
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col w-full items-start space-y-2">
+          <label>Mileage</label>
           <input
             className="p-2 w-full border-grey-300 border-b-2"
             type="text"
-            id="to"
-            value={expense.toLocation}
+            id="mileage"
+            placeholder="Enter mileage"
+            value={expense.mileage ?? ''}
             onChange={(event) => {
               handleExpenseChange({
                 ...expense,
-                toLocation: event.target.value,
-                mileage: undefined,
+                mileage: Number(event.target.value),
               })
             }}
           />
-        </Autocomplete>
-      </div>
+        </div>
+      )}
 
       <div className="flex w-full items-center justify-between">
         <label className="text-gray-600 text-nowrap">Round Trip</label>
