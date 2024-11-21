@@ -250,16 +250,6 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
               }}
             />
           </div>
-
-          <div className="flex w-full items-center justify-between">
-            <label className="text-gray-600 text-nowrap">Round Trip</label>
-            <input
-              type="checkbox"
-              id="roundTrip"
-              checked={expense.roundTrip}
-              onChange={handleRoundTripChange}
-            />
-          </div>
         </>
       ) : (
         <div className="flex flex-col w-full items-start space-y-2">
@@ -279,6 +269,16 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
           />
         </div>
       )}
+
+      <div className="flex w-full items-center justify-between">
+        <label className="text-gray-600 text-nowrap">Round Trip</label>
+        <input
+          type="checkbox"
+          id="roundTrip"
+          checked={expense.roundTrip}
+          onChange={handleRoundTripChange}
+        />
+      </div>
     </>
   )
 }
