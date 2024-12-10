@@ -33,6 +33,7 @@ export const breakdown = [
   { category: 'Relocation', costCode: '62-1008-TRV', sum: 0 },
   { category: 'Tolls', costCode: '62-1009-TRV', sum: 0 },
   { category: 'Wellness', costCode: '64-6161-OVH', sum: 0 },
+  { category: 'Auto Expense & Repairs', costCode: '64-6009', sum: 0 },
   { category: 'Other', costCode: '', sum: 0 },
 ]
 
