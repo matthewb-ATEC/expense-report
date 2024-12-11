@@ -286,9 +286,9 @@ const Settings = () => {
                 {isAdmin && (
                   <div>
                     <Header text="New Project" />
-                    <div className="w-full flex space-x-4 items-start">
+                    <div className="w-full grid grid-cols-[1fr_1fr_1fr] gap-x-4">
                       <input
-                        className="py-2 border-grey-300 border-b-2"
+                        className="py-2 w-full border-grey-300 border-b-2"
                         type="text"
                         placeholder="Project number"
                         value={
@@ -369,16 +369,16 @@ const Settings = () => {
                 {isAdmin && (
                   <div>
                     <Header text="New Cost Code" />
-                    <div className="w-full flex space-x-4 items-start">
+                    <div className="w-full grid grid-cols-[1fr_1fr_1fr] gap-x-4">
                       <input
-                        className="py-2 border-grey-300 border-b-2"
+                        className="py-2 w-full border-grey-300 border-b-2"
                         type="text"
                         placeholder="Cost code"
                         value={newCostCode.costCode}
                         onChange={handleCodeChange}
                       />
                       <input
-                        className="py-2 flex-grow border-grey-300 border-b-2"
+                        className="py-2 w-full border-grey-300 border-b-2"
                         type="text"
                         placeholder="Category"
                         value={newCostCode.category}
