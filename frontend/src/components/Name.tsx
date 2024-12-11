@@ -15,6 +15,8 @@
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import { debounce } from 'lodash'
 import { ReportType, UserType } from '../data/types'
+import { Title } from './Text'
+import Container from './Container'
 
 interface NameProps {
   report: ReportType
@@ -53,23 +55,21 @@ const Name: React.FC<NameProps> = ({ report, handleReportChange }) => {
   }
 
   return (
-    <div className="w-full flex flex-col space-y-4">
-      <div className="text-xl font-semibold">User Information</div>
-      <div className="p-8 bg-white border-gray-100 border-2 rounded-md shadow-md">
-        <div className="flex flex-col w-full items-start space-y-2">
-          <input
-            className="p-2 w-full border-grey-300 border-b-2"
-            type="text"
-            id="name"
-            placeholder="Full name"
-            name="name"
-            value={name}
-            onChange={handleNameChange}
-            onInput={handleNameInput}
-          />
-        </div>
+    <Container>
+      <Title text="User Information" />
+      <div className="flex flex-col w-full items-start space-y-2">
+        <input
+          className="p-2 w-full border-grey-300 border-b-2"
+          type="text"
+          id="name"
+          placeholder="Full name"
+          name="name"
+          value={name}
+          onChange={handleNameChange}
+          onInput={handleNameInput}
+        />
       </div>
-    </div>
+    </Container>
   )
 }
 

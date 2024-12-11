@@ -30,7 +30,6 @@ const Attachments: React.FC<AttachmentsProps> = ({
     const files = event.target.files
 
     if (!files) {
-      console.log('No files')
       return
     }
 
@@ -41,7 +40,6 @@ const Attachments: React.FC<AttachmentsProps> = ({
     }))
 
     sessionAttachments.push(...newAttachments)
-    console.log('sessionAttachments after addition:', sessionAttachments)
 
     const updatedExpense: ExpenseType = {
       ...expense,
@@ -61,8 +59,6 @@ const Attachments: React.FC<AttachmentsProps> = ({
 
     sessionAttachments.length = 0 // Clear the array
     sessionAttachments.push(...updatedAttachments) // Add updated attachments
-
-    console.log('sessionAttachments after deletion:', sessionAttachments)
 
     const updatedExpense: ExpenseType = {
       ...expense,

@@ -18,44 +18,39 @@
  * @relatedFiles ../data/types (for `ReportType`)
  */
 
-import axios from "axios";
-import { ReportType } from "../data/types";
-const baseURL = "/api/reports";
+import axios from 'axios'
+import { ReportType } from '../data/types'
+const baseURL = '/api/reports'
 
 const get = async () => {
-  console.log("Getting all reports");
-  const request = axios.get<ReportType[]>(baseURL);
-  const response = await request;
-  return response.data;
-};
+  const request = axios.get<ReportType[]>(baseURL)
+  const response = await request
+  return response.data
+}
 
 const getID = async (id: string) => {
-  console.log(`Getting report ID: ${id}`);
-  const request = axios.get<ReportType>(`${baseURL}/${id}`);
-  const response = await request;
-  return response.data;
-};
+  const request = axios.get<ReportType>(`${baseURL}/${id}`)
+  const response = await request
+  return response.data
+}
 
 const create = async (newReport: ReportType) => {
-  console.log("Creating report");
-  const request = axios.post<ReportType>(baseURL, newReport);
-  const response = await request;
-  return response.data;
-};
+  const request = axios.post<ReportType>(baseURL, newReport)
+  const response = await request
+  return response.data
+}
 
 const updateID = async (id: string, updatedReport: ReportType) => {
-  console.log(`Updating report ID: ${id}`);
-  const request = axios.put<ReportType>(`${baseURL}/${id}`, updatedReport);
-  const response = await request;
-  return response.data;
-};
+  const request = axios.put<ReportType>(`${baseURL}/${id}`, updatedReport)
+  const response = await request
+  return response.data
+}
 
 const deleteID = async (id: string) => {
-  console.log(`Deleting report ID: ${id}`);
-  const request = axios.delete<ReportType>(`${baseURL}/${id}`);
-  const response = await request;
-  return response.data;
-};
+  const request = axios.delete<ReportType>(`${baseURL}/${id}`)
+  const response = await request
+  return response.data
+}
 
-const reportsService = { get, getID, create, updateID, deleteID };
-export default reportsService;
+const reportsService = { get, getID, create, updateID, deleteID }
+export default reportsService

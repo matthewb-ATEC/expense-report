@@ -11,132 +11,123 @@
  * @relatedFiles Related components include `Name.tsx`, `Projects.tsx`, `Expenses.tsx`, and `PDF.tsx`, which are utilized to build the complete expense reporting functionality.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   ExpenseType,
   ProjectDropdownType,
   ProjectType,
   ReportType,
   SettingsType,
-} from "../data/types";
-import reportsService from "../services/reportsService";
-import Name from "./Name";
-import Projects from "./Projects";
-import Expenses from "./Expenses";
-import PDF from "./PDF";
-import Loading from "./Loading";
-import settingsService from "../services/settingsService";
+} from '../data/types'
+import reportsService from '../services/reportsService'
+import Name from './Name'
+import Projects from './Projects'
+import Expenses from './Expenses'
+import PDF from './PDF'
+import Loading from './Loading'
+import settingsService from '../services/settingsService'
+import Body from './Body'
 
 const ExpenseReport: React.FC = () => {
-  const [report, setReport] = useState<ReportType>();
+  const [report, setReport] = useState<ReportType>()
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
-  );
+  )
   const [filteredProjects, setFilteredProjects] =
-    useState<ProjectDropdownType[]>();
-  const [settings, setSettings] = useState<SettingsType>();
+    useState<ProjectDropdownType[]>()
+  const [settings, setSettings] = useState<SettingsType>()
 
   useEffect(() => {
-    console.log("Initial useEffect");
     const newReport: ReportType = {
       id: undefined,
       user: {
-        name: "",
+        name: '',
       },
       projects: [],
-    };
+    }
 
     reportsService
       .create(newReport)
       .then((reponse) => {
-        console.log("Promise fulfilled");
-        console.log("Report set to", reponse);
-        setReport(reponse);
+        setReport(reponse)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
 
     settingsService
       .get()
       .then((settings) => {
-        console.log("settings.projects", settings.projects);
-        setFilteredProjects(settings.projects);
-        setSettings(settings);
+        setFilteredProjects(settings.projects)
+        setSettings(settings)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
-  }, []);
+        console.log(error)
+      })
+  }, [])
 
   const handleReportChange = (updatedReport: ReportType) => {
-    if (!updatedReport.id) return;
+    if (!updatedReport.id) return
 
     reportsService
       .updateID(updatedReport.id, updatedReport)
       .then((newReport) => {
-        console.log("Report updated", newReport);
-        setReport(newReport);
+        setReport(newReport)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 
   const handleProjectsChange = (updatedProjects: ProjectType[]) => {
-    if (!report) return;
+    if (!report) return
 
     const updatedReport: ReportType = {
       ...report,
       projects: updatedProjects,
-    };
+    }
 
-    handleReportChange(updatedReport);
-  };
+    handleReportChange(updatedReport)
+  }
 
   const handleProjectChange = (updatedProject: ProjectType) => {
-    if (!report) return;
-    console.log(`Project changed to`, updatedProject);
+    if (!report) return
 
     const updatedProjects: ProjectType[] = report.projects.map((project) =>
       project.id === updatedProject.id ? updatedProject : project
-    );
+    )
 
     const updatedReport: ReportType = {
       ...report,
       projects: updatedProjects,
-    };
+    }
 
-    handleReportChange(updatedReport);
-    setSelectedProject(updatedProject);
-    updateFilteredProjects(updatedProjects);
-  };
+    handleReportChange(updatedReport)
+    setSelectedProject(updatedProject)
+    updateFilteredProjects(updatedProjects)
+  }
 
   const handleExpensesChange = (updatedExpenses: ExpenseType[]) => {
-    console.log("Expenses changed to", updatedExpenses);
-
     if (!selectedProject) {
-      console.log("No project selected");
-      return;
+      return
     }
 
     const updatedProject: ProjectType = {
       ...selectedProject,
       expenses: updatedExpenses,
-    };
-    handleProjectChange(updatedProject);
-    setSelectedProject(updatedProject);
-  };
+    }
+    handleProjectChange(updatedProject)
+    setSelectedProject(updatedProject)
+  }
 
   const handleSelectedProjectChange = (
     newSelectedProject: ProjectType | null
   ) => {
-    setSelectedProject(newSelectedProject);
-    console.log("Selected project changed to", newSelectedProject);
-  };
+    setSelectedProject(newSelectedProject)
+  }
 
   const updateFilteredProjects = (updatedProjects: ProjectType[]) => {
-    if (!settings?.projects) return;
+    if (!settings?.projects) return
 
     const filteredProjects: ProjectDropdownType[] = settings.projects
       .filter(
@@ -145,20 +136,17 @@ const ExpenseReport: React.FC = () => {
       .map((project) => ({
         name: project.name,
         number: project.number, // Keep track of both name and number
-      }));
-    setFilteredProjects(filteredProjects);
-  };
+      }))
+    setFilteredProjects(filteredProjects)
+  }
 
-  console.log("report", report);
-  console.log("fitlered", filteredProjects);
-  console.log("settings", settings);
-  if (!report || !filteredProjects || !settings) return <Loading />;
+  if (!report || !filteredProjects || !settings) return <Loading />
 
   return (
-    <div className="h-full flex p-8 bg-gray-50 justify-center flex-grow">
+    <Body>
       <div
-        className={`flex w-11/12 lg:w-fit flex-col
-          ${report.projects.length > 0 ? "space-y-8" : "space-y-2"}`}
+        className={`
+          ${report.projects.length > 0 ? 'space-y-8' : 'space-y-2'}`}
       >
         <Name report={report} handleReportChange={handleReportChange} />
 
@@ -173,7 +161,7 @@ const ExpenseReport: React.FC = () => {
             handleProjectChange={handleProjectChange}
             allProjects={settings.projects}
           />
-          {selectedProject !== null && selectedProject.name !== "" && (
+          {selectedProject !== null && selectedProject.name !== '' && (
             <Expenses
               report={report}
               project={selectedProject}
@@ -187,8 +175,8 @@ const ExpenseReport: React.FC = () => {
           <PDF report={report} />
         )}
       </div>
-    </div>
-  );
-};
+    </Body>
+  )
+}
 
-export default ExpenseReport;
+export default ExpenseReport
