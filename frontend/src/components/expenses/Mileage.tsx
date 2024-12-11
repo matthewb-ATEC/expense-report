@@ -35,8 +35,6 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
     libraries,
   })
 
-  console.log('GOOGLE MAPS KEY', import.meta.env.VITE_GOOGLE_MAPS_API_KEY)
-
   useEffect(() => {
     const updatedExpense: ExpenseType = {
       ...expense,
@@ -48,14 +46,10 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
 
   const calculateMileage = (expense: ExpenseType) => {
     if (!expense.fromLocation || !expense.toLocation) {
-      //console.log('Cannot calculate mileage without both locations.')
-      //console.log('From', expense.fromLocation, 'To', expense.toLocation)
       return
     }
 
     if (!fromAutocomplete || !toAutocomplete) {
-      //console.log('Locations must be autocompleted from the google maps API.')
-      //console.log('From', expense.fromLocation, 'To', expense.toLocation)
       return
     }
 
@@ -82,12 +76,6 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             mileage: distanceInMiles,
           }
           handleExpenseChange(updatedExpense)
-
-          /*console.log(
-            `Mileage from ${fromLocation} to ${toLocation}: ${String(
-              distanceInMiles
-            )}`
-          )*/
         } else {
           console.error('Distance value is not available.')
         }

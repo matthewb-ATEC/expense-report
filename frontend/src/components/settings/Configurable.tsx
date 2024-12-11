@@ -13,13 +13,14 @@
  */
 
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState } from 'react'
+import { Header, Text } from '../Text'
 
 interface ConfigurableProps {
-  name: string;
-  value: number;
-  isAdmin: boolean;
-  onChange: (newValue: number) => void;
+  name: string
+  value: number
+  isAdmin: boolean
+  onChange: (newValue: number) => void
 }
 
 const Configurable: React.FC<ConfigurableProps> = ({
@@ -28,51 +29,47 @@ const Configurable: React.FC<ConfigurableProps> = ({
   isAdmin,
   onChange,
 }) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [newValue, setNewValue] = useState<string>(String(value));
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [newValue, setNewValue] = useState<string>(String(value))
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("New value", e.target.value);
-    const value = parseFloat(e.target.value);
-    setNewValue(e.target.value);
-    onChange(value);
-  };
+    const value = parseFloat(e.target.value)
+    setNewValue(e.target.value)
+    onChange(value)
+  }
 
   if (isEditing)
     return (
-      <div className="w-full flex flex-col space-y-2 items-start">
-        <div className="w-full flex justify-between">
-          <label className="text-gray-600 text-nowrap" htmlFor={name}>
-            {name}
-          </label>
-          <button
-            className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-            onClick={() => {
-              setIsEditing(!isEditing);
-            }}
-          >
-            Close
-          </button>
-        </div>
+      <div className="w-full flex space-x-4 items-center ">
+        <Header className="text-nowrap" text={name} />
         <input
-          className="p-2 w-full border-grey-300 border-b-2"
+          className="py-2 w-full border-grey-300 border-b-2"
           type="text"
           value={newValue}
           onChange={handleChange}
         />
+
+        <button
+          className="text-atec justify-self-end transform transition-transform duration-300 ease-in-out hover:scale-105"
+          onClick={() => {
+            setIsEditing(!isEditing)
+          }}
+        >
+          Close
+        </button>
       </div>
-    );
+    )
 
   return (
     <div className="w-full flex space-x-12 justify-between">
-      <div className="text-gray-600 text-nowrap">{name}</div>
-      <div className="flex space-x-2">
-        <div>${newValue}</div>
+      <Text text={name} />
+      <div className="flex space-x-4">
+        <Text className="text-text-primary" text={`$${newValue}`} />
         {isAdmin && (
           <button
-            className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+            className="text-atec transform transition-transform duration-300 ease-in-out hover:scale-105"
             onClick={() => {
-              setIsEditing(!isEditing);
+              setIsEditing(!isEditing)
             }}
           >
             Edit
@@ -80,7 +77,7 @@ const Configurable: React.FC<ConfigurableProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Configurable;
+export default Configurable

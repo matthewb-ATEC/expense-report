@@ -17,19 +17,21 @@
  */
 
 /* eslint-disable react/prop-types */
-import { ProjectDropdownType, ProjectType, ReportType } from "../data/types";
-import projectsService from "../services/projectsService";
-import Project from "./Project";
+import { ProjectDropdownType, ProjectType, ReportType } from '../data/types'
+import projectsService from '../services/projectsService'
+import Button from './Button'
+import Project from './Project'
+import { Subtitle, Title } from './Text'
 
 interface ProjectsProps {
-  report: ReportType;
-  selectedProject: ProjectType | null;
-  filteredProjects: { name: string; number: number }[];
-  handleProjectsChange: (updatedProjects: ProjectType[]) => void;
-  handleSelectedProjectChange: (newSelectedProject: ProjectType | null) => void;
-  updateFilteredProjects: (updatedProjects: ProjectType[]) => void;
-  handleProjectChange: (updatedProject: ProjectType) => void;
-  allProjects: ProjectDropdownType[];
+  report: ReportType
+  selectedProject: ProjectType | null
+  filteredProjects: { name: string; number: number }[]
+  handleProjectsChange: (updatedProjects: ProjectType[]) => void
+  handleSelectedProjectChange: (newSelectedProject: ProjectType | null) => void
+  updateFilteredProjects: (updatedProjects: ProjectType[]) => void
+  handleProjectChange: (updatedProject: ProjectType) => void
+  allProjects: ProjectDropdownType[]
 }
 
 const Projects: React.FC<ProjectsProps> = ({
@@ -42,72 +44,76 @@ const Projects: React.FC<ProjectsProps> = ({
   handleProjectChange,
   allProjects,
 }) => {
-  const handleAddProject = () => {
-    if (!report.id) return;
+  const handleAddProject = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    if (!report.id) return
 
     // Create the new default project
     const newProject: ProjectType = {
-      id: "",
+      id: '',
       number: undefined,
-      name: "",
+      name: '',
       expenses: [
         {
-          id: "",
-          date: "",
-          costCategory: "",
-          costCode: "",
+          id: '',
+          date: '',
+          costCategory: '',
+          costCode: '',
         },
       ],
-    };
+    }
 
     // Use the projects service to create the new project in the database
     projectsService
       .create(report.id, newProject)
       .then((createdProject) => {
-        console.log("Successfully created project", createdProject);
+        const updatedProjects = report.projects.concat(createdProject)
 
-        const updatedProjects = report.projects.concat(createdProject);
-
-        handleProjectsChange(updatedProjects);
-        handleSelectedProjectChange(createdProject);
+        handleProjectsChange(updatedProjects)
+        handleSelectedProjectChange(createdProject)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 
-  const handleDeleteProject = (id: string) => {
-    if (!report.id) return;
-
-    console.log(`Deleting project ID: ${id}`);
+  const handleDeleteProject = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
+    event.preventDefault()
+    if (!report.id) return
 
     projectsService
       .deleteProject(report.id, id)
       .then(() => {
         const updatedProjects = report.projects.filter(
           (project) => project.id !== id
-        );
-        handleProjectsChange(updatedProjects);
+        )
+        handleProjectsChange(updatedProjects)
 
         // Check if selectedProject exists in updatedProjects
         const selectedProjectExists = updatedProjects.some(
           (project) => project.id === selectedProject?.id
-        );
+        )
 
         // If selectedProject is not in updatedProjects, set it to null
-        if (!selectedProjectExists) handleSelectedProjectChange(null);
+        if (!selectedProjectExists) handleSelectedProjectChange(null)
 
-        updateFilteredProjects(updatedProjects);
+        updateFilteredProjects(updatedProjects)
       })
       .catch((error: unknown) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 
   return (
     <div className="w-full flex flex-col space-y-4">
       {report.projects.length > 0 && (
-        <div className="text-xl font-semibold">Projects</div>
+        <div className="flex flex-col space-y-2">
+          <Title text="Projects" />
+          <Subtitle text="Bill to the following projects" />
+        </div>
       )}
 
       <div className="flex flex-col space-y-4 max-h-64 overflow-y-auto md:max-h-full">
@@ -124,17 +130,19 @@ const Projects: React.FC<ProjectsProps> = ({
           />
         ))}
       </div>
-      <button
-        className="w-full self-center p-2 bg-white shadow-md rounded-md text-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
-        type="button"
-        onClick={() => {
-          handleAddProject();
-        }}
-      >
-        {report.projects.length <= 0 ? "Start Expense Report" : "Add Project"}
-      </button>
+      <div className="flex justify-center">
+        <Button
+          className="w-full md:w-fit"
+          text={
+            report.projects.length <= 0 ? 'Start Expense Report' : 'Add Project'
+          }
+          onClick={(event) => {
+            handleAddProject(event)
+          }}
+        />
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Projects;
+export default Projects
