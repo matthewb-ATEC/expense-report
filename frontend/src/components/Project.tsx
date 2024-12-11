@@ -79,7 +79,7 @@ const Project: React.FC<ProjectProps> = ({
   }
 
   const getMinimizedProjectText = () => {
-    return project.name === 'Sales/Proposals'
+    return projectsThatRequireDescription.includes(project.name)
       ? !project.description || project.description === ''
         ? 'No description'
         : project.description

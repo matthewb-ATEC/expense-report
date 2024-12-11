@@ -224,21 +224,19 @@ const Mileage: React.FC<MileageProps> = ({ expense, handleExpenseChange }) => {
             </Autocomplete>
           </div>
 
-          <div className="flex flex-col w-full items-start space-y-2">
+          <div className="flex w-full justify-between text-gray-500">
             <label>Mileage</label>
-            <input
-              className="p-2 w-full border-grey-300 border-b-2"
-              type="text"
-              id="mileage"
-              disabled
-              value={expense.mileage ?? ''}
-              onChange={(event) => {
-                handleExpenseChange({
-                  ...expense,
-                  mileage: Number(event.target.value),
-                })
-              }}
-            />
+            <div>
+              {expense.mileage
+                ? (
+                    Number(expense.mileage) *
+                    (expense.roundTrip != undefined && expense.roundTrip
+                      ? 2
+                      : 1)
+                  ).toFixed(0)
+                : 0}{' '}
+              miles
+            </div>
           </div>
         </>
       ) : (
