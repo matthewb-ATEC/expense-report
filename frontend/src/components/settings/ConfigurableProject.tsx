@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { ProjectDropdownType } from "../../data/types";
+import { useState } from 'react'
+import { ProjectDropdownType } from '../../data/types'
+import { Header, Text } from '../Text'
 
 interface ProjectDropdownProps {
-  project: ProjectDropdownType;
-  isAdmin: boolean;
-  onChange: (updatedProject: ProjectDropdownType) => void;
-  handleDeleteProject: (projectToDelete: ProjectDropdownType) => void;
+  project: ProjectDropdownType
+  isAdmin: boolean
+  onChange: (updatedProject: ProjectDropdownType) => void
+  handleDeleteProject: (projectToDelete: ProjectDropdownType) => void
 }
 
 const ConfigurableProject: React.FC<ProjectDropdownProps> = ({
@@ -15,84 +16,74 @@ const ConfigurableProject: React.FC<ProjectDropdownProps> = ({
   onChange,
   handleDeleteProject,
 }) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [newProject, setNewProject] = useState<ProjectDropdownType>(project);
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [newProject, setNewProject] = useState<ProjectDropdownType>(project)
 
   const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedProject: ProjectDropdownType = {
       ...newProject,
       number: Number(event.target.value),
-    };
-    setNewProject(updatedProject);
-    onChange(updatedProject);
-  };
+    }
+    setNewProject(updatedProject)
+    onChange(updatedProject)
+  }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedProject: ProjectDropdownType = {
       ...newProject,
       name: event.target.value,
-    };
-    setNewProject(updatedProject);
-    onChange(updatedProject);
-  };
+    }
+    setNewProject(updatedProject)
+    onChange(updatedProject)
+  }
 
   if (isEditing)
     return (
-      <div className="w-full flex space-x-4 items-start">
-        <div className="flex flex-col space-y-2">
-          <label className="text-gray-600 text-nowrap" htmlFor="number">
-            Number
-          </label>
-          <input
-            className="w-16 p-2 border-grey-300 border-b-2"
-            type="text"
-            value={newProject.number}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <div className="w-full flex flex-col space-y-2">
-          <label className="text-gray-600 text-nowrap" htmlFor="name">
-            Name
-          </label>
-          <input
-            className="p-2 w-full border-grey-300 border-b-2"
-            type="text"
-            value={newProject.name}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div className="h-full flex flex-col justify-between">
-          <button
-            className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
-            onClick={() => {
-              setIsEditing(!isEditing);
-            }}
-          >
-            Close
-          </button>
+      <div className="w-full grid grid-cols-[1fr_2fr_1fr] gap-x-4">
+        <Header text="Number" />
+        <Header className="col-span-2" text="Project" />
+        <input
+          className="py-2 border-grey-300 border-b-2"
+          type="text"
+          value={newProject.number === 0 ? undefined : newProject.number}
+          onChange={handleNumberChange}
+        />
+        <input
+          className="py-2 border-grey-300 border-b-2"
+          type="text"
+          value={newProject.name}
+          onChange={handleNameChange}
+        />
+        <div className="flex space-x-4 place-self-end">
           <button
             className="text-red-500 transform transition-transform duration-300 ease-in-out hover:scale-105"
             onClick={() => {
-              handleDeleteProject(project);
+              handleDeleteProject(project)
             }}
           >
             Delete
           </button>
+          <button
+            className="text-atec transform transition-transform duration-300 ease-in-out hover:scale-105"
+            onClick={() => {
+              setIsEditing(!isEditing)
+            }}
+          >
+            Close
+          </button>
         </div>
       </div>
-    );
+    )
 
   return (
     <div className="w-full flex justify-between space-x-4 items-start">
-      <div>
-        {newProject.number} - {newProject.name}
-      </div>
+      <Text text={`${newProject.number} - ${newProject.name}`} />
       {isAdmin && (
         <div className="flex space-x-4">
           <button
-            className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+            className="text-atec transform transition-transform duration-300 ease-in-out hover:scale-105"
             onClick={() => {
-              setIsEditing(!isEditing);
+              setIsEditing(!isEditing)
             }}
           >
             Edit
@@ -100,7 +91,7 @@ const ConfigurableProject: React.FC<ProjectDropdownProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ConfigurableProject;
+export default ConfigurableProject

@@ -23,7 +23,10 @@ interface ProjectProps {
   selectedProject: ProjectType | null
   filteredProjects: { name: string; number: number }[]
   handleProjectChange: (updatedProject: ProjectType) => void
-  handleDeleteProject: (id: string) => void
+  handleDeleteProject: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => void
   handleSelectedProjectChange: (newSelectedProject: ProjectType) => void
   allProjects: ProjectDropdownType[]
 }
@@ -134,8 +137,8 @@ const Project: React.FC<ProjectProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
-              onClick={() => {
-                handleDeleteProject(project.id)
+              onClick={(event) => {
+                handleDeleteProject(event, project.id)
               }}
             >
               Delete
@@ -145,7 +148,7 @@ const Project: React.FC<ProjectProps> = ({
                 onClick={() => {
                   handleSelectedProjectChange(project)
                 }}
-                className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+                className="text-atec transform transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 Details
               </button>
@@ -164,7 +167,7 @@ const Project: React.FC<ProjectProps> = ({
           onClick={() => {
             handleSelectedProjectChange(project)
           }}
-          className="text-ATECblue transform transition-transform duration-300 ease-in-out hover:scale-105"
+          className="text-atec transform transition-transform duration-300 ease-in-out hover:scale-105"
         >
           Details
         </button>

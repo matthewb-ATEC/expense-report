@@ -13,20 +13,18 @@
  * @relatedFiles Related components include `Nav.tsx`, `Header.tsx`, `Footer.tsx`, and any routed components that will be displayed within the `Layout`.
  */
 
-import Nav from "./Nav";
-import Header from "./Header";
-import Footer from "./Footer";
-import { Outlet } from "react-router-dom";
+import Nav from './Nav/Nav'
+import Footer from './Footer'
+import { Outlet } from 'react-router-dom'
 
 const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Nav />
-      <Header />
       <Outlet />
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

@@ -75,24 +75,21 @@ jobs:
           path: ./end-to-end-tests/playwright-report/
           retention-days: 30
 
-      # Deployment
-      - name: Build Frontend UI
-        working-directory: frontend
-        run: |
-          npm run build
-
-      - name: Copy Frontend build to Backend
-        run: |
-          rm -rf ./backend/dist && cp -r ./frontend/dist ./backend
-
+      # Combined Build and Deployment Step
       - name: Set up Flyctl
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Deploy to Fly.io
+      - name: Build and Deploy
         if: ${{ env.SHOULD_DEPLOY_AND_TAG == 'true' }}
-        working-directory: backend
         run: |
+          cd frontend
+          npm run build
+          cd ..
+
+          rm -rf ./backend/dist
+          cp -r ./frontend/dist ./backend
+
           flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

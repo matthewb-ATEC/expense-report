@@ -11,18 +11,21 @@
  * @relatedFiles This component is related to `Attachments.tsx`, `Description.tsx`, `PerDiem.tsx`, and `Mileage.tsx`, which provide additional functionality for specific expense types.
  */
 
-import { ChangeEvent, FC } from "react";
-import Description from "./expenses/Description";
-import PerDiem from "./expenses/PerDiem";
-import Mileage from "./expenses/Mileage";
-import { CostCodeDropdownType, ExpenseType } from "../data/types";
-import Attachments from "./Attachments";
+import { ChangeEvent, FC } from 'react'
+import Description from './expenses/Description'
+import PerDiem from './expenses/PerDiem'
+import Mileage from './expenses/Mileage'
+import { CostCodeDropdownType, ExpenseType } from '../data/types'
+import Attachments from './Attachments'
 
 interface ExpenseProps {
-  expense: ExpenseType;
-  costCodes: CostCodeDropdownType[];
-  handleExpenseChange: (updatedExpense: ExpenseType) => void;
-  handleDeleteExpense: (id: string) => void;
+  expense: ExpenseType
+  costCodes: CostCodeDropdownType[]
+  handleExpenseChange: (updatedExpense: ExpenseType) => void
+  handleDeleteExpense: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => void
 }
 
 const Expense: FC<ExpenseProps> = ({
@@ -32,44 +35,44 @@ const Expense: FC<ExpenseProps> = ({
   handleDeleteExpense,
 }) => {
   const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newDate = event.target.value;
+    const newDate = event.target.value
     const updatedExpense: ExpenseType = {
       ...expense,
       date: newDate,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newCostCategory = event.target.value;
+    const newCostCategory = event.target.value
     const newCostCode =
       costCodes.find((costCode) => costCode.category === newCostCategory)
-        ?.costCode ?? "";
+        ?.costCode ?? ''
 
     const updatedExpense: ExpenseType = {
       ...expense,
       costCategory: newCostCategory,
       costCode: newCostCode,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   const handleCostChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const cost = Number(event.target.value);
+    const cost = Number(event.target.value)
     const updatedExpense: ExpenseType = {
       ...expense,
       cost: cost,
-    };
-    handleExpenseChange(updatedExpense);
-  };
+    }
+    handleExpenseChange(updatedExpense)
+  }
 
   const showCostInput = () => {
     return (
       expense.costCategory &&
-      expense.costCategory !== "Mileage" &&
-      expense.costCategory !== "Per Diem"
-    );
-  };
+      expense.costCategory !== 'Mileage' &&
+      expense.costCategory !== 'Per Diem'
+    )
+  }
 
   const renderCostInput = () => (
     <>
@@ -84,14 +87,14 @@ const Expense: FC<ExpenseProps> = ({
             value={
               expense.cost !== undefined && expense.cost !== 0
                 ? expense.cost
-                : ""
+                : ''
             }
             onChange={handleCostChange}
           />
         </div>
       )}
     </>
-  );
+  )
 
   return (
     <div className="p-8 bg-white shadow-md border-gray-100 border-2 rounded-md">
@@ -134,67 +137,67 @@ const Expense: FC<ExpenseProps> = ({
           </div>
 
           {/* Conditional Rendering for Expense Type */}
-          {expense.costCategory === "Client Entertainment" && (
+          {expense.costCategory === 'Client Entertainment' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Per Diem" && (
+          {expense.costCategory === 'Per Diem' && (
             <PerDiem
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Job Site Material" && (
+          {expense.costCategory === 'Job Site Material' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Mileage" && (
+          {expense.costCategory === 'Mileage' && (
             <Mileage
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Wellness" && (
+          {expense.costCategory === 'Wellness' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Company Events" && (
+          {expense.costCategory === 'Company Events' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Relocation" && (
+          {expense.costCategory === 'Relocation' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Training" && (
+          {expense.costCategory === 'Training' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Office Expense" && (
+          {expense.costCategory === 'Office Expense' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Technology" && (
+          {expense.costCategory === 'Technology' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
             />
           )}
-          {expense.costCategory === "Other" && (
+          {expense.costCategory === 'Other' && (
             <Description
               expense={expense}
               handleExpenseChange={handleExpenseChange}
@@ -212,8 +215,8 @@ const Expense: FC<ExpenseProps> = ({
             <button
               className="text-red-500 text-nowrap transform transition-transform duration-300 ease-in-out hover:scale-105"
               type="button"
-              onClick={() => {
-                handleDeleteExpense(expense.id);
+              onClick={(event) => {
+                handleDeleteExpense(event, expense.id)
               }}
             >
               Delete
@@ -222,7 +225,7 @@ const Expense: FC<ExpenseProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Expense;
+export default Expense

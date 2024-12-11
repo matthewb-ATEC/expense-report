@@ -30,6 +30,9 @@ import {
 import { sessionAttachments, total, breakdown } from '../data/results'
 import settingsService from '../services/settingsService'
 import ATECLogo from '/images/ATEC-pdf-logo.png'
+import Button from './Button'
+import { Subtitle, Title } from './Text'
+import Container from './Container'
 
 interface PDFProps {
   report: ReportType
@@ -50,7 +53,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
       .get()
       .then((response) => {
         setSettings(response)
-        console.log('Settings fetched', response)
       })
       .catch((error: unknown) => {
         console.log(error)
@@ -128,12 +130,14 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     return `${year}-${month}-${day}`
   }
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault()
     settingsService
       .get()
       .then((response) => {
         setSettings(response)
-        console.log('Settings fetched', response)
       })
       .catch((error: unknown) => {
         console.log(error)
@@ -143,7 +147,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     let alertText = ''
     if (!report.user.name) {
       //setIsNameInvalid(true);
-      console.log('Invalid name field')
       alertText += 'Invalid name field.\n'
     }
 
@@ -263,7 +266,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     })
 
     // Alert bad input
-    console.log('alertText', alertText)
     if (alertText != '') {
       alert(alertText)
       alertText = ''
@@ -522,7 +524,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             ? (Number(expense.mileage).toFixed(1) || 'N/A') + ' Miles'
             : ''
         )
-        console.log('subParts: ', subParts)
         subParts.push(expense.description ?? '')
         let subDescription = ''
         for (let i = 0; i < subParts.length; i++) {
@@ -608,7 +609,7 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             start: { x: pageMargin, y: currentY },
             end: { x: pageWidth - pageMargin, y: currentY },
             thickness: 1,
-            color: rgb(0, 0, 0.7), // Blue
+            color: rgb(0.00392156862, 0.32156862745, 0.63137254902), // ATEC Blue
           })
           currentY -= lineHeight
           currentY -= 0.5 * lineHeight
@@ -694,7 +695,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         currentY = page.getSize().height - pageMargin
       }
     })
-    console.log(total.value)
 
     // Gather all attachment files from all expenses
     const allAttachments = report.projects.flatMap((project) =>
@@ -705,9 +705,6 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
         (dbAttachment) => dbAttachment.text === sessionAttachment.text
       )
     )
-    console.log('db returned attachments', allAttachments)
-    console.log('used session attachments', sessionAttachments)
-    console.log('filtered session attachments', sessionAttachments)
 
     // Process each attachment
     for (const attachment of filteredAttachments) {
@@ -743,13 +740,10 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
             pdfDoc.addPage(page)
 
             // Add a "post-it note" annotation to the page
-            console.log('text', attachment.id)
             const noteText = attachment.id || 'N/A'
-            const { width, height } = page.getSize()
+            const { height } = page.getSize()
             const textSize = 12
             const padding = 5
-
-            console.log(width) // used for keeping width variable
 
             // Measure the width of the text
             const textWidth = font.widthOfTextAtSize(noteText, textSize)
@@ -795,28 +789,31 @@ const PDF: React.FC<PDFProps> = ({ report }) => {
     link.click()
   }
 
-  return (
-    <div className="flex flex-col space-y-4">
-      <div className="text-xl font-semibold">Finished?</div>
+  if (report.projects.length > 0)
+    return (
+      <div className="flex flex-col space-y-4">
+        <Container>
+          <div className="flex flex-col space-y-2 md:space-y-0">
+            <Title text="Finished?" />
+            <div className="flex flex-col md:flex-row justify-between items-center md:space-x-4 space-y-2">
+              <Subtitle text="Save and email the generated report to your manager for approval." />
+            </div>
+          </div>
+        </Container>
 
-      <div className="text-gray-500 text-wrap">
-        Save and email the generated report to your manager for approval.
+        {/* Download PDF button */}
+        <Button
+          text="Generate Report"
+          onClick={(event) => {
+            handleDownloadPDF(event).catch((error: unknown) => {
+              console.error('Error while downloading PDF:', error)
+            })
+          }}
+        />
       </div>
+    )
 
-      {/* Download PDF button */}
-      <button
-        className="w-full self-center p-2 hover:text-ATECblue text-white shadow-md rounded-md hover:shadow-md border-white hover:bg-white bg-ATECblue border-2 hover:border-ATECblue font-semibold transform transition-transform duration-300 ease-in-out hover:scale-105"
-        type="button"
-        onClick={() => {
-          handleDownloadPDF().catch((error: unknown) => {
-            console.error('Error while downloading PDF:', error)
-          })
-        }}
-      >
-        Generate Report
-      </button>
-    </div>
-  )
+  return null
 }
 
 export default PDF
