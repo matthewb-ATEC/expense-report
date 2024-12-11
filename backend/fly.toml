@@ -1,18 +1,18 @@
-# fly.toml app configuration file generated for backend-young-lake-5358 on 2024-09-27T14:38:27-04:00
+# fly.toml app configuration file generated for advancetecllc-expense-report on 2024-11-25T09:28:13-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'backend-young-lake-5358'
+app = 'advancetecllc-expense-report'
 primary_region = 'iad'
 
 [build]
 
 [env]
-  PORT = "3001"
+  PORT = "3000"
 
 [http_service]
-  internal_port = 3001
+  internal_port = 3000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
@@ -23,13 +23,3 @@ primary_region = 'iad'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-
-[deploy]
-  strategy = "canary"
-
-[[http_service.checks]]
-  grace_period = "10s"
-  interval = "30s"
-  method = "GET"
-  timeout = "5s"
-  path = "/health"

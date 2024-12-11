@@ -1,10 +1,32 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        ATECblue: '#0152A1',
+        background: {
+          light: '#F9FAFB',
+          DEFAULT: '#FFFFFF',
+          dark: '#1F2937',
+        },
+        text: {
+          primary: '#111827',
+          secondary: '#6B7280',
+          muted: '#9CA3AF',
+        },
+        container: {
+          light: '#FFFFFF',
+          DEFAULT: '#F3F4F6',
+          dark: '#374151',
+        },
+        atec: {
+          light: '#0278ed',
+          DEFAULT: '#0152A1',
+          dark: '#012c56',
+        },
+      },
+      fontFamily: {
+        sans: ['Century Gothic', 'sans-serif'],
       },
     },
     screens: {
